@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:neko_list/screens/anime_detail_screen.dart';
+import 'package:neko_list/screens/anime_details_screen.dart';
 
 class AnimeCard extends StatelessWidget {
   final int animeId;
