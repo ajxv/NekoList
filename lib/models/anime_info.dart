@@ -5,8 +5,8 @@ class AnimeInfo {
   final String title;
   final Picture mainPicture;
   final AlternativeTitles alternativeTitles;
-  final DateTime startDate;
-  final DateTime endDate;
+  final DateTime? startDate;
+  final DateTime? endDate;
   final String synopsis;
   final double mean;
   final int rank;
@@ -22,7 +22,6 @@ class AnimeInfo {
   final MyListStatus myListStatus;
   final int numEpisodes;
   final StartSeason startSeason;
-  final Broadcast broadcast;
   final String source;
   final int averageEpisodeDuration;
   final String rating;
@@ -56,7 +55,6 @@ class AnimeInfo {
     required this.myListStatus,
     required this.numEpisodes,
     required this.startSeason,
-    required this.broadcast,
     required this.source,
     required this.averageEpisodeDuration,
     required this.rating,
@@ -75,11 +73,14 @@ class AnimeInfo {
         mainPicture: Picture.fromJson(json["main_picture"]),
         alternativeTitles:
             AlternativeTitles.fromJson(json["alternative_titles"]),
-        startDate: DateTime.parse(json["start_date"]),
-        endDate: DateTime.parse(json["end_date"]),
+        startDate: json['start_date'] != null
+            ? DateTime.tryParse(json["start_date"])
+            : null,
+        endDate:
+            json['end_date'] != null ? DateTime.parse(json["end_date"]) : null,
         synopsis: json["synopsis"],
-        mean: json["mean"]?.toDouble(),
-        rank: json["rank"],
+        mean: json['mean'] != null ? json["mean"]?.toDouble() : 0,
+        rank: json['rank'] != null ? json["rank"] : 0,
         popularity: json["popularity"],
         numListUsers: json["num_list_users"],
         numScoringUsers: json["num_scoring_users"],
@@ -92,7 +93,6 @@ class AnimeInfo {
         myListStatus: MyListStatus.fromJson(json["my_list_status"]),
         numEpisodes: json["num_episodes"],
         startSeason: StartSeason.fromJson(json["start_season"]),
-        broadcast: Broadcast.fromJson(json["broadcast"]),
         source: json["source"],
         averageEpisodeDuration: json["average_episode_duration"],
         rating: json["rating"],
@@ -115,9 +115,9 @@ class AnimeInfo {
         "main_picture": mainPicture.toJson(),
         "alternative_titles": alternativeTitles.toJson(),
         "start_date":
-            "${startDate.year.toString().padLeft(4, '0')}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}",
+            "${startDate!.year.toString().padLeft(4, '0')}-${startDate!.month.toString().padLeft(2, '0')}-${startDate!.day.toString().padLeft(2, '0')}",
         "end_date":
-            "${endDate.year.toString().padLeft(4, '0')}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}",
+            "${endDate!.year.toString().padLeft(4, '0')}-${endDate!.month.toString().padLeft(2, '0')}-${endDate!.day.toString().padLeft(2, '0')}",
         "synopsis": synopsis,
         "mean": mean,
         "rank": rank,
@@ -133,7 +133,6 @@ class AnimeInfo {
         "my_list_status": myListStatus.toJson(),
         "num_episodes": numEpisodes,
         "start_season": startSeason.toJson(),
-        "broadcast": broadcast.toJson(),
         "source": source,
         "average_episode_duration": averageEpisodeDuration,
         "rating": rating,
@@ -171,26 +170,6 @@ class AlternativeTitles {
         "synonyms": List<dynamic>.from(synonyms.map((x) => x)),
         "en": en,
         "ja": ja,
-      };
-}
-
-class Broadcast {
-  final String dayOfTheWeek;
-  final String startTime;
-
-  Broadcast({
-    required this.dayOfTheWeek,
-    required this.startTime,
-  });
-
-  factory Broadcast.fromJson(Map<String, dynamic> json) => Broadcast(
-        dayOfTheWeek: json["day_of_the_week"],
-        startTime: json["start_time"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "day_of_the_week": dayOfTheWeek,
-        "start_time": startTime,
       };
 }
 
