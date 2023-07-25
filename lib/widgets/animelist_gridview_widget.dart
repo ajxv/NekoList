@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '/services/mal_services.dart';
-import 'anime_card.dart';
+import 'anime_card_widget.dart';
 
 class AnimeListGridView extends StatefulWidget {
   final String status;

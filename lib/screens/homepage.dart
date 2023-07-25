@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'home/anime_list.dart';
-import 'home/home_feed.dart';
-import 'home/manga_list.dart';
+import 'home/anime_list_screen.dart';
+import 'home/home_feed_screen.dart';
+import 'home/manga_list_screen.dart';
 import '/screens/profile.dart';
 
 class HomePage extends StatefulWidget {

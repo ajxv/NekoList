@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:neko_list/models/user.dart';
-import 'package:neko_list/models/user_animelist.dart';
-import 'package:neko_list/models/anime_info.dart';
+import 'package:neko_list/models/user_model.dart';
+import 'package:neko_list/models/user_animelist_model.dart';
+import 'package:neko_list/models/anime_info_model.dart';
 
 import '/helpers/secure_storage.dart';
 import '/helpers/constants.dart' as constants;

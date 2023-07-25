@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '/widgets/animelist_gridview.dart';
+import '../../widgets/animelist_gridview_widget.dart';
 
 class AnimeList extends StatefulWidget {
   const AnimeList({super.key});

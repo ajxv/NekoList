@@ -3,7 +3,7 @@ import 'package:neko_list/screens/homepage.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '/services/oauth.dart' as auth_helper;
+import '../../services/oauth_services.dart' as auth_helper;
 
 class MalOauthWebView extends StatefulWidget {
   const MalOauthWebView({super.key});

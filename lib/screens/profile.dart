@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:neko_list/models/user.dart';
+import 'package:neko_list/models/user_model.dart';
 import 'package:neko_list/services/mal_services.dart';
 
 class Profile extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:neko_list/services/mal_services.dart';
 
-import '../models/anime_info.dart';
+import '../models/anime_info_model.dart';
 
 class AnimeDetailPage extends StatefulWidget {
   final int animeId;
