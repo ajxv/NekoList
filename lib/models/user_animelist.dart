@@ -1,4 +1,5 @@
 // generated using https://app.quicktype.io
+
 class UserAnimeList {
   final List<Data> data;
   final Paging paging;

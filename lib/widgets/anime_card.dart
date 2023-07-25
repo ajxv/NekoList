@@ -26,7 +26,9 @@ class AnimeCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const AnimeDetailPage(),
+            builder: (context) => AnimeDetailPage(
+              animeId: animeId,
+            ),
           ),
         );
       },
@@ -92,7 +94,7 @@ class AnimeCardPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Opacity(
       // set opacity
-      opacity: 0.2,
+      opacity: 0.1,
       child: ConstrainedBox(
         constraints: const BoxConstraints(
           maxWidth: 124,
