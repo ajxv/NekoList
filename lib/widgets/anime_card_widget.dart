@@ -6,18 +6,24 @@ class AnimeCard extends StatelessWidget {
   final int animeId;
   final String animeTitle;
   final String imageUrl;
-  final int numEpsWatched;
-  final int numEpisodes;
-  final int rating;
+  final int? numEpsWatched;
+  final int? numEpisodes;
+  final int? rating;
+  // for related anime
+  final String? relationType;
+  // for recommendation
+  final int? numRecommendations;
 
   const AnimeCard({
     super.key,
     required this.animeId,
     required this.animeTitle,
     required this.imageUrl,
-    required this.numEpsWatched,
-    required this.numEpisodes,
-    required this.rating,
+    this.numEpsWatched,
+    this.numEpisodes,
+    this.rating,
+    this.relationType,
+    this.numRecommendations,
   });
 
   @override
@@ -45,15 +51,16 @@ class AnimeCard extends StatelessWidget {
           child: Column(
             children: [
               ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Stack(
-                    children: [
-                      Image.network(
-                        imageUrl,
-                        height: 150,
-                        width: 115,
-                        fit: BoxFit.cover,
-                      ),
+                borderRadius: BorderRadius.circular(8),
+                child: Stack(
+                  children: [
+                    Image.network(
+                      imageUrl,
+                      height: 150,
+                      width: 115,
+                      fit: BoxFit.cover,
+                    ),
+                    if (rating != null)
                       Positioned(
                           top: 5,
                           right: 5,
@@ -68,16 +75,41 @@ class AnimeCard extends StatelessWidget {
                               style: const TextStyle(color: Colors.white),
                             ),
                           ))
-                    ],
-                  )),
+                  ],
+                ),
+              ),
               Text(
                 animeTitle,
                 overflow: TextOverflow.ellipsis,
               ),
-              Text(
-                "$numEpsWatched/$numEpisodes",
-                overflow: TextOverflow.ellipsis,
-              )
+              if (relationType != null)
+                Text(
+                  "(${relationType!})",
+                  style: const TextStyle(
+                      fontSize: 12, overflow: TextOverflow.ellipsis),
+                ),
+              if (numRecommendations != null)
+                Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.thumbs_up_down_rounded,
+                      size: 15,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      numRecommendations.toString(),
+                      style: const TextStyle(fontSize: 12),
+                    )
+                  ],
+                ),
+              if (numEpsWatched != null)
+                Text(
+                  "$numEpsWatched/$numEpisodes",
+                  overflow: TextOverflow.ellipsis,
+                ),
             ],
           ),
         ),

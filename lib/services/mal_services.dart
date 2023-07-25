@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:neko_list/models/user_model.dart';
@@ -76,7 +77,7 @@ class MyAnimelistApi {
   Future<AnimeInfo> getAnimeInfo({required animeId}) async {
     var accessToken = await _secureStorage.getAccessToken();
     String fields =
-        "id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics";
+        "id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,source,average_episode_duration,rating,pictures,related_anime,related_manga,recommendations,studios,statistics,opening_themes,ending_themes";
 
     Uri url = Uri.parse("$baseUrl/anime/$animeId?fields=$fields");
     // try {
@@ -90,6 +91,7 @@ class MyAnimelistApi {
     );
 
     if (response.statusCode == 200) {
+      log(response.body);
       return AnimeInfo.fromJson(jsonDecode(response.body));
     } else {
       return Future.error("Failed to load UserAnimeList");

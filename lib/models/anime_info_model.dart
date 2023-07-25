@@ -19,19 +19,19 @@ class AnimeInfo {
   final String mediaType;
   final String status;
   final List<Genre> genres;
-  final MyListStatus myListStatus;
+  final MyListStatus? myListStatus;
   final int numEpisodes;
   final StartSeason startSeason;
   final String source;
   final int averageEpisodeDuration;
   final String rating;
   final List<Picture> pictures;
-  final String background;
   final List<RelatedAnime> relatedAnime;
-  final List<dynamic> relatedManga;
   final List<Recommendation> recommendations;
   final List<Genre> studios;
   final Statistics statistics;
+  final List? openingThemes;
+  final List? endingThemes;
 
   AnimeInfo({
     required this.id,
@@ -52,19 +52,19 @@ class AnimeInfo {
     required this.mediaType,
     required this.status,
     required this.genres,
-    required this.myListStatus,
+    this.myListStatus,
     required this.numEpisodes,
     required this.startSeason,
     required this.source,
     required this.averageEpisodeDuration,
     required this.rating,
     required this.pictures,
-    required this.background,
     required this.relatedAnime,
-    required this.relatedManga,
     required this.recommendations,
     required this.studios,
     required this.statistics,
+    this.openingThemes,
+    this.endingThemes,
   });
 
   factory AnimeInfo.fromJson(Map<String, dynamic> json) => AnimeInfo(
@@ -90,7 +90,9 @@ class AnimeInfo {
         mediaType: json["media_type"],
         status: json["status"],
         genres: List<Genre>.from(json["genres"].map((x) => Genre.fromJson(x))),
-        myListStatus: MyListStatus.fromJson(json["my_list_status"]),
+        myListStatus: json['my_list_status'] != null
+            ? MyListStatus.fromJson(json["my_list_status"])
+            : null,
         numEpisodes: json["num_episodes"],
         startSeason: StartSeason.fromJson(json["start_season"]),
         source: json["source"],
@@ -98,15 +100,15 @@ class AnimeInfo {
         rating: json["rating"],
         pictures: List<Picture>.from(
             json["pictures"].map((x) => Picture.fromJson(x))),
-        background: json["background"],
         relatedAnime: List<RelatedAnime>.from(
             json["related_anime"].map((x) => RelatedAnime.fromJson(x))),
-        relatedManga: List<dynamic>.from(json["related_manga"].map((x) => x)),
         recommendations: List<Recommendation>.from(
             json["recommendations"].map((x) => Recommendation.fromJson(x))),
         studios:
             List<Genre>.from(json["studios"].map((x) => Genre.fromJson(x))),
         statistics: Statistics.fromJson(json["statistics"]),
+        openingThemes: json['opening_themes'],
+        endingThemes: json['ending_themes'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -130,21 +132,21 @@ class AnimeInfo {
         "media_type": mediaType,
         "status": status,
         "genres": List<dynamic>.from(genres.map((x) => x.toJson())),
-        "my_list_status": myListStatus.toJson(),
+        "my_list_status": myListStatus!.toJson(),
         "num_episodes": numEpisodes,
         "start_season": startSeason.toJson(),
         "source": source,
         "average_episode_duration": averageEpisodeDuration,
         "rating": rating,
         "pictures": List<dynamic>.from(pictures.map((x) => x.toJson())),
-        "background": background,
         "related_anime":
             List<dynamic>.from(relatedAnime.map((x) => x.toJson())),
-        "related_manga": List<dynamic>.from(relatedManga.map((x) => x)),
         "recommendations":
             List<dynamic>.from(recommendations.map((x) => x.toJson())),
         "studios": List<dynamic>.from(studios.map((x) => x.toJson())),
         "statistics": statistics.toJson(),
+        'opening_theme': openingThemes,
+        'ending_theme': endingThemes,
       };
 }
 

@@ -1,7 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:neko_list/services/mal_services.dart';
+import 'package:neko_list/widgets/anime_card_widget.dart';
 
 import '../models/anime_info_model.dart';
+
+const rowSpacer1 = TableRow(children: [
+  SizedBox(
+    height: 10,
+  )
+]);
+
+const rowSpacer2 = TableRow(children: [
+  SizedBox(
+    height: 10,
+  ),
+  SizedBox(
+    height: 10,
+  )
+]);
+
+const boldText = TextStyle(
+  fontWeight: FontWeight.w500,
+);
+
+const headingTextStyle = TextStyle(
+  fontWeight: FontWeight.bold,
+  fontSize: 17,
+);
 
 class AnimeDetailPage extends StatefulWidget {
   final int animeId;
@@ -55,8 +80,216 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       text: data.synopsis,
                     ),
                     // More info
+                    const Text(
+                      "More Info",
+                      style: headingTextStyle,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Table(
+                        children: [
+                          TableRow(
+                            children: [
+                              const Text("Synonyms"),
+                              Text(
+                                data.alternativeTitles.synonyms.join(',\n'),
+                                style: boldText,
+                              )
+                            ],
+                          ),
+                          rowSpacer2,
+                          TableRow(
+                            children: [
+                              const Text("English"),
+                              Text(
+                                data.alternativeTitles.en,
+                                style: boldText,
+                              )
+                            ],
+                          ),
+                          rowSpacer2,
+                          TableRow(
+                            children: [
+                              const Text("Japanese"),
+                              Text(
+                                data.alternativeTitles.ja,
+                                style: boldText,
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(
+                      color: Colors.grey,
+                      height: 25,
+                      thickness: 1,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Table(
+                        children: [
+                          TableRow(
+                            children: [
+                              const Text("Start Date"),
+                              Text(
+                                data.startDate.toString().split(' ')[0],
+                                style: boldText,
+                              )
+                            ],
+                          ),
+                          rowSpacer2,
+                          TableRow(
+                            children: [
+                              const Text("End Date"),
+                              Text(
+                                data.endDate.toString().split(' ')[0],
+                                style: boldText,
+                              )
+                            ],
+                          ),
+                          rowSpacer2,
+                          TableRow(
+                            children: [
+                              const Text("Season"),
+                              Text(
+                                "${data.startSeason.season.toUpperCase()} ${data.startSeason.year}",
+                                style: boldText,
+                              )
+                            ],
+                          ),
+                          rowSpacer2,
+                          TableRow(
+                            children: [
+                              const Text("Duration"),
+                              Text(
+                                "${(data.averageEpisodeDuration / 60).round().toString()} min",
+                                style: boldText,
+                              )
+                            ],
+                          ),
+                          rowSpacer2,
+                          TableRow(
+                            children: [
+                              const Text("Source"),
+                              Text(
+                                data.source.replaceAll('_', ' '),
+                                style: boldText,
+                              )
+                            ],
+                          ),
+                          rowSpacer2,
+                          TableRow(
+                            children: [
+                              const Text("Studio"),
+                              Text(
+                                data.studios.isNotEmpty
+                                    ? data.studios[0].name
+                                    : '',
+                                style: boldText,
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(
+                      color: Colors.grey,
+                      height: 25,
+                      thickness: 1,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    // OP/ED
+                    if (data.openingThemes != null)
+                      Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Table(
+                          children: [
+                            const TableRow(children: [
+                              Text(
+                                "Opening Themes",
+                                style: headingTextStyle,
+                              )
+                            ]),
+                            rowSpacer1,
+                            ...data.openingThemes!.map(
+                              (op) => TableRow(children: [
+                                Text(op['text']),
+                              ]),
+                            ),
+                          ],
+                        ),
+                      ),
+                    if (data.endingThemes != null)
+                      Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Table(
+                          children: [
+                            rowSpacer1,
+                            const TableRow(children: [
+                              Text(
+                                "Ending Themes",
+                                style: headingTextStyle,
+                              )
+                            ]),
+                            rowSpacer1,
+                            ...data.endingThemes!.map(
+                              (ed) => TableRow(children: [
+                                Text(ed['text']),
+                              ]),
+                            ),
+                            rowSpacer1,
+                          ],
+                        ),
+                      ),
                     // related anime
+
+                    if (data.relatedAnime.isNotEmpty)
+                      const Text(
+                        "Related Anime",
+                        style: headingTextStyle,
+                      ),
+                    SingleChildScrollView(
+                      padding: const EdgeInsets.only(top: 10),
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: data.relatedAnime
+                            .map(
+                              (e) => AnimeCard(
+                                animeId: e.node.id,
+                                animeTitle: e.node.title,
+                                imageUrl: e.node.mainPicture.medium,
+                                relationType: e.relationTypeFormatted,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+
                     // reccomendations
+                    if (data.recommendations.isNotEmpty)
+                      const Text(
+                        "Recommendations",
+                        style: headingTextStyle,
+                      ),
+                    SingleChildScrollView(
+                      padding: const EdgeInsets.only(top: 10),
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: data.recommendations
+                            .map(
+                              (e) => AnimeCard(
+                                animeId: e.node.id,
+                                animeTitle: e.node.title,
+                                imageUrl: e.node.mainPicture.medium,
+                                numRecommendations: e.numRecommendations,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
                   ],
                 ),
               );
