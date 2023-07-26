@@ -60,6 +60,7 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
             if (snapshot.hasData) {
               var data = snapshot.data!;
               return SingleChildScrollView(
+                padding: const EdgeInsets.only(bottom: 30),
                 child: Column(
                   children: [
                     // Basic Details with image
@@ -251,20 +252,23 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                         "Related Anime",
                         style: headingTextStyle,
                       ),
-                    SingleChildScrollView(
-                      padding: const EdgeInsets.only(top: 10),
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: data.relatedAnime
-                            .map(
-                              (e) => AnimeCard(
-                                animeId: e.node.id,
-                                animeTitle: e.node.title,
-                                imageUrl: e.node.mainPicture.medium,
-                                relationType: e.relationTypeFormatted,
-                              ),
-                            )
-                            .toList(),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(10),
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: data.relatedAnime
+                              .map(
+                                (e) => AnimeCard(
+                                  animeId: e.node.id,
+                                  animeTitle: e.node.title,
+                                  imageUrl: e.node.mainPicture.medium,
+                                  relationType: e.relationTypeFormatted,
+                                ),
+                              )
+                              .toList(),
+                        ),
                       ),
                     ),
 
@@ -274,20 +278,23 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                         "Recommendations",
                         style: headingTextStyle,
                       ),
-                    SingleChildScrollView(
-                      padding: const EdgeInsets.only(top: 10),
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: data.recommendations
-                            .map(
-                              (e) => AnimeCard(
-                                animeId: e.node.id,
-                                animeTitle: e.node.title,
-                                imageUrl: e.node.mainPicture.medium,
-                                numRecommendations: e.numRecommendations,
-                              ),
-                            )
-                            .toList(),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(10),
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: data.recommendations
+                              .map(
+                                (e) => AnimeCard(
+                                  animeId: e.node.id,
+                                  animeTitle: e.node.title,
+                                  imageUrl: e.node.mainPicture.medium,
+                                  numRecommendations: e.numRecommendations,
+                                ),
+                              )
+                              .toList(),
+                        ),
                       ),
                     ),
                   ],
@@ -418,18 +425,22 @@ class TagsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: genres
-            .map((genre) => Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                  child: Chip(
-                    label: Text(genre.name),
-                    padding: const EdgeInsets.all(5),
-                  ),
-                ))
-            .toList(),
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.only(right: 10),
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: genres
+              .map((genre) => Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Chip(
+                      label: Text(genre.name),
+                      padding: const EdgeInsets.all(5),
+                    ),
+                  ))
+              .toList(),
+        ),
       ),
     );
   }

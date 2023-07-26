@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:neko_list/models/user_model.dart';
@@ -91,7 +90,6 @@ class MyAnimelistApi {
     );
 
     if (response.statusCode == 200) {
-      log(response.body);
       return AnimeInfo.fromJson(jsonDecode(response.body));
     } else {
       return Future.error("Failed to load UserAnimeList");
