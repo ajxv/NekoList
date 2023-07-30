@@ -2,23 +2,23 @@
 
 class UserAnimeList {
   final List<Data> data;
-  final Paging paging;
+  // final Paging paging;
 
   UserAnimeList({
     required this.data,
-    required this.paging,
+    // required this.paging,
   });
 
   factory UserAnimeList.fromJson(Map<String, dynamic> json) {
     return UserAnimeList(
       data: List<Data>.from(json["data"].map((x) => Data.fromJson(x))),
-      paging: Paging.fromJson(json["paging"]),
+      // paging: Paging.fromJson(json["paging"]),
     );
   }
 
   Map<String, dynamic> toJson() => {
         "data": List<dynamic>.from(data.map((x) => x.toJson())),
-        "paging": paging.toJson(),
+        // "paging": paging.toJson(),
       };
 }
 
@@ -122,18 +122,18 @@ class MainPicture {
       };
 }
 
-class Paging {
-  final String next;
+// class Paging {
+//   final String next;
 
-  Paging({
-    required this.next,
-  });
+//   Paging({
+//     required this.next,
+//   });
 
-  factory Paging.fromJson(Map<String, dynamic> json) => Paging(
-        next: json["next"] != null ? json['next'] : "",
-      );
+//   factory Paging.fromJson(Map<String, dynamic> json) => Paging(
+//         next: json["next"] != null ? json['next'] : "",
+//       );
 
-  Map<String, dynamic> toJson() => {
-        "next": next,
-      };
-}
+//   Map<String, dynamic> toJson() => {
+//         "next": next,
+//       };
+// }
