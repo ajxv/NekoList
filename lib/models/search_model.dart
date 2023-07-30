@@ -1,7 +1,5 @@
 // generated using https://app.quicktype.io
 
-import 'dart:developer';
-
 class SearchResult {
   final List<Datum> data;
   final Paging paging;
