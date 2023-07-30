@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '/services/mal_services.dart';
-import 'anime_card_widget.dart';
+import 'list_entry_card_widget.dart';
 
 class AnimeListGridView extends StatefulWidget {
   final String status;
@@ -13,7 +13,7 @@ class AnimeListGridView extends StatefulWidget {
 
 class _AnimeListGridViewState extends State<AnimeListGridView>
     with AutomaticKeepAliveClientMixin<AnimeListGridView> {
-  final List<AnimeCard> _cardList = [];
+  final List<ListEntryCard> _cardList = [];
   int _offset = 0;
   bool _hasMore = true;
   bool _isLoading = false;
@@ -32,10 +32,10 @@ class _AnimeListGridViewState extends State<AnimeListGridView>
     MyAnimelistApi()
         .getUserAnimeList(status: status, offset: offset, limit: limit)
         .then((userAnimeList) {
-      List<AnimeCard> cardList = [];
+      List<ListEntryCard> cardList = [];
 
       cardList = userAnimeList.data
-          .map((data) => AnimeCard(
+          .map((data) => ListEntryCard(
                 animeId: data.node.id,
                 imageUrl: data.node.mainPicture.medium,
                 animeTitle: data.node.title,
@@ -81,7 +81,7 @@ class _AnimeListGridViewState extends State<AnimeListGridView>
           } else {
             if (_hasMore) {
               getAnimeCards(widget.status, _offset);
-              return const AnimeCardPlaceholder();
+              return const ListEntryCardPlaceholder();
             } else {
               return const Center(
                 child: Text("(ᓀ ᓀ)"),

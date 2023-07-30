@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neko_list/screens/anime_details_screen.dart';
 
-class AnimeCard extends StatelessWidget {
+class ListEntryCard extends StatelessWidget {
   final int animeId;
   final String animeTitle;
   final String imageUrl;
@@ -14,7 +14,7 @@ class AnimeCard extends StatelessWidget {
   // for recommendation
   final int? numRecommendations;
 
-  const AnimeCard({
+  const ListEntryCard({
     super.key,
     required this.animeId,
     required this.animeTitle,
@@ -119,8 +119,8 @@ class AnimeCard extends StatelessWidget {
 }
 
 // Placeholder Widget
-class AnimeCardPlaceholder extends StatelessWidget {
-  const AnimeCardPlaceholder({super.key});
+class ListEntryCardPlaceholder extends StatelessWidget {
+  const ListEntryCardPlaceholder({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -144,6 +144,78 @@ class AnimeCardPlaceholder extends StatelessWidget {
               Expanded(
                   child: Container(
                 color: Colors.grey.shade600,
+              ))
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SimpleListEntryCard extends StatelessWidget {
+  final String contentType;
+  final int entryId;
+  final String entryTitle;
+  final String imageUrl;
+
+  const SimpleListEntryCard({
+    super.key,
+    required this.contentType,
+    required this.entryId,
+    required this.entryTitle,
+    required this.imageUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => contentType == 'anime'
+                ? AnimeDetailPage(
+                    animeId: entryId,
+                  )
+                : const Text("not an anime"),
+          ),
+        );
+      },
+      onLongPress: () {
+        Fluttertoast.showToast(msg: entryTitle);
+      },
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: 124,
+          maxHeight: 210,
+        ),
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: imageUrl.isNotEmpty
+                    ? Image.network(
+                        imageUrl,
+                        height: 150,
+                        width: 115,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.asset(
+                        "assets/images/image_placeholder.jpg",
+                        height: 150,
+                        width: 115,
+                        fit: BoxFit.cover,
+                      ),
+              ),
+              Expanded(
+                  child: Center(
+                child: Text(
+                  entryTitle,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
               ))
             ],
           ),

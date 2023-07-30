@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:neko_list/services/mal_services.dart';
-import 'package:neko_list/widgets/anime_card_widget.dart';
+import 'package:neko_list/widgets/list_entry_card_widget.dart';
 
 import '../models/anime_info_model.dart';
 
@@ -154,7 +154,9 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                             children: [
                               const Text("Season"),
                               Text(
-                                "${data.startSeason.season.toUpperCase()} ${data.startSeason.year}",
+                                data.startSeason != null
+                                    ? "${data.startSeason!.season.toUpperCase()} ${data.startSeason!.year}"
+                                    : "",
                                 style: boldText,
                               )
                             ],
@@ -260,7 +262,7 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                         child: Row(
                           children: data.relatedAnime
                               .map(
-                                (e) => AnimeCard(
+                                (e) => ListEntryCard(
                                   animeId: e.node.id,
                                   animeTitle: e.node.title,
                                   imageUrl: e.node.mainPicture.medium,
@@ -286,7 +288,7 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                         child: Row(
                           children: data.recommendations
                               .map(
-                                (e) => AnimeCard(
+                                (e) => ListEntryCard(
                                   animeId: e.node.id,
                                   animeTitle: e.node.title,
                                   imageUrl: e.node.mainPicture.medium,

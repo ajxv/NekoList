@@ -21,10 +21,10 @@ class AnimeInfo {
   final List<Genre> genres;
   final MyListStatus? myListStatus;
   final int numEpisodes;
-  final StartSeason startSeason;
+  final StartSeason? startSeason;
   final String source;
   final int averageEpisodeDuration;
-  final String rating;
+  final String? rating;
   final List<Picture> pictures;
   final List<RelatedAnime> relatedAnime;
   final List<Recommendation> recommendations;
@@ -54,10 +54,10 @@ class AnimeInfo {
     required this.genres,
     this.myListStatus,
     required this.numEpisodes,
-    required this.startSeason,
+    this.startSeason,
     required this.source,
     required this.averageEpisodeDuration,
-    required this.rating,
+    this.rating,
     required this.pictures,
     required this.relatedAnime,
     required this.recommendations,
@@ -94,7 +94,9 @@ class AnimeInfo {
             ? MyListStatus.fromJson(json["my_list_status"])
             : null,
         numEpisodes: json["num_episodes"],
-        startSeason: StartSeason.fromJson(json["start_season"]),
+        startSeason: json["start_season"] != null
+            ? StartSeason.fromJson(json["start_season"])
+            : null,
         source: json["source"],
         averageEpisodeDuration: json["average_episode_duration"],
         rating: json["rating"],
@@ -134,7 +136,7 @@ class AnimeInfo {
         "genres": List<dynamic>.from(genres.map((x) => x.toJson())),
         "my_list_status": myListStatus!.toJson(),
         "num_episodes": numEpisodes,
-        "start_season": startSeason.toJson(),
+        "start_season": startSeason!.toJson(),
         "source": source,
         "average_episode_duration": averageEpisodeDuration,
         "rating": rating,
@@ -345,7 +347,7 @@ class Statistics {
   });
 
   factory Statistics.fromJson(Map<String, dynamic> json) => Statistics(
-        status: Status.fromJson(json["status"]),
+        status: Status?.fromJson(json["status"]),
         numListUsers: json["num_list_users"],
       );
 
@@ -371,11 +373,11 @@ class Status {
   });
 
   factory Status.fromJson(Map<String, dynamic> json) => Status(
-        watching: json["watching"],
-        completed: json["completed"],
-        onHold: json["on_hold"],
-        dropped: json["dropped"],
-        planToWatch: json["plan_to_watch"],
+        watching: json["watching"].toString(),
+        completed: json["completed"].toString(),
+        onHold: json["on_hold"].toString(),
+        dropped: json["dropped"].toString(),
+        planToWatch: json["plan_to_watch"].toString(),
       );
 
   Map<String, dynamic> toJson() => {

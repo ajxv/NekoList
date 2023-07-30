@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:neko_list/models/user_model.dart';
-import 'package:neko_list/models/user_animelist_model.dart';
-import 'package:neko_list/models/anime_info_model.dart';
+import '../models/search_model.dart';
+import '../models/user_model.dart';
+import '../models/user_animelist_model.dart';
+import '../models/anime_info_model.dart';
 
 import '/helpers/secure_storage.dart';
 import '/helpers/constants.dart' as constants;
@@ -93,6 +94,36 @@ class MyAnimelistApi {
       return AnimeInfo.fromJson(jsonDecode(response.body));
     } else {
       return Future.error("Failed to load UserAnimeList");
+    }
+    // } on SocketException {
+    //   return Future.error("SocketException: Check your internet connection");
+    // } catch (e) {
+    //   return Future.error(e.toString());
+    // }
+  }
+
+  // Search Anime/Manga
+  Future<SearchResult> search(
+      {required query, required contentType, limit = 100, offset = 0}) async {
+    var accessToken = await _secureStorage.getAccessToken();
+
+    Uri url =
+        Uri.parse("$baseUrl/$contentType?q=$query&limit=$limit&offset=$offset");
+
+    // try {
+    var response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return SearchResult.fromJson(jsonDecode(response.body));
+    } else {
+      return Future.error("Failed to load SearchResults");
     }
     // } on SocketException {
     //   return Future.error("SocketException: Check your internet connection");

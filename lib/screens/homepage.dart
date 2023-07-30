@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'search_screen.dart';
 import 'home/anime_list_screen.dart';
 import 'home/home_feed_screen.dart';
 import 'home/manga_list_screen.dart';
@@ -43,7 +44,12 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: NekoSearchDelgate(),
+              );
+            },
             icon: const Icon(Icons.search),
           )
         ],
