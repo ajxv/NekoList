@@ -107,7 +107,7 @@ class ListEntryCard extends StatelessWidget {
                 ),
               if (numEpsWatched != null)
                 Text(
-                  "$numEpsWatched/$numEpisodes",
+                  "$numEpsWatched/${numEpisodes != 0 ? numEpisodes : '?'}",
                   overflow: TextOverflow.ellipsis,
                 ),
             ],
