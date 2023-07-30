@@ -176,7 +176,9 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                             children: [
                               const Text("Source"),
                               Text(
-                                data.source.replaceAll('_', ' '),
+                                data.source == null
+                                    ? ''
+                                    : data.source!.replaceAll('_', ' '),
                                 style: boldText,
                               )
                             ],

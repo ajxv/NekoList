@@ -22,7 +22,7 @@ class AnimeInfo {
   final MyListStatus? myListStatus;
   final int numEpisodes;
   final StartSeason? startSeason;
-  final String source;
+  final String? source;
   final int averageEpisodeDuration;
   final String? rating;
   final List<Picture> pictures;
@@ -55,7 +55,7 @@ class AnimeInfo {
     this.myListStatus,
     required this.numEpisodes,
     this.startSeason,
-    required this.source,
+    this.source,
     required this.averageEpisodeDuration,
     this.rating,
     required this.pictures,
