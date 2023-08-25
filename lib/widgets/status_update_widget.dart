@@ -12,22 +12,37 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("cancel"),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: const Text("apply"),
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("cancel"),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: const Text("apply"),
+              ),
+            ],
+          ),
         ),
         const SetListStatus(),
-        const EpisodeCounter(
-          totalEpisodes: 12,
+        const SizedBox(height: 20), // add space between widgets
+        const EpisodeCounter(totalEpisodes: 12),
+        const SizedBox(height: 20), // add space between widgets
+        const ScoreSlider(initialScore: 0),
+        const SizedBox(height: 20), // add space between widgets
+        TextButton(
+          onPressed: () {},
+          style: ButtonStyle(
+              fixedSize: const MaterialStatePropertyAll(Size(200, 10)),
+              backgroundColor: MaterialStatePropertyAll(Colors.red.shade300)),
+          child: const Text(
+            'Delete',
+            style: TextStyle(color: Colors.white),
+          ),
         )
       ],
     );
@@ -47,11 +62,6 @@ class _SetListStatusState extends State<SetListStatus> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // decoration: BoxDecoration(
-      //   border: Border.all(color: Colors.grey),
-      //   borderRadius: const BorderRadius.all(Radius.circular(8)),
-      // ),
-      // margin: const EdgeInsets.all(8),
       padding: const EdgeInsets.fromLTRB(5, 8, 5, 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -195,7 +205,7 @@ class _EpisodeCounterState extends State<EpisodeCounter> {
               border: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
               ),
-              labelText: 'episodes',
+              labelText: 'watched',
               counterText: '',
               suffixText: '/ ${widget.totalEpisodes.toString()}',
             ),
@@ -219,6 +229,50 @@ class _EpisodeCounterState extends State<EpisodeCounter> {
           ),
         ),
         IconButton(onPressed: _increment, icon: const Icon(Icons.add)),
+      ],
+    );
+  }
+}
+
+class ScoreSlider extends StatefulWidget {
+  final int initialScore;
+
+  const ScoreSlider({super.key, required this.initialScore});
+
+  @override
+  State<StatefulWidget> createState() => _ScoreState();
+}
+
+class _ScoreState extends State<ScoreSlider> {
+  int _currentValue = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentValue = widget.initialScore;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(left: 15),
+          child: Text(
+            'Score:',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+        ),
+        Slider(
+          value: _currentValue.toDouble(),
+          onChanged: (value) => setState(() {
+            _currentValue = value.toInt();
+          }),
+          max: 10,
+          divisions: 10,
+          label: _currentValue.round().toString(),
+        )
       ],
     );
   }

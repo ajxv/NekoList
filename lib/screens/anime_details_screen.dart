@@ -321,31 +321,14 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
-              context: context,
-              builder: (context) {
-                return const StatusUpdateModal();
-              });
-          // showDialog(
-          //     context: context,
-          //     builder: (context) {
-          //       return AlertDialog(
-          //         content: const Stack(
-          //           children: [
-          //             SetListStatus(),
-          //           ],
-          //         ),
-          //         actions: [
-          //           TextButton(
-          //             onPressed: () => Navigator.of(context).pop(),
-          //             child: const Text("cancel"),
-          //           ),
-          //           TextButton(
-          //             onPressed: () {},
-          //             child: const Text("apply"),
-          //           ),
-          //         ],
-          //       );
-          //     });
+            context: context,
+            builder: (context) {
+              return const SizedBox(
+                height: 400,
+                child: StatusUpdateModal(),
+              );
+            },
+          );
         },
         child: const Icon(Icons.add),
       ),
