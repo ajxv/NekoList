@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:neko_list/services/mal_services.dart';
 import 'package:neko_list/widgets/list_entry_card_widget.dart';
+import 'package:neko_list/widgets/status_update_widget.dart';
 
 import '../models/anime_info_model.dart';
 
@@ -48,274 +49,307 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.chevron_left),
-          ),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.chevron_left),
         ),
-        body: FutureBuilder(
-          future: _futureAnimeInfo,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              var data = snapshot.data!;
-              return SingleChildScrollView(
-                padding: const EdgeInsets.only(bottom: 30),
-                child: Column(
-                  children: [
-                    // Basic Details with image
-                    BasicDetailSection(
-                      imageUrl: data.mainPicture.large,
-                      animeTitle: data.title,
-                      meanScore: data.mean,
-                      mediaType: data.mediaType,
-                      airingStatus: data.status,
-                      numEpisodes: data.numEpisodes,
+      ),
+      body: FutureBuilder(
+        future: _futureAnimeInfo,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var data = snapshot.data!;
+            return SingleChildScrollView(
+              padding: const EdgeInsets.only(bottom: 30),
+              child: Column(
+                children: [
+                  // Basic Details with image
+                  BasicDetailSection(
+                    imageUrl: data.mainPicture.large,
+                    animeTitle: data.title,
+                    meanScore: data.mean,
+                    mediaType: data.mediaType,
+                    airingStatus: data.status,
+                    numEpisodes: data.numEpisodes,
+                  ),
+                  // Tags
+                  TagsSection(
+                    genres: data.genres,
+                  ),
+                  // Summary
+                  DescriptionTextWidget(
+                    text: data.synopsis,
+                  ),
+                  // More info
+                  const Text(
+                    "More Info",
+                    style: headingTextStyle,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Table(
+                      children: [
+                        TableRow(
+                          children: [
+                            const Text("Synonyms"),
+                            Text(
+                              data.alternativeTitles.synonyms.join(',\n'),
+                              style: boldText,
+                            )
+                          ],
+                        ),
+                        rowSpacer2,
+                        TableRow(
+                          children: [
+                            const Text("English"),
+                            Text(
+                              data.alternativeTitles.en,
+                              style: boldText,
+                            )
+                          ],
+                        ),
+                        rowSpacer2,
+                        TableRow(
+                          children: [
+                            const Text("Japanese"),
+                            Text(
+                              data.alternativeTitles.ja,
+                              style: boldText,
+                            )
+                          ],
+                        ),
+                      ],
                     ),
-                    // Tags
-                    TagsSection(
-                      genres: data.genres,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Table(
+                      children: [
+                        TableRow(
+                          children: [
+                            const Text("Start Date"),
+                            Text(
+                              data.startDate.toString().split(' ')[0],
+                              style: boldText,
+                            )
+                          ],
+                        ),
+                        rowSpacer2,
+                        TableRow(
+                          children: [
+                            const Text("End Date"),
+                            Text(
+                              data.endDate.toString().split(' ')[0],
+                              style: boldText,
+                            )
+                          ],
+                        ),
+                        rowSpacer2,
+                        TableRow(
+                          children: [
+                            const Text("Season"),
+                            Text(
+                              data.startSeason != null
+                                  ? "${data.startSeason!.season.toUpperCase()} ${data.startSeason!.year}"
+                                  : "",
+                              style: boldText,
+                            )
+                          ],
+                        ),
+                        rowSpacer2,
+                        TableRow(
+                          children: [
+                            const Text("Duration"),
+                            Text(
+                              "${(data.averageEpisodeDuration / 60).round().toString()} min",
+                              style: boldText,
+                            )
+                          ],
+                        ),
+                        rowSpacer2,
+                        TableRow(
+                          children: [
+                            const Text("Source"),
+                            Text(
+                              data.source == null
+                                  ? ''
+                                  : data.source!.replaceAll('_', ' '),
+                              style: boldText,
+                            )
+                          ],
+                        ),
+                        rowSpacer2,
+                        TableRow(
+                          children: [
+                            const Text("Studio"),
+                            Text(
+                              data.studios.isNotEmpty
+                                  ? data.studios[0].name
+                                  : '',
+                              style: boldText,
+                            )
+                          ],
+                        ),
+                      ],
                     ),
-                    // Summary
-                    DescriptionTextWidget(
-                      text: data.synopsis,
+                  ),
+                  Divider(
+                    color: Colors.grey.shade200,
+                    height: 25,
+                    thickness: 1,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  // OP/ED
+                  if (data.openingThemes != null)
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Table(
+                        children: [
+                          const TableRow(children: [
+                            Text(
+                              "Opening Themes",
+                              style: headingTextStyle,
+                            )
+                          ]),
+                          rowSpacer1,
+                          ...data.openingThemes!.map(
+                            (op) => TableRow(children: [
+                              Text(op['text']),
+                            ]),
+                          ),
+                        ],
+                      ),
                     ),
-                    // More info
+                  if (data.endingThemes != null)
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Table(
+                        children: [
+                          rowSpacer1,
+                          const TableRow(children: [
+                            Text(
+                              "Ending Themes",
+                              style: headingTextStyle,
+                            )
+                          ]),
+                          rowSpacer1,
+                          ...data.endingThemes!.map(
+                            (ed) => TableRow(children: [
+                              Text(ed['text']),
+                            ]),
+                          ),
+                          rowSpacer1,
+                        ],
+                      ),
+                    ),
+
+                  Divider(
+                    color: Colors.grey.shade200,
+                    height: 25,
+                    thickness: 1,
+                  ),
+
+                  // related anime
+                  if (data.relatedAnime.isNotEmpty)
                     const Text(
-                      "More Info",
+                      "Related Anime",
                       style: headingTextStyle,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Table(
-                        children: [
-                          TableRow(
-                            children: [
-                              const Text("Synonyms"),
-                              Text(
-                                data.alternativeTitles.synonyms.join(',\n'),
-                                style: boldText,
-                              )
-                            ],
-                          ),
-                          rowSpacer2,
-                          TableRow(
-                            children: [
-                              const Text("English"),
-                              Text(
-                                data.alternativeTitles.en,
-                                style: boldText,
-                              )
-                            ],
-                          ),
-                          rowSpacer2,
-                          TableRow(
-                            children: [
-                              const Text("Japanese"),
-                              Text(
-                                data.alternativeTitles.ja,
-                                style: boldText,
-                              )
-                            ],
-                          ),
-                        ],
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(10),
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: data.relatedAnime
+                            .map(
+                              (e) => ListEntryCard(
+                                animeId: e.node.id,
+                                animeTitle: e.node.title,
+                                imageUrl: e.node.mainPicture.medium,
+                                relationType: e.relationTypeFormatted,
+                              ),
+                            )
+                            .toList(),
                       ),
                     ),
-                    const Divider(
-                      color: Colors.grey,
-                      height: 25,
-                      thickness: 1,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Table(
-                        children: [
-                          TableRow(
-                            children: [
-                              const Text("Start Date"),
-                              Text(
-                                data.startDate.toString().split(' ')[0],
-                                style: boldText,
-                              )
-                            ],
-                          ),
-                          rowSpacer2,
-                          TableRow(
-                            children: [
-                              const Text("End Date"),
-                              Text(
-                                data.endDate.toString().split(' ')[0],
-                                style: boldText,
-                              )
-                            ],
-                          ),
-                          rowSpacer2,
-                          TableRow(
-                            children: [
-                              const Text("Season"),
-                              Text(
-                                data.startSeason != null
-                                    ? "${data.startSeason!.season.toUpperCase()} ${data.startSeason!.year}"
-                                    : "",
-                                style: boldText,
-                              )
-                            ],
-                          ),
-                          rowSpacer2,
-                          TableRow(
-                            children: [
-                              const Text("Duration"),
-                              Text(
-                                "${(data.averageEpisodeDuration / 60).round().toString()} min",
-                                style: boldText,
-                              )
-                            ],
-                          ),
-                          rowSpacer2,
-                          TableRow(
-                            children: [
-                              const Text("Source"),
-                              Text(
-                                data.source == null
-                                    ? ''
-                                    : data.source!.replaceAll('_', ' '),
-                                style: boldText,
-                              )
-                            ],
-                          ),
-                          rowSpacer2,
-                          TableRow(
-                            children: [
-                              const Text("Studio"),
-                              Text(
-                                data.studios.isNotEmpty
-                                    ? data.studios[0].name
-                                    : '',
-                                style: boldText,
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Divider(
-                      color: Colors.grey,
-                      height: 25,
-                      thickness: 1,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    // OP/ED
-                    if (data.openingThemes != null)
-                      Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Table(
-                          children: [
-                            const TableRow(children: [
-                              Text(
-                                "Opening Themes",
-                                style: headingTextStyle,
-                              )
-                            ]),
-                            rowSpacer1,
-                            ...data.openingThemes!.map(
-                              (op) => TableRow(children: [
-                                Text(op['text']),
-                              ]),
-                            ),
-                          ],
-                        ),
-                      ),
-                    if (data.endingThemes != null)
-                      Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Table(
-                          children: [
-                            rowSpacer1,
-                            const TableRow(children: [
-                              Text(
-                                "Ending Themes",
-                                style: headingTextStyle,
-                              )
-                            ]),
-                            rowSpacer1,
-                            ...data.endingThemes!.map(
-                              (ed) => TableRow(children: [
-                                Text(ed['text']),
-                              ]),
-                            ),
-                            rowSpacer1,
-                          ],
-                        ),
-                      ),
-                    // related anime
+                  ),
 
-                    if (data.relatedAnime.isNotEmpty)
-                      const Text(
-                        "Related Anime",
-                        style: headingTextStyle,
-                      ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.all(10),
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: data.relatedAnime
-                              .map(
-                                (e) => ListEntryCard(
-                                  animeId: e.node.id,
-                                  animeTitle: e.node.title,
-                                  imageUrl: e.node.mainPicture.medium,
-                                  relationType: e.relationTypeFormatted,
-                                ),
-                              )
-                              .toList(),
-                        ),
+                  // reccomendations
+                  if (data.recommendations.isNotEmpty)
+                    const Text(
+                      "Recommendations",
+                      style: headingTextStyle,
+                    ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(10),
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: data.recommendations
+                            .map(
+                              (e) => ListEntryCard(
+                                animeId: e.node.id,
+                                animeTitle: e.node.title,
+                                imageUrl: e.node.mainPicture.medium,
+                                numRecommendations: e.numRecommendations,
+                              ),
+                            )
+                            .toList(),
                       ),
                     ),
-
-                    // reccomendations
-                    if (data.recommendations.isNotEmpty)
-                      const Text(
-                        "Recommendations",
-                        style: headingTextStyle,
-                      ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.all(10),
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: data.recommendations
-                              .map(
-                                (e) => ListEntryCard(
-                                  animeId: e.node.id,
-                                  animeTitle: e.node.title,
-                                  imageUrl: e.node.mainPicture.medium,
-                                  numRecommendations: e.numRecommendations,
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text(snapshot.error.toString()),
-              );
-            } else {
-              // By default, show a loading spinner.
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        ));
+                  ),
+                ],
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(snapshot.error.toString()),
+            );
+          } else {
+            // By default, show a loading spinner.
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return const StatusUpdateModal();
+              });
+          // showDialog(
+          //     context: context,
+          //     builder: (context) {
+          //       return AlertDialog(
+          //         content: const Stack(
+          //           children: [
+          //             SetListStatus(),
+          //           ],
+          //         ),
+          //         actions: [
+          //           TextButton(
+          //             onPressed: () => Navigator.of(context).pop(),
+          //             child: const Text("cancel"),
+          //           ),
+          //           TextButton(
+          //             onPressed: () {},
+          //             child: const Text("apply"),
+          //           ),
+          //         ],
+          //       );
+          //     });
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 }
 
