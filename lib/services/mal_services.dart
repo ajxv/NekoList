@@ -9,6 +9,8 @@ import '../models/anime_info_model.dart';
 import '/helpers/secure_storage.dart';
 import '/helpers/constants.dart' as constants;
 
+import './oauth_services.dart' as auth_services;
+
 class MyAnimelistApi {
   final _secureStorage = SecureStorage();
 
@@ -32,6 +34,9 @@ class MyAnimelistApi {
 
       if (response.statusCode == 200) {
         return UserDetails.fromJson(jsonDecode(response.body));
+      } else if (response.statusCode == 401) {
+        await auth_services.refreshAccessToken();
+        return getUserDetails();
       } else {
         return Future.error("Failed to load UserDetails");
       }
@@ -64,8 +69,12 @@ class MyAnimelistApi {
 
     if (response.statusCode == 200) {
       return UserAnimeList.fromJson(jsonDecode(response.body));
+    } else if (response.statusCode == 401) {
+      await auth_services.refreshAccessToken();
+      return getUserAnimeList(
+          status: status, sort: sort, limit: limit, offset: offset);
     } else {
-      return Future.error("Failed to load UserAnimeList");
+      return Future.error(response.body);
     }
     // } on SocketException {
     //   return Future.error("SocketException: Check your internet connection");
@@ -92,6 +101,9 @@ class MyAnimelistApi {
 
     if (response.statusCode == 200) {
       return AnimeInfo.fromJson(jsonDecode(response.body));
+    } else if (response.statusCode == 401) {
+      await auth_services.refreshAccessToken();
+      return getAnimeInfo(animeId: animeId);
     } else {
       return Future.error("Failed to load UserAnimeList");
     }
@@ -122,6 +134,10 @@ class MyAnimelistApi {
 
     if (response.statusCode == 200) {
       return SearchResult.fromJson(jsonDecode(response.body));
+    } else if (response.statusCode == 401) {
+      await auth_services.refreshAccessToken();
+      return search(
+          query: query, contentType: contentType, limit: limit, offset: offset);
     } else {
       return Future.error("Failed to load SearchResults");
     }

@@ -77,3 +77,30 @@ Future<String> getAccessToken() async {
 
   return data['access_token'];
 }
+
+Future<String> refreshAccessToken() async {
+  final secureStorage = SecureStorage();
+  var authCode = await secureStorage.getAuthCode();
+  // var pkce = await secureStorage.getPkce();
+  var refreshToken = await secureStorage.getRefreshToken();
+
+  var response = await http.post(
+    Uri.https(constants.domain, constants.tokenEndpoint),
+    body: {
+      'client_id': constants.clientId,
+      'code': authCode,
+      // 'code_verifier': pkce,
+      'grant_type': 'refresh_token',
+      'redirect_uri': constants.redirectUrl,
+      'refresh_token': refreshToken,
+    },
+    headers: {"Content-Type": 'application/x-www-form-urlencoded'},
+  );
+
+  var data = jsonDecode(response.body);
+
+  secureStorage.setAccessToken(data['access_token']);
+  // secureStorage.setTokenType(data['token_type']);
+  secureStorage.setRefreshToken(data['refresh_token']);
+  return data['access_token'];
+}
