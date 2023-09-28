@@ -221,15 +221,15 @@ class MyListStatus {
   final String status;
   final int score;
   final int numEpisodesWatched;
-  final bool isRewatching;
-  final DateTime updatedAt;
+  final bool? isRewatching;
+  final DateTime? updatedAt;
 
   MyListStatus({
     required this.status,
     required this.score,
     required this.numEpisodesWatched,
-    required this.isRewatching,
-    required this.updatedAt,
+    this.isRewatching,
+    this.updatedAt,
   });
 
   factory MyListStatus.fromJson(Map<String, dynamic> json) => MyListStatus(
@@ -245,7 +245,7 @@ class MyListStatus {
         "score": score,
         "num_episodes_watched": numEpisodesWatched,
         "is_rewatching": isRewatching,
-        "updated_at": updatedAt.toIso8601String(),
+        "updated_at": updatedAt!.toIso8601String(),
       };
 }
 

@@ -39,6 +39,8 @@ class AnimeDetailPage extends StatefulWidget {
 
 class _AnimeDetailPageState extends State<AnimeDetailPage> {
   late Future<AnimeInfo> _futureAnimeInfo;
+  late MyListStatus myListStatus;
+  late int totalEpisodes;
 
   @override
   void initState() {
@@ -56,7 +58,14 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
         ),
       ),
       body: FutureBuilder(
-        future: _futureAnimeInfo,
+        future: _futureAnimeInfo.then((value) {
+          setState(() {
+            myListStatus = value.myListStatus ??
+                MyListStatus(status: '', score: 0, numEpisodesWatched: 0);
+            totalEpisodes = value.numEpisodes;
+          });
+          return value;
+        }),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var data = snapshot.data!;
@@ -320,15 +329,25 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showModalBottomSheet(
+          showModalBottomSheet<void>(
             context: context,
             builder: (context) {
-              return const SizedBox(
+              return SizedBox(
                 height: 400,
-                child: StatusUpdateModal(),
+                child: StatusUpdateModal(
+                  animeId: widget.animeId,
+                  myListStatus: myListStatus,
+                  totalEpisodes: totalEpisodes,
+                ),
               );
             },
-          );
+          ).whenComplete(() {
+            // reload animeinfo after update (when closing bottomSheet)
+            setState(() {
+              _futureAnimeInfo =
+                  MyAnimelistApi().getAnimeInfo(animeId: widget.animeId);
+            });
+          });
         },
         child: const Icon(Icons.add),
       ),

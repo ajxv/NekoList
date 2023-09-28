@@ -1,13 +1,108 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:neko_list/models/anime_info_model.dart';
+import 'package:neko_list/services/mal_services.dart';
 
 class StatusUpdateModal extends StatefulWidget {
-  const StatusUpdateModal({super.key});
+  final MyListStatus myListStatus;
+  final int animeId;
+  final int totalEpisodes;
+
+  const StatusUpdateModal({
+    super.key,
+    required this.animeId,
+    required this.myListStatus,
+    required this.totalEpisodes,
+  });
 
   @override
   State<StatefulWidget> createState() => _StatusUpdateModalState();
 }
 
 class _StatusUpdateModalState extends State<StatusUpdateModal> {
+  String _selectedStatus = 'plan-to-watch';
+  int _episodesWatched = 0;
+  int _selectedScore = 0;
+
+  void _manageStatusChange(String status) {
+    setState(() {
+      _selectedStatus = status;
+    });
+  }
+
+  void _manageEpisodesChange(int eps) {
+    setState(() {
+      _episodesWatched = eps;
+    });
+  }
+
+  void _manageScoreChange(int score) {
+    setState(() {
+      _selectedScore = score;
+    });
+  }
+
+  void onUpdate() {
+    if (_selectedStatus == '') {
+      _selectedStatus = 'plan_to_watch';
+    }
+
+    MyAnimelistApi()
+        .updateListAnime(
+      animeId: widget.animeId,
+      status: _selectedStatus,
+      epsWatched: _episodesWatched,
+      score: _selectedScore,
+    )
+        .then((value) {
+      Fluttertoast.showToast(msg: "Updated");
+      Navigator.of(context).pop();
+    });
+  }
+
+  onDelete() {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text(
+              'Remove Anime',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+            ),
+            content:
+                const Text('Do you want to remove this anime from your list ?'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel')),
+              TextButton(
+                  onPressed: () {
+                    MyAnimelistApi()
+                        .removeListAnime(animeId: widget.animeId)
+                        .then((value) {
+                      Fluttertoast.showToast(msg: "Removed from List");
+                      Navigator.of(context)
+                        ..pop()
+                        ..pop();
+                    });
+                  },
+                  child: const Text('Delete'))
+            ],
+          );
+        });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // load list status
+    _selectedStatus = widget.myListStatus.status;
+    _episodesWatched = widget.myListStatus.numEpisodesWatched;
+    _selectedScore = widget.myListStatus.score;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -19,23 +114,35 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
             children: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text("cancel"),
+                child: const Text("Close"),
               ),
               TextButton(
-                onPressed: () {},
-                child: const Text("apply"),
+                onPressed: onUpdate,
+                child: _selectedStatus == ''
+                    ? const Text("Add")
+                    : const Text("Update"),
               ),
             ],
           ),
         ),
-        const SetListStatus(),
+        SetListStatus(
+          status: _selectedStatus,
+          notifyParent: _manageStatusChange,
+        ),
         const SizedBox(height: 20), // add space between widgets
-        const EpisodeCounter(totalEpisodes: 12),
+        EpisodeCounter(
+          totalEpisodes: widget.totalEpisodes,
+          epsWatched: _episodesWatched,
+          notifyParent: _manageEpisodesChange,
+        ),
         const SizedBox(height: 20), // add space between widgets
-        const ScoreSlider(initialScore: 0),
+        ScoreSlider(
+          initialScore: _selectedScore,
+          notifyParent: _manageScoreChange,
+        ),
         const SizedBox(height: 20), // add space between widgets
         TextButton(
-          onPressed: () {},
+          onPressed: onDelete,
           style: ButtonStyle(
               fixedSize: const MaterialStatePropertyAll(Size(200, 10)),
               backgroundColor: MaterialStatePropertyAll(Colors.red.shade300)),
@@ -43,21 +150,23 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
             'Delete',
             style: TextStyle(color: Colors.white),
           ),
-        )
+        ),
       ],
     );
   }
 }
 
-class SetListStatus extends StatefulWidget {
-  const SetListStatus({super.key});
+typedef ValueChanged<T> = void Function(T value);
 
-  @override
-  State<StatefulWidget> createState() => _SetListStatusState();
-}
+class SetListStatus extends StatelessWidget {
+  final String status;
+  final ValueChanged<String> notifyParent;
 
-class _SetListStatusState extends State<SetListStatus> {
-  String _selected = 'plan-to-watch';
+  const SetListStatus({
+    super.key,
+    required this.status,
+    required this.notifyParent,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -68,13 +177,11 @@ class _SetListStatusState extends State<SetListStatus> {
         children: [
           IconButton.outlined(
             onPressed: () {
-              setState(() {
-                _selected = "watching";
-              });
+              notifyParent('watching');
             },
             style: OutlinedButton.styleFrom(
-              backgroundColor: _selected == 'watching'
-                  ? Theme.of(context).highlightColor
+              backgroundColor: status == 'watching'
+                  ? Theme.of(context).primaryColorLight
                   : null,
             ),
             icon: const Icon(
@@ -83,13 +190,11 @@ class _SetListStatusState extends State<SetListStatus> {
           ),
           IconButton.outlined(
             onPressed: () {
-              setState(() {
-                _selected = "plan-to-watch";
-              });
+              notifyParent('plan_to_watch');
             },
             style: OutlinedButton.styleFrom(
-              backgroundColor: _selected == 'plan-to-watch'
-                  ? Theme.of(context).highlightColor
+              backgroundColor: status == 'plan_to_watch'
+                  ? Theme.of(context).primaryColorLight
                   : null,
             ),
             icon: const Icon(
@@ -98,13 +203,11 @@ class _SetListStatusState extends State<SetListStatus> {
           ),
           IconButton.outlined(
             onPressed: () {
-              setState(() {
-                _selected = "completed";
-              });
+              notifyParent('completed');
             },
             style: OutlinedButton.styleFrom(
-              backgroundColor: _selected == 'completed'
-                  ? Theme.of(context).highlightColor
+              backgroundColor: status == 'completed'
+                  ? Theme.of(context).primaryColorLight
                   : null,
             ),
             icon: const Icon(
@@ -113,13 +216,11 @@ class _SetListStatusState extends State<SetListStatus> {
           ),
           IconButton.outlined(
             onPressed: () {
-              setState(() {
-                _selected = "on-hold";
-              });
+              notifyParent('on_hold');
             },
             style: OutlinedButton.styleFrom(
-              backgroundColor: _selected == 'on-hold'
-                  ? Theme.of(context).highlightColor
+              backgroundColor: status == 'on_hold'
+                  ? Theme.of(context).primaryColorLight
                   : null,
             ),
             icon: const Icon(
@@ -128,13 +229,11 @@ class _SetListStatusState extends State<SetListStatus> {
           ),
           IconButton.outlined(
             onPressed: () {
-              setState(() {
-                _selected = "dropped";
-              });
+              notifyParent('dropped');
             },
             style: OutlinedButton.styleFrom(
-              backgroundColor: _selected == 'dropped'
-                  ? Theme.of(context).highlightColor
+              backgroundColor: status == 'dropped'
+                  ? Theme.of(context).primaryColorLight
                   : null,
             ),
             icon: const Icon(
@@ -149,8 +248,15 @@ class _SetListStatusState extends State<SetListStatus> {
 
 class EpisodeCounter extends StatefulWidget {
   final int totalEpisodes;
+  final int epsWatched;
+  final ValueChanged<int> notifyParent;
 
-  const EpisodeCounter({super.key, required this.totalEpisodes});
+  const EpisodeCounter({
+    super.key,
+    required this.totalEpisodes,
+    required this.epsWatched,
+    required this.notifyParent,
+  });
 
   @override
   State<StatefulWidget> createState() => _EpisodeCounterState();
@@ -166,6 +272,7 @@ class _EpisodeCounterState extends State<EpisodeCounter> {
       if (_currentValue < widget.totalEpisodes) {
         _currentValue++;
       }
+      widget.notifyParent(_currentValue);
       _controller.text = _currentValue.toString();
     });
   }
@@ -176,6 +283,7 @@ class _EpisodeCounterState extends State<EpisodeCounter> {
       if (_currentValue > 0) {
         _currentValue--;
       }
+      widget.notifyParent(_currentValue);
       _controller.text = _currentValue.toString();
     });
   }
@@ -183,6 +291,7 @@ class _EpisodeCounterState extends State<EpisodeCounter> {
   @override
   void initState() {
     super.initState();
+    _currentValue = widget.epsWatched;
     _controller.text = _currentValue.toString();
   }
 
@@ -221,6 +330,7 @@ class _EpisodeCounterState extends State<EpisodeCounter> {
                 setState(() {
                   _currentValue = parsedValue;
                 });
+                widget.notifyParent(_currentValue);
               } else {
                 _controller.text = _currentValue.toString();
                 FocusScope.of(context).unfocus();
@@ -234,23 +344,15 @@ class _EpisodeCounterState extends State<EpisodeCounter> {
   }
 }
 
-class ScoreSlider extends StatefulWidget {
+class ScoreSlider extends StatelessWidget {
   final int initialScore;
+  final ValueChanged<int> notifyParent;
 
-  const ScoreSlider({super.key, required this.initialScore});
-
-  @override
-  State<StatefulWidget> createState() => _ScoreState();
-}
-
-class _ScoreState extends State<ScoreSlider> {
-  int _currentValue = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentValue = widget.initialScore;
-  }
+  const ScoreSlider({
+    super.key,
+    required this.initialScore,
+    required this.notifyParent,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -265,13 +367,13 @@ class _ScoreState extends State<ScoreSlider> {
           ),
         ),
         Slider(
-          value: _currentValue.toDouble(),
-          onChanged: (value) => setState(() {
-            _currentValue = value.toInt();
-          }),
+          value: initialScore.toDouble(),
+          onChanged: (value) {
+            return notifyParent(value.toInt());
+          },
           max: 10,
           divisions: 10,
-          label: _currentValue.round().toString(),
+          label: initialScore.round().toString(),
         )
       ],
     );

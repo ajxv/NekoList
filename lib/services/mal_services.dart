@@ -147,4 +147,78 @@ class MyAnimelistApi {
     //   return Future.error(e.toString());
     // }
   }
+
+  Future<bool> updateListAnime({
+    required int animeId,
+    required String status,
+    required int epsWatched,
+    required int score,
+  }) async {
+    var accessToken = await _secureStorage.getAccessToken();
+
+    Uri url = Uri.parse("$baseUrl/anime/$animeId/my_list_status");
+    var data = {
+      'status': status,
+      'score': score.toString(),
+      'num_watched_episodes': epsWatched.toString(),
+    };
+
+    // try {
+    var response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: data,
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 401) {
+      await auth_services.refreshAccessToken();
+      return updateListAnime(
+        animeId: animeId,
+        status: status,
+        epsWatched: epsWatched,
+        score: score,
+      );
+    } else {
+      return false;
+    }
+    // } on SocketException {
+    //   return Future.error("SocketException: Check your internet connection");
+    // } catch (e) {
+    //   return Future.error(e.toString());
+    // }
+  }
+
+  Future<bool> removeListAnime({required int animeId}) async {
+    var accessToken = await _secureStorage.getAccessToken();
+
+    Uri url = Uri.parse("$baseUrl/anime/$animeId/my_list_status");
+
+    // try {
+    var response = await http.delete(
+      url,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 401) {
+      await auth_services.refreshAccessToken();
+      return removeListAnime(animeId: animeId);
+    } else {
+      return false;
+    }
+    // } on SocketException {
+    //   return Future.error("SocketException: Check your internet connection");
+    // } catch (e) {
+    //   return Future.error(e.toString());
+    // }
+  }
 }
