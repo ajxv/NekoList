@@ -78,10 +78,12 @@ Future<String> getAccessToken() async {
   return data['access_token'];
 }
 
-Future<String> refreshAccessToken() async {
+Future<bool> refreshAccessToken() async {
   final secureStorage = SecureStorage();
+  // set auth state as false so that next time homepage prompts to login; if refresh fails.
+  secureStorage.setAuthStatus(false);
+
   var authCode = await secureStorage.getAuthCode();
-  // var pkce = await secureStorage.getPkce();
   var refreshToken = await secureStorage.getRefreshToken();
 
   var response = await http.post(
@@ -89,7 +91,6 @@ Future<String> refreshAccessToken() async {
     body: {
       'client_id': constants.clientId,
       'code': authCode,
-      // 'code_verifier': pkce,
       'grant_type': 'refresh_token',
       'redirect_uri': constants.redirectUrl,
       'refresh_token': refreshToken,
@@ -97,10 +98,15 @@ Future<String> refreshAccessToken() async {
     headers: {"Content-Type": 'application/x-www-form-urlencoded'},
   );
 
-  var data = jsonDecode(response.body);
+  if (response.statusCode == 200) {
+    var data = jsonDecode(response.body);
 
-  secureStorage.setAccessToken(data['access_token']);
-  // secureStorage.setTokenType(data['token_type']);
-  secureStorage.setRefreshToken(data['refresh_token']);
-  return data['access_token'];
+    secureStorage.setAuthStatus(true);
+    secureStorage.setAccessToken(data['access_token']);
+    secureStorage.setRefreshToken(data['refresh_token']);
+
+    return true;
+  }
+
+  return false;
 }
