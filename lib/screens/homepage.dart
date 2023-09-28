@@ -68,7 +68,8 @@ class _HomePageState extends State<HomePage> {
 
       // Bottom Navogation Bar Material 3 design
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.fromLTRB(10, 0, 10, 15),
+        margin: const EdgeInsets.fromLTRB(50, 0, 50, 30),
+        height: 65,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(30),
           child: NavigationBar(
