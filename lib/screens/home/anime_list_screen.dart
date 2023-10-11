@@ -41,6 +41,8 @@ class _AnimeListState extends State<AnimeList>
         TabBar(
           controller: _tabController,
           isScrollable: true,
+          // labelColor: Theme.of(context).colorScheme.secondary,
+          // unselectedLabelColor: Theme.of(context).colorScheme.primary,
           tabs: _tabTitles
               .map((title) => Tab(
                     text: title,

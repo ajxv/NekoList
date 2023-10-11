@@ -13,6 +13,7 @@ class ListEntryCard extends StatelessWidget {
   final String? relationType;
   // for recommendation
   final int? numRecommendations;
+  final int? labelMaxLines;
 
   const ListEntryCard({
     super.key,
@@ -24,6 +25,7 @@ class ListEntryCard extends StatelessWidget {
     this.rating,
     this.relationType,
     this.numRecommendations,
+    this.labelMaxLines,
   });
 
   @override
@@ -43,8 +45,8 @@ class ListEntryCard extends StatelessWidget {
       },
       child: ConstrainedBox(
         constraints: const BoxConstraints(
-          maxWidth: 124,
-          maxHeight: 210,
+          maxWidth: 110,
+          maxHeight: 230,
         ),
         child: Card(
           clipBehavior: Clip.antiAlias,
@@ -62,31 +64,38 @@ class ListEntryCard extends StatelessWidget {
                     ),
                     if (rating != null)
                       Positioned(
-                          top: 5,
-                          right: 5,
-                          child: Container(
-                            width: 25,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Colors.black54),
-                            child: Text(
-                              "$rating",
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ))
+                        top: 4,
+                        right: 4,
+                        child: Container(
+                          width: 20,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.black54),
+                          child: Text(
+                            "$rating",
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      )
                   ],
                 ),
               ),
-              Text(
-                animeTitle,
-                overflow: TextOverflow.ellipsis,
+              SizedBox(
+                child: Text(
+                  animeTitle,
+                  maxLines: labelMaxLines ?? 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
               ),
               if (relationType != null)
                 Text(
                   "(${relationType!})",
                   style: const TextStyle(
-                      fontSize: 12, overflow: TextOverflow.ellipsis),
+                    fontSize: 12,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               if (numRecommendations != null)
                 Wrap(
@@ -139,12 +148,13 @@ class ListEntryCardPlaceholder extends StatelessWidget {
               Container(
                 height: 150,
                 width: 115,
-                color: Colors.grey.shade400,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               Expanded(
-                  child: Container(
-                color: Colors.grey.shade600,
-              ))
+                child: Container(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              )
             ],
           ),
         ),

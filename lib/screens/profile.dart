@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:neko_list/models/user_model.dart';
 import 'package:neko_list/services/mal_services.dart';
+import 'package:neko_list/theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -61,6 +63,14 @@ class _ProfileState extends State<Profile> {
                     indent: 30,
                     endIndent: 30,
                   ),
+                  IconButton(
+                      onPressed: () {
+                        Provider.of<ThemeProvider>(context, listen: false)
+                            .toggleTheme();
+                      },
+                      icon: const Icon(
+                        Icons.dark_mode,
+                      ))
                 ],
               );
             } else if (snapshot.hasError) {

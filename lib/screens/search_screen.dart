@@ -41,8 +41,10 @@ class NekoSearchDelgate extends SearchDelegate {
             children: [
               ActionChip(
                 avatar: _contentType != "anime"
-                    ? const Icon(Icons.movie)
-                    : const Icon(Icons.check_rounded),
+                    ? Icon(Icons.movie,
+                        color: Theme.of(context).colorScheme.onPrimary)
+                    : Icon(Icons.check_rounded,
+                        color: Theme.of(context).colorScheme.onPrimary),
                 label: const Text("Anime"),
                 labelStyle: const TextStyle(fontSize: 12),
                 onPressed: () {
@@ -56,8 +58,10 @@ class NekoSearchDelgate extends SearchDelegate {
               ),
               ActionChip(
                 avatar: _contentType != "manga"
-                    ? const Icon(Icons.book)
-                    : const Icon(Icons.check_rounded),
+                    ? Icon(Icons.book,
+                        color: Theme.of(context).colorScheme.onPrimary)
+                    : Icon(Icons.check_rounded,
+                        color: Theme.of(context).colorScheme.onPrimary),
                 label: const Text("Manga"),
                 labelStyle: const TextStyle(fontSize: 12),
                 onPressed: () {

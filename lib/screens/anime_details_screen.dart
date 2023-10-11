@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neko_list/services/mal_services.dart';
 import 'package:neko_list/widgets/list_entry_card_widget.dart';
 import 'package:neko_list/widgets/status_update_widget.dart';
@@ -40,6 +41,7 @@ class AnimeDetailPage extends StatefulWidget {
 class _AnimeDetailPageState extends State<AnimeDetailPage> {
   late Future<AnimeInfo> _futureAnimeInfo;
   late MyListStatus myListStatus;
+  var listStatusLoaded = false; // show floatingActionButton only if true
   late int totalEpisodes;
 
   @override
@@ -62,6 +64,7 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
           setState(() {
             myListStatus = value.myListStatus ??
                 MyListStatus(status: '', score: 0, numEpisodesWatched: 0);
+            listStatusLoaded = true;
             totalEpisodes = value.numEpisodes;
           });
           return value;
@@ -203,11 +206,11 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       ],
                     ),
                   ),
-                  Divider(
-                    color: Colors.grey.shade200,
-                    height: 25,
-                    thickness: 1,
-                  ),
+                  // Divider(
+                  //   color: Theme.of(context).colorScheme.primary,
+                  //   height: 25,
+                  //   thickness: 1,
+                  // ),
                   const SizedBox(
                     height: 15,
                   ),
@@ -217,17 +220,22 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       padding: const EdgeInsets.all(15),
                       child: Table(
                         children: [
-                          const TableRow(children: [
-                            Text(
-                              "Opening Themes",
-                              style: headingTextStyle,
-                            )
-                          ]),
+                          const TableRow(
+                            children: [
+                              Text(
+                                "Opening Themes",
+                                style: headingTextStyle,
+                                textAlign: TextAlign.center,
+                              )
+                            ],
+                          ),
                           rowSpacer1,
                           ...data.openingThemes!.map(
-                            (op) => TableRow(children: [
-                              Text(op['text']),
-                            ]),
+                            (op) => TableRow(
+                              children: [
+                                Text("• ${op['text']}"),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -242,12 +250,13 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                             Text(
                               "Ending Themes",
                               style: headingTextStyle,
+                              textAlign: TextAlign.center,
                             )
                           ]),
                           rowSpacer1,
                           ...data.endingThemes!.map(
                             (ed) => TableRow(children: [
-                              Text(ed['text']),
+                              Text("• ${ed['text']}"),
                             ]),
                           ),
                           rowSpacer1,
@@ -255,11 +264,11 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       ),
                     ),
 
-                  Divider(
-                    color: Colors.grey.shade200,
-                    height: 25,
-                    thickness: 1,
-                  ),
+                  // Divider(
+                  //   color: Theme.of(context).colorScheme.primary,
+                  //   height: 25,
+                  //   thickness: 1,
+                  // ),
 
                   // related anime
                   if (data.relatedAnime.isNotEmpty)
@@ -327,30 +336,55 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet<void>(
-            context: context,
-            builder: (context) {
-              return SizedBox(
-                height: 400,
-                child: StatusUpdateModal(
-                  animeId: widget.animeId,
-                  myListStatus: myListStatus,
-                  totalEpisodes: totalEpisodes,
-                ),
-              );
-            },
-          ).whenComplete(() {
-            // reload animeinfo after update (when closing bottomSheet)
-            setState(() {
-              _futureAnimeInfo =
-                  MyAnimelistApi().getAnimeInfo(animeId: widget.animeId);
-            });
-          });
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: listStatusLoaded
+          ? FloatingActionButton(
+              // add anime to list if not already on list else open edit modal
+              onPressed: myListStatus.status != ''
+                  // condition: anime already on list
+                  ? () {
+                      showModalBottomSheet<void>(
+                        context: context,
+                        builder: (context) {
+                          return SizedBox(
+                            height: 400,
+                            child: StatusUpdateModal(
+                              animeId: widget.animeId,
+                              myListStatus: myListStatus,
+                              totalEpisodes: totalEpisodes,
+                            ),
+                          );
+                        },
+                      ).whenComplete(() {
+                        // reload animeinfo after update (when closing bottomSheet)
+                        setState(() {
+                          _futureAnimeInfo = MyAnimelistApi()
+                              .getAnimeInfo(animeId: widget.animeId);
+                        });
+                      });
+                    }
+                  // condition: anime not in list
+                  : () {
+                      MyAnimelistApi()
+                          .updateListAnime(
+                        animeId: widget.animeId,
+                        status: 'plan_to_watch',
+                        epsWatched: 0,
+                        score: 0,
+                      )
+                          .then((value) {
+                        Fluttertoast.showToast(msg: "Added to List");
+                        // reload animeinfo after update
+                        setState(() {
+                          _futureAnimeInfo = MyAnimelistApi()
+                              .getAnimeInfo(animeId: widget.animeId);
+                        });
+                      });
+                    },
+              child: myListStatus.status == ''
+                  ? const Icon(Icons.add)
+                  : const Icon(Icons.mode_edit_outline_rounded),
+            )
+          : const SizedBox(),
     );
   }
 }
@@ -466,7 +500,7 @@ class TagsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: genres.length > 4 ? Alignment.centerLeft : Alignment.center,
       child: SingleChildScrollView(
         padding: const EdgeInsets.only(right: 10),
         scrollDirection: Axis.horizontal,

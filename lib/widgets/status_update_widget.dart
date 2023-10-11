@@ -114,13 +114,28 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
             children: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text("Close"),
+                child: Text(
+                  "Close",
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                  ),
+                ),
               ),
               TextButton(
                 onPressed: onUpdate,
                 child: _selectedStatus == ''
-                    ? const Text("Add")
-                    : const Text("Update"),
+                    ? Text(
+                        "Add",
+                        style: TextStyle(
+                          color: Colors.lightGreen.shade200,
+                        ),
+                      )
+                    : Text(
+                        "Update",
+                        style: TextStyle(
+                          color: Colors.lightGreen.shade200,
+                        ),
+                      ),
               ),
             ],
           ),
@@ -144,8 +159,9 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
         TextButton(
           onPressed: onDelete,
           style: ButtonStyle(
-              fixedSize: const MaterialStatePropertyAll(Size(200, 10)),
-              backgroundColor: MaterialStatePropertyAll(Colors.red.shade300)),
+            fixedSize: const MaterialStatePropertyAll(Size(200, 10)),
+            backgroundColor: MaterialStatePropertyAll(Colors.red.shade300),
+          ),
           child: const Text(
             'Delete',
             style: TextStyle(color: Colors.white),
@@ -170,6 +186,17 @@ class SetListStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // outlined button style
+    ButtonStyle getOutlinedButtonStyle(buttonLabel) {
+      return OutlinedButton.styleFrom(
+        backgroundColor:
+            status == buttonLabel ? Theme.of(context).highlightColor : null,
+        side: BorderSide(
+          color: Colors.grey.shade900,
+        ),
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.fromLTRB(5, 8, 5, 8),
       child: Row(
@@ -179,11 +206,7 @@ class SetListStatus extends StatelessWidget {
             onPressed: () {
               notifyParent('watching');
             },
-            style: OutlinedButton.styleFrom(
-              backgroundColor: status == 'watching'
-                  ? Theme.of(context).primaryColorLight
-                  : null,
-            ),
+            style: getOutlinedButtonStyle('watching'),
             icon: const Icon(
               Icons.play_circle_outline_rounded,
             ),
@@ -192,11 +215,7 @@ class SetListStatus extends StatelessWidget {
             onPressed: () {
               notifyParent('plan_to_watch');
             },
-            style: OutlinedButton.styleFrom(
-              backgroundColor: status == 'plan_to_watch'
-                  ? Theme.of(context).primaryColorLight
-                  : null,
-            ),
+            style: getOutlinedButtonStyle('plan_to_watch'),
             icon: const Icon(
               Icons.timer_outlined,
             ),
@@ -205,11 +224,7 @@ class SetListStatus extends StatelessWidget {
             onPressed: () {
               notifyParent('completed');
             },
-            style: OutlinedButton.styleFrom(
-              backgroundColor: status == 'completed'
-                  ? Theme.of(context).primaryColorLight
-                  : null,
-            ),
+            style: getOutlinedButtonStyle('completed'),
             icon: const Icon(
               Icons.check_circle_outline_rounded,
             ),
@@ -218,11 +233,7 @@ class SetListStatus extends StatelessWidget {
             onPressed: () {
               notifyParent('on_hold');
             },
-            style: OutlinedButton.styleFrom(
-              backgroundColor: status == 'on_hold'
-                  ? Theme.of(context).primaryColorLight
-                  : null,
-            ),
+            style: getOutlinedButtonStyle('on_hold'),
             icon: const Icon(
               Icons.pause_circle_outline_rounded,
             ),
@@ -231,11 +242,7 @@ class SetListStatus extends StatelessWidget {
             onPressed: () {
               notifyParent('dropped');
             },
-            style: OutlinedButton.styleFrom(
-              backgroundColor: status == 'dropped'
-                  ? Theme.of(context).primaryColorLight
-                  : null,
-            ),
+            style: getOutlinedButtonStyle('dropped'),
             icon: const Icon(
               Icons.delete_outline_rounded,
             ),

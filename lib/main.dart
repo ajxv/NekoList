@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:neko_list/theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 import 'screens/auth/login.dart';
 import 'helpers/secure_storage.dart';
 import 'screens/homepage.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => ThemeProvider(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -30,10 +35,12 @@ class _MyAppState extends State<MyApp> {
         builder: (context, snapshot) {
           return MaterialApp(
             title: 'NekoList',
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-              useMaterial3: true,
-            ),
+            theme: Provider.of<ThemeProvider>(context).themeData,
+            // darkTheme: darkMode,
+            // ThemeData(
+            //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
+            //   useMaterial3: true,
+            // ),
             home: _isAuth ? const HomePage() : const LoginPage(),
           );
         });

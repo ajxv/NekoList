@@ -42,6 +42,7 @@ class _AnimeListGridViewState extends State<AnimeListGridView>
                 numEpsWatched: data.listStatus.numEpisodesWatched!,
                 numEpisodes: data.node.numEpisodes,
                 rating: data.listStatus.score,
+                labelMaxLines: 1,
               ))
           .toList();
 
