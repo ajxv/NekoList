@@ -55,7 +55,7 @@ class MyAnimelistApi {
     status = status != 'all' ? "status=$status&" : "";
 
     Uri url = Uri.parse(
-        "$baseUrl/users/@me/animelist?fields=list_status,num_episodes&${status}sort=$sort&limit=$limit&offset=$offset");
+        "$baseUrl/users/@me/animelist?nsfw=true&fields=list_status,num_episodes&${status}sort=$sort&limit=$limit&offset=$offset");
 
     // try {
     var response = await http.get(
@@ -148,6 +148,7 @@ class MyAnimelistApi {
     // }
   }
 
+  // update anime in userAnimeList
   Future<bool> updateListAnime({
     required int animeId,
     required String status,
@@ -193,6 +194,7 @@ class MyAnimelistApi {
     // }
   }
 
+  // remove Anime from userAnimeList
   Future<bool> removeListAnime({required int animeId}) async {
     var accessToken = await _secureStorage.getAccessToken();
 
