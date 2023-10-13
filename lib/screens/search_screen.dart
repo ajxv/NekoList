@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../services/mal_services.dart';
 import '../widgets/list_entry_card_widget.dart';
@@ -103,6 +104,16 @@ class _SearchGridViewState extends State<SearchGridView>
     getResults(widget.query, widget.contentType, _offset);
   }
 
+  // refresh function
+  Future _refresh() async {
+    setState(() {
+      _isLoading = false;
+      _hasMore = true;
+      _offset = 0;
+      _cardList.clear();
+    });
+  }
+
   void getResults(query, contentType, int offset, {int limit = 100}) {
     if (_isLoading) return;
     _isLoading = true;
@@ -132,15 +143,12 @@ class _SearchGridViewState extends State<SearchGridView>
 
         if (cardList.length < 10) _hasMore = false;
       });
-    });
-  }
-
-  Future _refresh() async {
-    setState(() {
-      _isLoading = false;
-      _hasMore = true;
-      _offset = 0;
-      _cardList.clear();
+    }).catchError((error) {
+      Fluttertoast.showToast(
+          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+      Future.delayed(const Duration(seconds: 10)).then((val) {
+        _refresh();
+      });
     });
   }
 

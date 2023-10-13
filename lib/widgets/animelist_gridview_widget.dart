@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '/services/mal_services.dart';
 import 'list_entry_card_widget.dart';
@@ -23,6 +24,16 @@ class _AnimeListGridViewState extends State<AnimeListGridView>
     super.initState();
     // load initial 100 entries
     getAnimeCards(widget.status, _offset);
+  }
+
+  // refresh function
+  Future _refresh() async {
+    setState(() {
+      _isLoading = false;
+      _hasMore = true;
+      _offset = 0;
+      _cardList.clear();
+    });
   }
 
   void getAnimeCards(status, int offset, {int limit = 100}) {
@@ -53,15 +64,12 @@ class _AnimeListGridViewState extends State<AnimeListGridView>
 
         if (cardList.length < 10) _hasMore = false;
       });
-    });
-  }
-
-  Future _refresh() async {
-    setState(() {
-      _isLoading = false;
-      _hasMore = true;
-      _offset = 0;
-      _cardList.clear();
+    }).catchError((error) {
+      Fluttertoast.showToast(
+          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+      Future.delayed(const Duration(seconds: 10)).then((val) {
+        _refresh();
+      });
     });
   }
 

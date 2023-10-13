@@ -52,8 +52,10 @@ class ListEntryCard extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
+              // anime poster
               ClipRRect(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(8), topRight: Radius.circular(8)),
                 child: Stack(
                   children: [
                     Image.network(

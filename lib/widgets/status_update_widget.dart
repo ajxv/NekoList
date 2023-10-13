@@ -57,6 +57,9 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
         .then((value) {
       Fluttertoast.showToast(msg: "Updated");
       Navigator.of(context).pop();
+    }).catchError((error) {
+      Fluttertoast.showToast(msg: "Update Failed: ${error.toString()}");
+      Navigator.of(context).pop();
     });
   }
 
@@ -86,6 +89,10 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
                       Navigator.of(context)
                         ..pop()
                         ..pop();
+                    }).catchError((error) {
+                      Fluttertoast.showToast(
+                          msg: "Update Failed: ${error.toString()}");
+                      Navigator.of(context).pop();
                     });
                   },
                   child: const Text('Delete'))

@@ -57,61 +57,62 @@ class MyAnimelistApi {
     Uri url = Uri.parse(
         "$baseUrl/users/@me/animelist?nsfw=true&fields=list_status,num_episodes&${status}sort=$sort&limit=$limit&offset=$offset");
 
-    // try {
-    var response = await http.get(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $accessToken',
-      },
-    );
+    try {
+      var response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
 
-    if (response.statusCode == 200) {
-      return UserAnimeList.fromJson(jsonDecode(response.body));
-    } else if (response.statusCode == 401) {
-      await auth_services.refreshAccessToken();
-      return getUserAnimeList(
-          status: status, sort: sort, limit: limit, offset: offset);
-    } else {
-      return Future.error(response.body);
+      if (response.statusCode == 200) {
+        return UserAnimeList.fromJson(jsonDecode(response.body));
+      } else if (response.statusCode == 401) {
+        await auth_services.refreshAccessToken();
+        return getUserAnimeList(
+            status: status, sort: sort, limit: limit, offset: offset);
+      } else {
+        return Future.error(response.body);
+      }
+    } on SocketException {
+      return Future.error("SocketException: Check your internet connection");
+    } catch (e) {
+      return Future.error(e.toString());
     }
-    // } on SocketException {
-    //   return Future.error("SocketException: Check your internet connection");
-    // } catch (e) {
-    //   return Future.error(e.toString());
-    // }
   }
 
+  // animeInfo
   Future<AnimeInfo> getAnimeInfo({required animeId}) async {
     var accessToken = await _secureStorage.getAccessToken();
     String fields =
         "id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,source,average_episode_duration,rating,pictures,related_anime,related_manga,recommendations,studios,statistics,opening_themes,ending_themes";
 
     Uri url = Uri.parse("$baseUrl/anime/$animeId?fields=$fields");
-    // try {
-    var response = await http.get(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $accessToken',
-      },
-    );
+    try {
+      var response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
 
-    if (response.statusCode == 200) {
-      return AnimeInfo.fromJson(jsonDecode(response.body));
-    } else if (response.statusCode == 401) {
-      await auth_services.refreshAccessToken();
-      return getAnimeInfo(animeId: animeId);
-    } else {
-      return Future.error("Failed to load UserAnimeList");
+      if (response.statusCode == 200) {
+        return AnimeInfo.fromJson(jsonDecode(response.body));
+      } else if (response.statusCode == 401) {
+        await auth_services.refreshAccessToken();
+        return getAnimeInfo(animeId: animeId);
+      } else {
+        return Future.error("Failed to load UserAnimeList");
+      }
+    } on SocketException {
+      return Future.error("SocketException: Check your internet connection");
+    } catch (e) {
+      return Future.error(e.toString());
     }
-    // } on SocketException {
-    //   return Future.error("SocketException: Check your internet connection");
-    // } catch (e) {
-    //   return Future.error(e.toString());
-    // }
   }
 
   // Search Anime/Manga
@@ -122,30 +123,33 @@ class MyAnimelistApi {
     Uri url =
         Uri.parse("$baseUrl/$contentType?q=$query&limit=$limit&offset=$offset");
 
-    // try {
-    var response = await http.get(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $accessToken',
-      },
-    );
+    try {
+      var response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
 
-    if (response.statusCode == 200) {
-      return SearchResult.fromJson(jsonDecode(response.body));
-    } else if (response.statusCode == 401) {
-      await auth_services.refreshAccessToken();
-      return search(
-          query: query, contentType: contentType, limit: limit, offset: offset);
-    } else {
-      return Future.error("Failed to load SearchResults");
+      if (response.statusCode == 200) {
+        return SearchResult.fromJson(jsonDecode(response.body));
+      } else if (response.statusCode == 401) {
+        await auth_services.refreshAccessToken();
+        return search(
+            query: query,
+            contentType: contentType,
+            limit: limit,
+            offset: offset);
+      } else {
+        return Future.error("Failed to load SearchResults");
+      }
+    } on SocketException {
+      return Future.error("SocketException: Check your internet connection");
+    } catch (e) {
+      return Future.error(e.toString());
     }
-    // } on SocketException {
-    //   return Future.error("SocketException: Check your internet connection");
-    // } catch (e) {
-    //   return Future.error(e.toString());
-    // }
   }
 
   // update anime in userAnimeList
@@ -164,34 +168,34 @@ class MyAnimelistApi {
       'num_watched_episodes': epsWatched.toString(),
     };
 
-    // try {
-    var response = await http.put(
-      url,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer $accessToken',
-      },
-      body: data,
-    );
-
-    if (response.statusCode == 200) {
-      return true;
-    } else if (response.statusCode == 401) {
-      await auth_services.refreshAccessToken();
-      return updateListAnime(
-        animeId: animeId,
-        status: status,
-        epsWatched: epsWatched,
-        score: score,
+    try {
+      var response = await http.put(
+        url,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Bearer $accessToken',
+        },
+        body: data,
       );
-    } else {
-      return false;
+
+      if (response.statusCode == 200) {
+        return true;
+      } else if (response.statusCode == 401) {
+        await auth_services.refreshAccessToken();
+        return updateListAnime(
+          animeId: animeId,
+          status: status,
+          epsWatched: epsWatched,
+          score: score,
+        );
+      } else {
+        return false;
+      }
+    } on SocketException {
+      return Future.error("SocketException: Check your internet connection");
+    } catch (e) {
+      return Future.error(e.toString());
     }
-    // } on SocketException {
-    //   return Future.error("SocketException: Check your internet connection");
-    // } catch (e) {
-    //   return Future.error(e.toString());
-    // }
   }
 
   // remove Anime from userAnimeList
@@ -200,27 +204,27 @@ class MyAnimelistApi {
 
     Uri url = Uri.parse("$baseUrl/anime/$animeId/my_list_status");
 
-    // try {
-    var response = await http.delete(
-      url,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer $accessToken',
-      },
-    );
+    try {
+      var response = await http.delete(
+        url,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
 
-    if (response.statusCode == 200) {
-      return true;
-    } else if (response.statusCode == 401) {
-      await auth_services.refreshAccessToken();
-      return removeListAnime(animeId: animeId);
-    } else {
-      return false;
+      if (response.statusCode == 200) {
+        return true;
+      } else if (response.statusCode == 401) {
+        await auth_services.refreshAccessToken();
+        return removeListAnime(animeId: animeId);
+      } else {
+        return false;
+      }
+    } on SocketException {
+      return Future.error("SocketException: Check your internet connection");
+    } catch (e) {
+      return Future.error(e.toString());
     }
-    // } on SocketException {
-    //   return Future.error("SocketException: Check your internet connection");
-    // } catch (e) {
-    //   return Future.error(e.toString());
-    // }
   }
 }
