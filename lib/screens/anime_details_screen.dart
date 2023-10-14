@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neko_list/services/mal_services.dart';
 import 'package:neko_list/widgets/list_entry_card_widget.dart';
-import 'package:neko_list/widgets/status_update_widget.dart';
+import 'package:neko_list/widgets/anime_status_update_widget.dart';
 
 import '../models/anime_info_model.dart';
 
