@@ -1,37 +1,31 @@
 // generated using https://app.quicktype.io
 
-class UserAnimeList {
-  final List<Data> data;
-  // final Paging paging;
+class UserMangaList {
+  List<Datum> data;
 
-  UserAnimeList({
+  UserMangaList({
     required this.data,
-    // required this.paging,
   });
 
-  factory UserAnimeList.fromJson(Map<String, dynamic> json) {
-    return UserAnimeList(
-      data: List<Data>.from(json["data"].map((x) => Data.fromJson(x))),
-      // paging: Paging.fromJson(json["paging"]),
-    );
-  }
+  factory UserMangaList.fromJson(Map<String, dynamic> json) => UserMangaList(
+        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
         "data": List<dynamic>.from(data.map((x) => x.toJson())),
-        // "paging": paging.toJson(),
       };
 }
 
-class Data {
-  final Node node;
-  final ListStatus listStatus;
+class Datum {
+  Node node;
+  ListStatus listStatus;
 
-  Data({
+  Datum({
     required this.node,
     required this.listStatus,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         node: Node.fromJson(json["node"]),
         listStatus: ListStatus.fromJson(json["list_status"]),
       );
@@ -43,48 +37,52 @@ class Data {
 }
 
 class ListStatus {
-  final String status;
-  final int score;
-  final bool isRewatching;
-  final DateTime updatedAt;
-  final int? numEpisodesWatched;
+  String status;
+  bool isRereading;
+  int numVolumesRead;
+  int numChaptersRead;
+  int score;
+  DateTime updatedAt;
 
   ListStatus({
     required this.status,
+    required this.isRereading,
+    required this.numVolumesRead,
+    required this.numChaptersRead,
     required this.score,
-    required this.isRewatching,
     required this.updatedAt,
-    this.numEpisodesWatched,
   });
 
   factory ListStatus.fromJson(Map<String, dynamic> json) => ListStatus(
         status: json["status"],
+        isRereading: json["is_rereading"],
+        numVolumesRead: json["num_volumes_read"],
+        numChaptersRead: json["num_chapters_read"],
         score: json["score"],
-        isRewatching: json["is_rewatching"],
         updatedAt: DateTime.parse(json["updated_at"]),
-        numEpisodesWatched: json["num_episodes_watched"],
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
+        "is_rereading": isRereading,
+        "num_volumes_read": numVolumesRead,
+        "num_chapters_read": numChaptersRead,
         "score": score,
-        "is_rewatching": isRewatching,
         "updated_at": updatedAt.toIso8601String(),
-        "num_episodes_watched": numEpisodesWatched,
       };
 }
 
 class Node {
-  final int id;
-  final String title;
-  final MainPicture mainPicture;
-  final int numEpisodes;
+  int id;
+  String title;
+  MainPicture mainPicture;
+  final int numChapters;
 
   Node({
     required this.id,
     required this.title,
     required this.mainPicture,
-    required this.numEpisodes,
+    required this.numChapters,
   });
 
   factory Node.fromJson(Map<String, dynamic> json) => Node(
@@ -95,20 +93,20 @@ class Node {
               ? json["main_picture"]
               : {'medium': '', 'large': ''},
         ),
-        numEpisodes: json['num_episodes'],
+        numChapters: json['num_chapters'],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
         "main_picture": mainPicture.toJson(),
-        "num_episodes": numEpisodes,
+        "num_chapters": numChapters,
       };
 }
 
 class MainPicture {
-  final String medium;
-  final String large;
+  String medium;
+  String large;
 
   MainPicture({
     required this.medium,
@@ -125,19 +123,3 @@ class MainPicture {
         "large": large,
       };
 }
-
-// class Paging {
-//   final String next;
-
-//   Paging({
-//     required this.next,
-//   });
-
-//   factory Paging.fromJson(Map<String, dynamic> json) => Paging(
-//         next: json["next"] != null ? json['next'] : "",
-//       );
-
-//   Map<String, dynamic> toJson() => {
-//         "next": next,
-//       };
-// }

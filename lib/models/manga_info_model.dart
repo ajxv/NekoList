@@ -1,39 +1,38 @@
 // generated using https://app.quicktype.io
 
-class AnimeInfo {
-  final int id;
-  final String title;
-  final Picture mainPicture;
-  final AlternativeTitles alternativeTitles;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final String synopsis;
-  final double mean;
-  final int rank;
-  final int popularity;
-  final int numListUsers;
-  final int numScoringUsers;
-  final String nsfw;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String mediaType;
-  final String status;
-  final List<Genre> genres;
-  final MyListStatus? myListStatus;
-  final int numEpisodes;
-  final StartSeason? startSeason;
-  final String? source;
-  final int averageEpisodeDuration;
-  final String? rating;
-  final List<Picture> pictures;
-  final List<RelatedAnime> relatedAnime;
-  final List<Recommendation> recommendations;
-  final List<Genre> studios;
-  final Statistics statistics;
-  final List? openingThemes;
-  final List? endingThemes;
+import 'anime_info_model.dart';
 
-  AnimeInfo({
+class MangaInfo {
+  int id;
+  String title;
+  Picture mainPicture;
+  AlternativeTitles alternativeTitles;
+  DateTime? startDate;
+  DateTime? endDate;
+  String synopsis;
+  double mean;
+  int rank;
+  int popularity;
+  int numListUsers;
+  int numScoringUsers;
+  String nsfw;
+  DateTime createdAt;
+  DateTime updatedAt;
+  String mediaType;
+  String status;
+  List<Genre> genres;
+  MyListStatus? myListStatus;
+  int? numVolumes;
+  int numChapters;
+  List<Author> authors;
+  List<Picture> pictures;
+  String background;
+  List<RelatedAnime> relatedAnime;
+  List<RelatedManga> relatedManga;
+  List<Recommendation> recommendations;
+  // List<Serialization> serialization;
+
+  MangaInfo({
     required this.id,
     required this.title,
     required this.mainPicture,
@@ -52,22 +51,19 @@ class AnimeInfo {
     required this.mediaType,
     required this.status,
     required this.genres,
-    this.myListStatus,
-    required this.numEpisodes,
-    this.startSeason,
-    this.source,
-    required this.averageEpisodeDuration,
-    this.rating,
+    required this.myListStatus,
+    required this.numVolumes,
+    required this.numChapters,
+    required this.authors,
     required this.pictures,
+    required this.background,
     required this.relatedAnime,
+    required this.relatedManga,
     required this.recommendations,
-    required this.studios,
-    required this.statistics,
-    this.openingThemes,
-    this.endingThemes,
+    // required this.serialization,
   });
 
-  factory AnimeInfo.fromJson(Map<String, dynamic> json) => AnimeInfo(
+  factory MangaInfo.fromJson(Map<String, dynamic> json) => MangaInfo(
         id: json["id"],
         title: json["title"],
         mainPicture: Picture.fromJson(json["main_picture"]),
@@ -79,8 +75,8 @@ class AnimeInfo {
         endDate:
             json['end_date'] != null ? DateTime.parse(json["end_date"]) : null,
         synopsis: json["synopsis"],
-        mean: json['mean'] != null ? json["mean"]?.toDouble() : 0,
-        rank: json['rank'] != null ? json["rank"] : 0,
+        mean: json["mean"]?.toDouble(),
+        rank: json["rank"],
         popularity: json["popularity"],
         numListUsers: json["num_list_users"],
         numScoringUsers: json["num_scoring_users"],
@@ -93,24 +89,21 @@ class AnimeInfo {
         myListStatus: json['my_list_status'] != null
             ? MyListStatus.fromJson(json["my_list_status"])
             : null,
-        numEpisodes: json["num_episodes"],
-        startSeason: json["start_season"] != null
-            ? StartSeason.fromJson(json["start_season"])
-            : null,
-        source: json["source"],
-        averageEpisodeDuration: json["average_episode_duration"],
-        rating: json["rating"],
+        numVolumes: json["num_volumes"],
+        numChapters: json["num_chapters"],
+        authors:
+            List<Author>.from(json["authors"].map((x) => Author.fromJson(x))),
         pictures: List<Picture>.from(
             json["pictures"].map((x) => Picture.fromJson(x))),
+        background: json["background"],
         relatedAnime: List<RelatedAnime>.from(
             json["related_anime"].map((x) => RelatedAnime.fromJson(x))),
+        relatedManga: List<RelatedManga>.from(
+            json["related_manga"].map((x) => RelatedManga.fromJson(x))),
         recommendations: List<Recommendation>.from(
             json["recommendations"].map((x) => Recommendation.fromJson(x))),
-        studios:
-            List<Genre>.from(json["studios"].map((x) => Genre.fromJson(x))),
-        statistics: Statistics.fromJson(json["statistics"]),
-        openingThemes: json['opening_themes'],
-        endingThemes: json['ending_themes'],
+        // serialization: List<Serialization>.from(
+        // json["serialization"].map((x) => Serialization.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -135,27 +128,26 @@ class AnimeInfo {
         "status": status,
         "genres": List<dynamic>.from(genres.map((x) => x.toJson())),
         "my_list_status": myListStatus!.toJson(),
-        "num_episodes": numEpisodes,
-        "start_season": startSeason!.toJson(),
-        "source": source,
-        "average_episode_duration": averageEpisodeDuration,
-        "rating": rating,
+        "num_volumes": numVolumes,
+        "num_chapters": numChapters,
+        "authors": List<dynamic>.from(authors.map((x) => x.toJson())),
         "pictures": List<dynamic>.from(pictures.map((x) => x.toJson())),
+        "background": background,
         "related_anime":
             List<dynamic>.from(relatedAnime.map((x) => x.toJson())),
+        "related_manga":
+            List<dynamic>.from(relatedManga.map((x) => x.toJson())),
         "recommendations":
             List<dynamic>.from(recommendations.map((x) => x.toJson())),
-        "studios": List<dynamic>.from(studios.map((x) => x.toJson())),
-        "statistics": statistics.toJson(),
-        'opening_theme': openingThemes,
-        'ending_theme': endingThemes,
+        // "serialization":
+        //     List<dynamic>.from(serialization.map((x) => x.toJson())),
       };
 }
 
 class AlternativeTitles {
-  final List<String> synonyms;
-  final String en;
-  final String ja;
+  List<String> synonyms;
+  String en;
+  String ja;
 
   AlternativeTitles({
     required this.synonyms,
@@ -177,9 +169,53 @@ class AlternativeTitles {
       };
 }
 
+class Author {
+  AuthorNode node;
+  String role;
+
+  Author({
+    required this.node,
+    required this.role,
+  });
+
+  factory Author.fromJson(Map<String, dynamic> json) => Author(
+        node: AuthorNode.fromJson(json["node"]),
+        role: json["role"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "node": node.toJson(),
+        "role": role,
+      };
+}
+
+class AuthorNode {
+  int id;
+  String firstName;
+  String lastName;
+
+  AuthorNode({
+    required this.id,
+    required this.firstName,
+    required this.lastName,
+  });
+
+  factory AuthorNode.fromJson(Map<String, dynamic> json) => AuthorNode(
+        id: json["id"],
+        firstName: json["first_name"],
+        lastName: json["last_name"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "first_name": firstName,
+        "last_name": lastName,
+      };
+}
+
 class Genre {
-  final int id;
-  final String name;
+  int id;
+  String name;
 
   Genre({
     required this.id,
@@ -198,8 +234,8 @@ class Genre {
 }
 
 class Picture {
-  final String medium;
-  final String large;
+  String medium;
+  String large;
 
   Picture({
     required this.medium,
@@ -218,40 +254,44 @@ class Picture {
 }
 
 class MyListStatus {
-  final String status;
-  final int score;
-  final int numEpisodesWatched;
-  final bool? isRewatching;
-  final DateTime? updatedAt;
+  String status;
+  bool? isRereading;
+  int? numVolumesRead;
+  int numChaptersRead;
+  int score;
+  DateTime? updatedAt;
 
   MyListStatus({
     required this.status,
+    this.isRereading,
+    this.numVolumesRead,
+    required this.numChaptersRead,
     required this.score,
-    required this.numEpisodesWatched,
-    this.isRewatching,
     this.updatedAt,
   });
 
   factory MyListStatus.fromJson(Map<String, dynamic> json) => MyListStatus(
         status: json["status"],
+        isRereading: json["is_rereading"],
+        numVolumesRead: json["num_volumes_read"],
+        numChaptersRead: json["num_chapters_read"],
         score: json["score"],
-        numEpisodesWatched: json["num_episodes_watched"],
-        isRewatching: json["is_rewatching"],
         updatedAt: DateTime.parse(json["updated_at"]),
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
+        "is_rereading": isRereading,
+        "num_volumes_read": numVolumesRead,
+        "num_chapters_read": numChaptersRead,
         "score": score,
-        "num_episodes_watched": numEpisodesWatched,
-        "is_rewatching": isRewatching,
         "updated_at": updatedAt!.toIso8601String(),
       };
 }
 
 class Recommendation {
-  final AnimeNode node;
-  final int numRecommendations;
+  RecommendationNode node;
+  int numRecommendations;
 
   Recommendation({
     required this.node,
@@ -259,7 +299,7 @@ class Recommendation {
   });
 
   factory Recommendation.fromJson(Map<String, dynamic> json) => Recommendation(
-        node: AnimeNode.fromJson(json["node"]),
+        node: RecommendationNode.fromJson(json["node"]),
         numRecommendations: json["num_recommendations"],
       );
 
@@ -269,21 +309,26 @@ class Recommendation {
       };
 }
 
-class AnimeNode {
-  final int id;
-  final String title;
-  final Picture mainPicture;
+class RecommendationNode {
+  int id;
+  String title;
+  Picture mainPicture;
 
-  AnimeNode({
+  RecommendationNode({
     required this.id,
     required this.title,
     required this.mainPicture,
   });
 
-  factory AnimeNode.fromJson(Map<String, dynamic> json) => AnimeNode(
+  factory RecommendationNode.fromJson(Map<String, dynamic> json) =>
+      RecommendationNode(
         id: json["id"],
         title: json["title"],
-        mainPicture: Picture.fromJson(json["main_picture"]),
+        mainPicture: Picture.fromJson(
+          json.containsKey('main_picture')
+              ? json["main_picture"]
+              : {'medium': '', 'large': ''},
+        ),
       );
 
   Map<String, dynamic> toJson() => {
@@ -293,19 +338,19 @@ class AnimeNode {
       };
 }
 
-class RelatedAnime {
-  final AnimeNode node;
-  final String relationType;
-  final String relationTypeFormatted;
+class RelatedManga {
+  RecommendationNode node;
+  String relationType;
+  String relationTypeFormatted;
 
-  RelatedAnime({
+  RelatedManga({
     required this.node,
     required this.relationType,
     required this.relationTypeFormatted,
   });
 
-  factory RelatedAnime.fromJson(Map<String, dynamic> json) => RelatedAnime(
-        node: AnimeNode.fromJson(json["node"]),
+  factory RelatedManga.fromJson(Map<String, dynamic> json) => RelatedManga(
+        node: RecommendationNode.fromJson(json["node"]),
         relationType: json["relation_type"],
         relationTypeFormatted: json["relation_type_formatted"],
       );
@@ -317,74 +362,19 @@ class RelatedAnime {
       };
 }
 
-class StartSeason {
-  final int year;
-  final String season;
 
-  StartSeason({
-    required this.year,
-    required this.season,
-  });
+// class Serialization {
+//   Genre node;
 
-  factory StartSeason.fromJson(Map<String, dynamic> json) => StartSeason(
-        year: json["year"],
-        season: json["season"],
-      );
+//   Serialization({
+//     required this.node,
+//   });
 
-  Map<String, dynamic> toJson() => {
-        "year": year,
-        "season": season,
-      };
-}
+//   factory Serialization.fromJson(Map<String, dynamic> json) => Serialization(
+//         node: Genre.fromJson(json["node"]),
+//       );
 
-class Statistics {
-  final Status status;
-  final int numListUsers;
-
-  Statistics({
-    required this.status,
-    required this.numListUsers,
-  });
-
-  factory Statistics.fromJson(Map<String, dynamic> json) => Statistics(
-        status: Status?.fromJson(json["status"]),
-        numListUsers: json["num_list_users"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "status": status.toJson(),
-        "num_list_users": numListUsers,
-      };
-}
-
-class Status {
-  final String watching;
-  final String completed;
-  final String onHold;
-  final String dropped;
-  final String planToWatch;
-
-  Status({
-    required this.watching,
-    required this.completed,
-    required this.onHold,
-    required this.dropped,
-    required this.planToWatch,
-  });
-
-  factory Status.fromJson(Map<String, dynamic> json) => Status(
-        watching: json["watching"].toString(),
-        completed: json["completed"].toString(),
-        onHold: json["on_hold"].toString(),
-        dropped: json["dropped"].toString(),
-        planToWatch: json["plan_to_watch"].toString(),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "watching": watching,
-        "completed": completed,
-        "on_hold": onHold,
-        "dropped": dropped,
-        "plan_to_watch": planToWatch,
-      };
-}
+//   Map<String, dynamic> toJson() => {
+//         "node": node.toJson(),
+//       };
+// }

@@ -4,16 +4,21 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '/services/mal_services.dart';
 import 'list_entry_card_widget.dart';
 
-class AnimeListGridView extends StatefulWidget {
+class ListGridView extends StatefulWidget {
+  final String entryType;
   final String status;
-  const AnimeListGridView({super.key, required this.status});
+  const ListGridView({
+    super.key,
+    required this.entryType,
+    required this.status,
+  });
 
   @override
-  State<StatefulWidget> createState() => _AnimeListGridViewState();
+  State<StatefulWidget> createState() => _ListGridViewState();
 }
 
-class _AnimeListGridViewState extends State<AnimeListGridView>
-    with AutomaticKeepAliveClientMixin<AnimeListGridView> {
+class _ListGridViewState extends State<ListGridView>
+    with AutomaticKeepAliveClientMixin<ListGridView> {
   final List<ListEntryCard> _cardList = [];
   int _offset = 0;
   bool _hasMore = true;
@@ -23,7 +28,7 @@ class _AnimeListGridViewState extends State<AnimeListGridView>
   void initState() {
     super.initState();
     // load initial 100 entries
-    getAnimeCards(widget.status, _offset);
+    getListCards(widget.status, _offset);
   }
 
   // refresh function
@@ -34,6 +39,12 @@ class _AnimeListGridViewState extends State<AnimeListGridView>
       _offset = 0;
       _cardList.clear();
     });
+  }
+
+  void getListCards(status, int offset, {int limit = 100}) {
+    widget.entryType == 'anime'
+        ? getAnimeCards(status, offset)
+        : getMangaCards(status, offset);
   }
 
   void getAnimeCards(status, int offset, {int limit = 100}) {
@@ -47,11 +58,50 @@ class _AnimeListGridViewState extends State<AnimeListGridView>
 
       cardList = userAnimeList.data
           .map((data) => ListEntryCard(
-                animeId: data.node.id,
+                entryType: 'anime',
+                entryId: data.node.id,
                 imageUrl: data.node.mainPicture.medium,
-                animeTitle: data.node.title,
-                numEpsWatched: data.listStatus.numEpisodesWatched!,
-                numEpisodes: data.node.numEpisodes,
+                entryTitle: data.node.title,
+                numCompleted: data.listStatus.numEpisodesWatched!,
+                numTotal: data.node.numEpisodes,
+                rating: data.listStatus.score,
+                labelMaxLines: 1,
+              ))
+          .toList();
+
+      setState(() {
+        _cardList.addAll(cardList);
+        _offset += limit;
+        _isLoading = false;
+
+        if (cardList.length < 10) _hasMore = false;
+      });
+    }).catchError((error) {
+      Fluttertoast.showToast(
+          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+      Future.delayed(const Duration(seconds: 10)).then((val) {
+        _refresh();
+      });
+    });
+  }
+
+  void getMangaCards(status, int offset, {int limit = 100}) {
+    if (_isLoading) return;
+    _isLoading = true;
+
+    MyAnimelistApi()
+        .getUserMangaList(status: status, offset: offset, limit: limit)
+        .then((userMangaList) {
+      List<ListEntryCard> cardList = [];
+
+      cardList = userMangaList.data
+          .map((data) => ListEntryCard(
+                entryType: 'manga',
+                entryId: data.node.id,
+                imageUrl: data.node.mainPicture.medium,
+                entryTitle: data.node.title,
+                numCompleted: data.listStatus.numChaptersRead!,
+                numTotal: data.node.numChapters,
                 rating: data.listStatus.score,
                 labelMaxLines: 1,
               ))
@@ -89,7 +139,7 @@ class _AnimeListGridViewState extends State<AnimeListGridView>
             return _cardList[index];
           } else {
             if (_hasMore) {
-              getAnimeCards(widget.status, _offset);
+              getListCards(widget.status, _offset);
               return const ListEntryCardPlaceholder();
             } else {
               return const Center(

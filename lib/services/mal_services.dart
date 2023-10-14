@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import '../models/manga_info_model.dart';
 import '../models/search_model.dart';
+import '../models/user_mangalist_model.dart';
 import '../models/user_model.dart';
 import '../models/user_animelist_model.dart';
 import '../models/anime_info_model.dart';
@@ -106,7 +108,7 @@ class MyAnimelistApi {
         await auth_services.refreshAccessToken();
         return getAnimeInfo(animeId: animeId);
       } else {
-        return Future.error("Failed to load UserAnimeList");
+        return Future.error("Failed to load Anime Details");
       }
     } on SocketException {
       return Future.error("SocketException: Check your internet connection");
@@ -226,5 +228,153 @@ class MyAnimelistApi {
     } catch (e) {
       return Future.error(e.toString());
     }
+  }
+
+// ######################
+// MANGA
+// ######################
+
+// User MangaList
+  Future<UserMangaList> getUserMangaList(
+      {status, sort = "list_updated_at", limit = 100, offset = 0}) async {
+    var accessToken = await _secureStorage.getAccessToken();
+
+    status = status != 'all' ? "status=$status&" : "";
+
+    Uri url = Uri.parse(
+        "$baseUrl/users/@me/mangalist?nsfw=true&fields=list_status,num_chapters&${status}sort=$sort&limit=$limit&offset=$offset");
+
+    try {
+      var response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return UserMangaList.fromJson(jsonDecode(response.body));
+      } else if (response.statusCode == 401) {
+        await auth_services.refreshAccessToken();
+        return getUserMangaList(
+            status: status, sort: sort, limit: limit, offset: offset);
+      } else {
+        return Future.error(response.body);
+      }
+    } on SocketException {
+      return Future.error("SocketException: Check your internet connection");
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
+// mangaInfo
+  Future<MangaInfo> getMangaInfo({required mangaId}) async {
+    var accessToken = await _secureStorage.getAccessToken();
+    String fields =
+        "id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_chapters,authors{first_name,last_name},pictures,background,related_anime,related_manga,recommendations";
+
+    Uri url = Uri.parse("$baseUrl/manga/$mangaId?fields=$fields");
+    // try {
+    var response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return MangaInfo.fromJson(jsonDecode(response.body));
+    } else if (response.statusCode == 401) {
+      await auth_services.refreshAccessToken();
+      return getMangaInfo(mangaId: mangaId);
+    } else {
+      return Future.error("Failed to load Manga Details");
+    }
+    // } on SocketException {
+    //   return Future.error("SocketException: Check your internet connection");
+    // } catch (e) {
+    //   return Future.error(e.toString());
+    // }
+  }
+
+  // update Manga in userMangaList
+  Future<bool> updateListManga({
+    required int mangaId,
+    required String status,
+    required int chapsRead,
+    required int score,
+  }) async {
+    var accessToken = await _secureStorage.getAccessToken();
+
+    Uri url = Uri.parse("$baseUrl/manga/$mangaId/my_list_status");
+    var data = {
+      'status': status,
+      'score': score.toString(),
+      'num_chapters_read': chapsRead.toString(),
+    };
+
+    // try {
+    var response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: data,
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 401) {
+      await auth_services.refreshAccessToken();
+      return updateListManga(
+        mangaId: mangaId,
+        status: status,
+        chapsRead: chapsRead,
+        score: score,
+      );
+    } else {
+      return false;
+    }
+    // } on SocketException {
+    //   return Future.error("SocketException: Check your internet connection");
+    // } catch (e) {
+    //   return Future.error(e.toString());
+    // }
+  }
+
+  // remove Manga from userMangaList
+  Future<bool> removeListManga({required int mangaId}) async {
+    var accessToken = await _secureStorage.getAccessToken();
+
+    Uri url = Uri.parse("$baseUrl/manga/$mangaId/my_list_status");
+
+    // try {
+    var response = await http.delete(
+      url,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 401) {
+      await auth_services.refreshAccessToken();
+      return removeListManga(mangaId: mangaId);
+    } else {
+      return false;
+    }
+    // } on SocketException {
+    //   return Future.error("SocketException: Check your internet connection");
+    // } catch (e) {
+    //   return Future.error(e.toString());
+    // }
   }
 }
