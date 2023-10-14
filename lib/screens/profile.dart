@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:neko_list/models/user_model.dart';
+import 'package:neko_list/screens/auth/login.dart';
 import 'package:neko_list/services/mal_services.dart';
+import 'package:neko_list/services/oauth_services.dart';
 import 'package:neko_list/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -67,13 +69,33 @@ class _ProfileState extends State<Profile> {
                     endIndent: 30,
                   ),
                   IconButton(
-                      onPressed: () {
-                        Provider.of<ThemeProvider>(context, listen: false)
-                            .toggleTheme();
-                      },
-                      icon: const Icon(
-                        Icons.dark_mode,
-                      ))
+                    onPressed: () {
+                      Provider.of<ThemeProvider>(context, listen: false)
+                          .toggleTheme();
+                    },
+                    icon: const Icon(
+                      Icons.dark_mode,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextButton.icon(
+                    onPressed: () {
+                      signOut().then(
+                        (value) => Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: ((context) => const LoginPage()),
+                          ),
+                        ),
+                      );
+                    },
+                    label: const Text('Logout'),
+                    icon: const Icon(Icons.logout_rounded),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith(
+                          (states) => Colors.red.shade400),
+                    ),
+                  )
                 ],
               );
             } else if (snapshot.hasError) {

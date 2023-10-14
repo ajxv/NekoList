@@ -14,10 +14,15 @@ class MalOauthWebView extends StatefulWidget {
 
 class _MalOauthWebViewState extends State<MalOauthWebView> {
   late WebViewController _controller;
+  late final WebViewCookieManager cookieManager = WebViewCookieManager();
+  void clearCookies() async {
+    await cookieManager.clearCookies();
+  }
 
   @override
   void initState() {
     super.initState();
+    clearCookies();
 
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -44,6 +49,8 @@ class _MalOauthWebViewState extends State<MalOauthWebView> {
 
   @override
   Widget build(BuildContext context) {
-    return WebViewWidget(controller: _controller);
+    return Scaffold(
+      body: SafeArea(child: WebViewWidget(controller: _controller)),
+    );
   }
 }

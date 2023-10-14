@@ -77,4 +77,7 @@ class SecureStorage {
   // Future<String> getUserDetails() async {
   //   return await _storage.read(key: _user) ?? "";
   // }
+
+  // Clear SecureStorage
+  Future clear() async => await _storage.deleteAll();
 }
