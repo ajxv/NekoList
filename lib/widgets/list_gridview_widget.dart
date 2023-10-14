@@ -100,7 +100,7 @@ class _ListGridViewState extends State<ListGridView>
                 entryId: data.node.id,
                 imageUrl: data.node.mainPicture.medium,
                 entryTitle: data.node.title,
-                numCompleted: data.listStatus.numChaptersRead!,
+                numCompleted: data.listStatus.numChaptersRead,
                 numTotal: data.node.numChapters,
                 rating: data.listStatus.score,
                 labelMaxLines: 1,
@@ -132,7 +132,7 @@ class _ListGridViewState extends State<ListGridView>
         itemCount: _cardList.length + 1,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
-          childAspectRatio: 1 / 2,
+          childAspectRatio: 11 / 23,
         ),
         itemBuilder: (context, index) {
           if (index < _cardList.length) {

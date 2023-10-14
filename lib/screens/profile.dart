@@ -41,7 +41,10 @@ class _ProfileState extends State<Profile> {
                   CircleAvatar(
                     radius: 60,
                     child: ClipOval(
-                      child: Image.network(snapshot.data!.picture),
+                      child: snapshot.data!.picture.isNotEmpty
+                          ? Image.network(snapshot.data!.picture)
+                          : Image.asset(
+                              "assets/images/profile_placeholder.jpeg"),
                     ),
                   ),
                   const SizedBox(height: 20),

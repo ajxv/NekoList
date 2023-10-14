@@ -15,7 +15,7 @@ class UserDetails {
     return UserDetails(
       id: json['id'],
       name: json['name'],
-      picture: json['picture'],
+      picture: json.containsKey('picture') ? json['picture'] : '',
       statistics: json['anime_statistics'],
     );
   }
