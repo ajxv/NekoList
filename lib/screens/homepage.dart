@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           },
-          icon: const Icon(Icons.account_circle),
+          icon: const Icon(Icons.manage_accounts_rounded),
         ),
         title: const Text("n e k o"),
         centerTitle: true,

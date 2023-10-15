@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neko_list/screens/anime_details_screen.dart';
+import 'package:neko_list/screens/manga_details_screen.dart';
 
 class ListEntryCard extends StatelessWidget {
-  final int animeId;
-  final String animeTitle;
+  final String entryType;
+  final int entryId;
+  final String entryTitle;
   final String imageUrl;
-  final int? numEpsWatched;
-  final int? numEpisodes;
+  final int? numCompleted;
+  final int? numTotal;
   final int? rating;
-  // for related anime
+  // for related entry
   final String? relationType;
   // for recommendation
   final int? numRecommendations;
@@ -17,11 +19,12 @@ class ListEntryCard extends StatelessWidget {
 
   const ListEntryCard({
     super.key,
-    required this.animeId,
-    required this.animeTitle,
+    required this.entryType,
+    required this.entryId,
+    required this.entryTitle,
     required this.imageUrl,
-    this.numEpsWatched,
-    this.numEpisodes,
+    this.numCompleted,
+    this.numTotal,
     this.rating,
     this.relationType,
     this.numRecommendations,
@@ -34,14 +37,14 @@ class ListEntryCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => AnimeDetailPage(
-              animeId: animeId,
-            ),
+            builder: (context) => entryType == 'anime'
+                ? AnimeDetailPage(animeId: entryId)
+                : MangaDetailPage(mangaId: entryId),
           ),
         );
       },
       onLongPress: () {
-        Fluttertoast.showToast(msg: animeTitle);
+        Fluttertoast.showToast(msg: entryTitle);
       },
       child: ConstrainedBox(
         constraints: const BoxConstraints(
@@ -49,21 +52,29 @@ class ListEntryCard extends StatelessWidget {
           maxHeight: 230,
         ),
         child: Card(
+          elevation: 2,
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
-              // anime poster
+              // entry poster
               ClipRRect(
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(8), topRight: Radius.circular(8)),
                 child: Stack(
                   children: [
-                    Image.network(
-                      imageUrl,
-                      height: 150,
-                      width: 115,
-                      fit: BoxFit.cover,
-                    ),
+                    imageUrl.isNotEmpty
+                        ? Image.network(
+                            imageUrl,
+                            height: 150,
+                            width: 115,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.asset(
+                            "assets/images/image_placeholder.jpg",
+                            height: 150,
+                            width: 115,
+                            fit: BoxFit.cover,
+                          ),
                     if (rating != null)
                       Positioned(
                         top: 4,
@@ -85,7 +96,7 @@ class ListEntryCard extends StatelessWidget {
               ),
               SizedBox(
                 child: Text(
-                  animeTitle,
+                  entryTitle,
                   maxLines: labelMaxLines ?? 2,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -116,9 +127,9 @@ class ListEntryCard extends StatelessWidget {
                     )
                   ],
                 ),
-              if (numEpsWatched != null)
+              if (numCompleted != null)
                 Text(
-                  "$numEpsWatched/${numEpisodes != 0 ? numEpisodes : '?'}",
+                  "$numCompleted/${numTotal != 0 ? numTotal : '?'}",
                   overflow: TextOverflow.ellipsis,
                 ),
             ],
@@ -165,6 +176,7 @@ class ListEntryCardPlaceholder extends StatelessWidget {
   }
 }
 
+// for search display
 class SimpleListEntryCard extends StatelessWidget {
   final String contentType;
   final int entryId;
@@ -189,7 +201,9 @@ class SimpleListEntryCard extends StatelessWidget {
                 ? AnimeDetailPage(
                     animeId: entryId,
                   )
-                : const Text("not an anime"),
+                : MangaDetailPage(
+                    mangaId: entryId,
+                  ),
           ),
         );
       },

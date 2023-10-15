@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/animelist_gridview_widget.dart';
+import '../../widgets/list_gridview_widget.dart';
 
 class AnimeList extends StatefulWidget {
   const AnimeList({super.key});
@@ -54,8 +54,12 @@ class _AnimeListState extends State<AnimeList>
             controller: _tabController,
             // List of AnimeGridView s
             children: _tabTitles
-                .map((title) => AnimeListGridView(
-                    status: title.replaceAll(' ', '_').toLowerCase()))
+                .map(
+                  (title) => ListGridView(
+                    entryType: 'anime',
+                    status: title.replaceAll(' ', '_').toLowerCase(),
+                  ),
+                )
                 .toList(),
           ),
         )

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:neko_list/models/user_model.dart';
+import 'package:neko_list/screens/auth/login.dart';
 import 'package:neko_list/services/mal_services.dart';
+import 'package:neko_list/services/oauth_services.dart';
 import 'package:neko_list/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -30,47 +32,83 @@ class _ProfileState extends State<Profile> {
         ),
         title: const Text("Profile"),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+            },
+            icon: Provider.of<ThemeProvider>(context).themeData.brightness ==
+                    Brightness.dark
+                ? const Icon(Icons.light_mode_rounded)
+                : const Icon(Icons.dark_mode),
+          )
+        ],
       ),
       body: FutureBuilder<UserDetails>(
           future: _futureUserDetails,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView(
+                padding: const EdgeInsets.all(10),
                 children: [
                   const SizedBox(height: 20),
                   CircleAvatar(
                     radius: 60,
                     child: ClipOval(
-                      child: Image.network(snapshot.data!.picture),
+                      child: snapshot.data!.picture.isNotEmpty
+                          ? Image.network(snapshot.data!.picture)
+                          : Image.asset(
+                              "assets/images/profile_placeholder.jpeg"),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
                   Text(
                     snapshot.data!.name,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
+                      fontSize: 18,
                     ),
                   ),
                   Text(
                     snapshot.data!.id.toString(),
                     textAlign: TextAlign.center,
                   ),
-                  const Divider(
-                    color: Colors.grey,
-                    height: 25,
-                    thickness: 1,
-                    indent: 30,
-                    endIndent: 30,
-                  ),
-                  IconButton(
+                  if (snapshot.data!.animeStatistics.isNotEmpty)
+                    UserAnimeStatsOverview(
+                        animeStatistics: snapshot.data!.animeStatistics),
+                  // const Divider(
+                  //   color: Colors.grey,
+                  //   height: 25,
+                  //   thickness: 1,
+                  //   indent: 30,
+                  //   endIndent: 30,
+                  // ),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: TextButton.icon(
                       onPressed: () {
-                        Provider.of<ThemeProvider>(context, listen: false)
-                            .toggleTheme();
+                        signOut().then(
+                          (value) => Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: ((context) => const LoginPage()),
+                            ),
+                          ),
+                        );
                       },
-                      icon: const Icon(
-                        Icons.dark_mode,
-                      ))
+                      label: const Text('Logout'),
+                      icon: const Icon(Icons.logout_rounded),
+                      style: ButtonStyle(
+                        foregroundColor: MaterialStateProperty.resolveWith(
+                            (states) => Colors.white),
+                        fixedSize:
+                            const MaterialStatePropertyAll(Size(150, 10)),
+                        backgroundColor: MaterialStateProperty.resolveWith(
+                            (states) => Colors.red.shade400),
+                      ),
+                    ),
+                  ),
                 ],
               );
             } else if (snapshot.hasError) {
@@ -84,6 +122,89 @@ class _ProfileState extends State<Profile> {
               );
             }
           }),
+    );
+  }
+}
+
+class UserAnimeStatsOverview extends StatelessWidget {
+  final Map<String, double> animeStatistics;
+  const UserAnimeStatsOverview({super.key, required this.animeStatistics});
+
+  @override
+  Widget build(BuildContext context) {
+    // define vertical divider
+    VerticalDivider vdivider = VerticalDivider(
+      width: 20,
+      thickness: 1,
+      indent: 10,
+      endIndent: 10,
+      color: Colors.grey.shade800,
+    );
+    return Padding(
+      padding: const EdgeInsets.only(top: 20, bottom: 10),
+      child: IntrinsicHeight(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Card(
+              color: Theme.of(context).colorScheme.background,
+              elevation: 0,
+              child: SizedBox(
+                width: 100,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.done_all_rounded),
+                    Text(
+                      '${animeStatistics['num_episodes']!.toInt()}',
+                    ),
+                    const Text('Episodes'),
+                  ],
+                ),
+              ),
+            ),
+            vdivider,
+            Card(
+              color: Theme.of(context).colorScheme.background,
+              elevation: 0,
+              child: SizedBox(
+                width: 100,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.tv_rounded),
+                    Text(
+                      '${animeStatistics['num_items_completed']!.toInt()}',
+                    ),
+                    const Text('Anime'),
+                  ],
+                ),
+              ),
+            ),
+            vdivider,
+            Card(
+              color: Theme.of(context).colorScheme.background,
+              elevation: 0,
+              child: SizedBox(
+                width: 100,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.thumb_up_alt_rounded),
+                    Text(
+                      '${animeStatistics['mean_score']!.toInt()}',
+                    ),
+                    const Text('Mean Score'),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
