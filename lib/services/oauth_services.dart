@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
 import '../helpers/constants.dart' as constants;
-import '../helpers/secure_storage.dart';
+import '../helpers/storage.dart';
 
 String generateRandomString(int len) {
   var r = Random();
