@@ -52,6 +52,7 @@ class ListEntryCard extends StatelessWidget {
           maxHeight: 230,
         ),
         child: Card(
+          elevation: 2,
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
