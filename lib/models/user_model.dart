@@ -20,7 +20,7 @@ class UserDetails {
   factory UserDetails.fromJson(Map<String, dynamic> json) => UserDetails(
         id: json["id"],
         name: json["name"],
-        picture: json["picture"],
+        picture: json.containsKey('picture') ? json["picture"] : '',
         location: json["location"],
         joinedAt: DateTime.parse(json["joined_at"]),
         animeStatistics: Map.from(json["anime_statistics"])
