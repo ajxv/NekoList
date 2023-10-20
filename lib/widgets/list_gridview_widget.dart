@@ -62,9 +62,10 @@ class _ListGridViewState extends State<ListGridView>
                 entryId: data.node.id,
                 imageUrl: data.node.mainPicture.medium,
                 entryTitle: data.node.title,
-                numCompleted: data.listStatus.numEpisodesWatched!,
+                numCompleted: data.listStatus.numEpisodesWatched,
                 numTotal: data.node.numEpisodes,
                 rating: data.listStatus.score,
+                status: data.node.airingStatus,
                 labelMaxLines: 1,
               ))
           .toList();

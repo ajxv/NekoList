@@ -8,6 +8,7 @@ class ListEntryCard extends StatelessWidget {
   final int entryId;
   final String entryTitle;
   final String imageUrl;
+  final String? status;
   final int? numCompleted;
   final int? numTotal;
   final int? rating;
@@ -23,6 +24,7 @@ class ListEntryCard extends StatelessWidget {
     required this.entryId,
     required this.entryTitle,
     required this.imageUrl,
+    this.status,
     this.numCompleted,
     this.numTotal,
     this.rating,
@@ -89,6 +91,15 @@ class ListEntryCard extends StatelessWidget {
                             "$rating",
                             style: const TextStyle(color: Colors.white),
                           ),
+                        ),
+                      ),
+                    if (status == "currently_airing")
+                      const Positioned(
+                        bottom: 5,
+                        left: 5,
+                        child: Icon(
+                          Icons.live_tv_rounded,
+                          size: 18,
                         ),
                       )
                   ],

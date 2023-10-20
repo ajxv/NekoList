@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:neko_list/theme/theme_provider.dart';
+import 'package:neko_list/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'screens/auth/login.dart';
 import 'helpers/storage.dart';

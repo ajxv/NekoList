@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:neko_list/helpers/storage.dart';
-import 'package:neko_list/theme/theme.dart';
+
+import '../theme/dark_mode.dart';
+import '../theme/light_mode.dart';
 
 class ThemeProvider with ChangeNotifier {
   final SecureStorage _storage = SecureStorage();

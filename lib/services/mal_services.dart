@@ -57,7 +57,7 @@ class MyAnimelistApi {
     status = status != 'all' ? "status=$status&" : "";
 
     Uri url = Uri.parse(
-        "$baseUrl/users/@me/animelist?nsfw=true&fields=list_status,num_episodes&${status}sort=$sort&limit=$limit&offset=$offset");
+        "$baseUrl/users/@me/animelist?nsfw=true&fields=list_status,num_episodes,status&${status}sort=$sort&limit=$limit&offset=$offset");
 
     try {
       var response = await http.get(

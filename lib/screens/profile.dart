@@ -3,7 +3,7 @@ import 'package:neko_list/models/user_model.dart';
 import 'package:neko_list/screens/auth/login.dart';
 import 'package:neko_list/services/mal_services.dart';
 import 'package:neko_list/services/oauth_services.dart';
-import 'package:neko_list/theme/theme_provider.dart';
+import 'package:neko_list/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {

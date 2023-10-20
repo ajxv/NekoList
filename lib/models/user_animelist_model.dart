@@ -1,5 +1,7 @@
 // generated using https://app.quicktype.io
 
+import 'package:neko_list/models/anime_info_model.dart';
+
 class UserAnimeList {
   final List<Data> data;
   // final Paging paging;
@@ -24,7 +26,7 @@ class UserAnimeList {
 
 class Data {
   final Node node;
-  final ListStatus listStatus;
+  final MyListStatus listStatus;
 
   Data({
     required this.node,
@@ -33,7 +35,7 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         node: Node.fromJson(json["node"]),
-        listStatus: ListStatus.fromJson(json["list_status"]),
+        listStatus: MyListStatus.fromJson(json["list_status"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -42,49 +44,51 @@ class Data {
       };
 }
 
-class ListStatus {
-  final String status;
-  final int score;
-  final bool isRewatching;
-  final DateTime updatedAt;
-  final int? numEpisodesWatched;
+// class ListStatus {
+//   final String status;
+//   final int score;
+//   final bool isRewatching;
+//   final DateTime updatedAt;
+//   final int? numEpisodesWatched;
 
-  ListStatus({
-    required this.status,
-    required this.score,
-    required this.isRewatching,
-    required this.updatedAt,
-    this.numEpisodesWatched,
-  });
+//   ListStatus({
+//     required this.status,
+//     required this.score,
+//     required this.isRewatching,
+//     required this.updatedAt,
+//     this.numEpisodesWatched,
+//   });
 
-  factory ListStatus.fromJson(Map<String, dynamic> json) => ListStatus(
-        status: json["status"],
-        score: json["score"],
-        isRewatching: json["is_rewatching"],
-        updatedAt: DateTime.parse(json["updated_at"]),
-        numEpisodesWatched: json["num_episodes_watched"],
-      );
+//   factory ListStatus.fromJson(Map<String, dynamic> json) => ListStatus(
+//         status: json["status"],
+//         score: json["score"],
+//         isRewatching: json["is_rewatching"],
+//         updatedAt: DateTime.parse(json["updated_at"]),
+//         numEpisodesWatched: json["num_episodes_watched"],
+//       );
 
-  Map<String, dynamic> toJson() => {
-        "status": status,
-        "score": score,
-        "is_rewatching": isRewatching,
-        "updated_at": updatedAt.toIso8601String(),
-        "num_episodes_watched": numEpisodesWatched,
-      };
-}
+//   Map<String, dynamic> toJson() => {
+//         "status": status,
+//         "score": score,
+//         "is_rewatching": isRewatching,
+//         "updated_at": updatedAt.toIso8601String(),
+//         "num_episodes_watched": numEpisodesWatched,
+//       };
+// }
 
 class Node {
   final int id;
   final String title;
   final MainPicture mainPicture;
   final int numEpisodes;
+  final String airingStatus;
 
   Node({
     required this.id,
     required this.title,
     required this.mainPicture,
     required this.numEpisodes,
+    required this.airingStatus,
   });
 
   factory Node.fromJson(Map<String, dynamic> json) => Node(
@@ -96,6 +100,7 @@ class Node {
               : {'medium': '', 'large': ''},
         ),
         numEpisodes: json['num_episodes'],
+        airingStatus: json['status'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -103,6 +108,7 @@ class Node {
         "title": title,
         "main_picture": mainPicture.toJson(),
         "num_episodes": numEpisodes,
+        'airing_status': airingStatus,
       };
 }
 
