@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:neko_list/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'screens/auth/login.dart';
-import 'helpers/storage.dart';
+import 'helpers/secure_storage.dart';
 import 'screens/homepage.dart';
 
 void main() {

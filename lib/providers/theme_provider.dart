@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:neko_list/helpers/storage.dart';
+import 'package:neko_list/helpers/shared_preferences.dart';
 
 import '../theme/dark_mode.dart';
 import '../theme/light_mode.dart';
 
 class ThemeProvider with ChangeNotifier {
-  final SecureStorage _storage = SecureStorage();
+  final SharedPreference _pref = SharedPreference();
 
   ThemeData _themeData = darkMode;
 
@@ -15,7 +15,7 @@ class ThemeProvider with ChangeNotifier {
   }
 
   Future<void> getTheme() async {
-    String theme = await _storage.getTheme();
+    String theme = await _pref.getTheme();
 
     theme == 'dark' ? _themeData = darkMode : _themeData = lightMode;
   }
@@ -32,6 +32,6 @@ class ThemeProvider with ChangeNotifier {
       themeData = lightMode;
     }
 
-    await _storage.setTheme(_themeData == darkMode);
+    await _pref.setTheme(_themeData == darkMode);
   }
 }

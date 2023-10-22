@@ -8,7 +8,7 @@ import '../models/user_model.dart';
 import '../models/user_animelist_model.dart';
 import '../models/anime_info_model.dart';
 
-import '../helpers/storage.dart';
+import '../helpers/secure_storage.dart';
 import '/helpers/constants.dart' as constants;
 
 import './oauth_services.dart' as auth_services;
