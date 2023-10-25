@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neko_list/services/mal_services.dart';
@@ -415,14 +416,26 @@ class BasicDetailSection extends StatelessWidget {
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(9),
-            child: Image.network(
-              imageUrl,
-              height: 200,
-              width: 130,
-              fit: BoxFit.cover,
-            ),
-          ),
+              borderRadius: BorderRadius.circular(9),
+              child: imageUrl.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      height: 200,
+                      width: 130,
+                      fit: BoxFit.cover,
+                    )
+                  // Image.network(
+                  //   imageUrl,
+                  //   height: 200,
+                  //   width: 130,
+                  //   fit: BoxFit.cover,
+                  // )
+                  : Image.asset(
+                      "assets/images/image_placeholder.jpg",
+                      height: 200,
+                      width: 130,
+                      fit: BoxFit.cover,
+                    )),
           Flexible(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(25, 0, 5, 0),

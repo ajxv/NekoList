@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:neko_list/models/user_model.dart';
+import 'package:neko_list/providers/session_provider.dart';
 import 'package:neko_list/screens/auth/login.dart';
 import 'package:neko_list/services/mal_services.dart';
 import 'package:neko_list/services/oauth_services.dart';
@@ -14,12 +16,12 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  late Future<UserDetails> _futureUserDetails;
+  // late Future<UserDetails> _futureUserDetails;
 
   @override
   void initState() {
     super.initState();
-    _futureUserDetails = MyAnimelistApi().getUserDetails();
+    // _futureUserDetails = MyAnimelistApi().getUserDetails();
   }
 
   @override
@@ -44,84 +46,69 @@ class _ProfileState extends State<Profile> {
           )
         ],
       ),
-      body: FutureBuilder<UserDetails>(
-          future: _futureUserDetails,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView(
-                padding: const EdgeInsets.all(10),
-                children: [
-                  const SizedBox(height: 20),
-                  CircleAvatar(
-                    radius: 60,
-                    child: ClipOval(
-                      child: snapshot.data!.picture.isNotEmpty
-                          ? Image.network(snapshot.data!.picture)
-                          : Image.asset(
-                              "assets/images/profile_placeholder.jpeg"),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  Text(
-                    snapshot.data!.name,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  Text(
-                    snapshot.data!.id.toString(),
-                    textAlign: TextAlign.center,
-                  ),
-                  if (snapshot.data!.animeStatistics.isNotEmpty)
-                    UserAnimeStatsOverview(
-                        animeStatistics: snapshot.data!.animeStatistics),
-                  // const Divider(
-                  //   color: Colors.grey,
-                  //   height: 25,
-                  //   thickness: 1,
-                  //   indent: 30,
-                  //   endIndent: 30,
-                  // ),
-                  const SizedBox(height: 20),
-                  Center(
-                    child: TextButton.icon(
-                      onPressed: () {
-                        signOut().then(
-                          (value) => Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: ((context) => const LoginPage()),
-                            ),
-                          ),
-                        );
-                      },
-                      label: const Text('Logout'),
-                      icon: const Icon(Icons.logout_rounded),
-                      style: ButtonStyle(
-                        foregroundColor: MaterialStateProperty.resolveWith(
-                            (states) => Colors.white),
-                        fixedSize:
-                            const MaterialStatePropertyAll(Size(150, 10)),
-                        backgroundColor: MaterialStateProperty.resolveWith(
-                            (states) => Colors.red.shade400),
+      body: Consumer<SessionProvider>(builder: (context, value, child) {
+        return ListView(
+          padding: const EdgeInsets.all(10),
+          children: [
+            const SizedBox(height: 20),
+            CircleAvatar(
+              radius: 60,
+              child: ClipOval(
+                child: value.user.picture.isNotEmpty
+                    ? CachedNetworkImage(imageUrl: value.user.picture)
+                    : Image.asset("assets/images/profile_placeholder.jpeg"),
+              ),
+            ),
+            const SizedBox(height: 15),
+            Text(
+              value.user.name,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            Text(
+              value.user.id.toString(),
+              textAlign: TextAlign.center,
+            ),
+            if (value.user.animeStatistics.isNotEmpty)
+              UserAnimeStatsOverview(
+                  animeStatistics: value.user.animeStatistics),
+            // const Divider(
+            //   color: Colors.grey,
+            //   height: 25,
+            //   thickness: 1,
+            //   indent: 30,
+            //   endIndent: 30,
+            // ),
+            const SizedBox(height: 20),
+            Center(
+              child: TextButton.icon(
+                onPressed: () {
+                  signOut().then(
+                    (value) => Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: ((context) => const LoginPage()),
                       ),
                     ),
-                  ),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text(snapshot.error.toString()),
-              );
-            } else {
-              // By default, show a loading spinner.
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }),
+                  );
+                },
+                label: const Text('Logout'),
+                icon: const Icon(Icons.logout_rounded),
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.resolveWith(
+                      (states) => Colors.white),
+                  fixedSize: const MaterialStatePropertyAll(Size(150, 10)),
+                  backgroundColor: MaterialStateProperty.resolveWith(
+                      (states) => Colors.red.shade400),
+                ),
+              ),
+            ),
+          ],
+        );
+      }),
     );
   }
 }

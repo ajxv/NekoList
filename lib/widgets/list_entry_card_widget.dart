@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neko_list/screens/anime_details_screen.dart';
@@ -65,12 +66,18 @@ class ListEntryCard extends StatelessWidget {
                 child: Stack(
                   children: [
                     imageUrl.isNotEmpty
-                        ? Image.network(
-                            imageUrl,
+                        ? CachedNetworkImage(
+                            imageUrl: imageUrl,
                             height: 150,
                             width: 115,
                             fit: BoxFit.cover,
                           )
+                        // Image.network(
+                        //     imageUrl,
+                        //     height: 150,
+                        //     width: 115,
+                        //     fit: BoxFit.cover,
+                        //   )
                         : Image.asset(
                             "assets/images/image_placeholder.jpg",
                             height: 150,
