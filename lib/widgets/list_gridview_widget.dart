@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:neko_list/providers/list_provider.dart';
+import 'package:provider/provider.dart';
 
-import '/services/mal_services.dart';
 import 'list_entry_card_widget.dart';
 
 class ListGridView extends StatefulWidget {
@@ -19,128 +19,52 @@ class ListGridView extends StatefulWidget {
 
 class _ListGridViewState extends State<ListGridView>
     with AutomaticKeepAliveClientMixin<ListGridView> {
-  final List<ListEntryCard> _cardList = [];
-  int _offset = 0;
-  bool _hasMore = true;
-  bool _isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // load initial 100 entries
-    getListCards(widget.status, _offset);
+  // get corressponding provider
+  getProvider({listen = true}) {
+    return widget.entryType == 'anime'
+        ? Provider.of<AnimeListProvider>(context, listen: listen)
+        : Provider.of<MangaListProvider>(context, listen: listen);
   }
 
   // refresh function
   Future _refresh() async {
-    setState(() {
-      _isLoading = false;
-      _hasMore = true;
-      _offset = 0;
-      _cardList.clear();
-    });
+    // refresh stored data in provider
+    getProvider(listen: false).refresh(widget.status);
+
+    // get new data
+    getListCards(widget.status);
   }
 
-  void getListCards(status, int offset, {int limit = 100}) {
+  // get data
+  void getListCards(status, {int limit = 100}) {
     widget.entryType == 'anime'
-        ? getAnimeCards(status, offset)
-        : getMangaCards(status, offset);
-  }
-
-  void getAnimeCards(status, int offset, {int limit = 100}) {
-    if (_isLoading) return;
-    _isLoading = true;
-
-    MyAnimelistApi()
-        .getUserAnimeList(status: status, offset: offset, limit: limit)
-        .then((userAnimeList) {
-      List<ListEntryCard> cardList = [];
-
-      cardList = userAnimeList.data
-          .map((data) => ListEntryCard(
-                entryType: 'anime',
-                entryId: data.node.id,
-                imageUrl: data.node.mainPicture.medium,
-                entryTitle: data.node.title,
-                numCompleted: data.listStatus.numEpisodesWatched,
-                numTotal: data.node.numEpisodes,
-                rating: data.listStatus.score,
-                status: data.node.airingStatus,
-                labelMaxLines: 1,
-              ))
-          .toList();
-
-      setState(() {
-        _cardList.addAll(cardList);
-        _offset += limit;
-        _isLoading = false;
-
-        if (cardList.length < 10) _hasMore = false;
-      });
-    }).catchError((error) {
-      Fluttertoast.showToast(
-          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
-      Future.delayed(const Duration(seconds: 10)).then((val) {
-        _refresh();
-      });
-    });
-  }
-
-  void getMangaCards(status, int offset, {int limit = 100}) {
-    if (_isLoading) return;
-    _isLoading = true;
-
-    MyAnimelistApi()
-        .getUserMangaList(status: status, offset: offset, limit: limit)
-        .then((userMangaList) {
-      List<ListEntryCard> cardList = [];
-
-      cardList = userMangaList.data
-          .map((data) => ListEntryCard(
-                entryType: 'manga',
-                entryId: data.node.id,
-                imageUrl: data.node.mainPicture.medium,
-                entryTitle: data.node.title,
-                numCompleted: data.listStatus.numChaptersRead,
-                numTotal: data.node.numChapters,
-                rating: data.listStatus.score,
-                labelMaxLines: 1,
-              ))
-          .toList();
-
-      setState(() {
-        _cardList.addAll(cardList);
-        _offset += limit;
-        _isLoading = false;
-
-        if (cardList.length < 10) _hasMore = false;
-      });
-    }).catchError((error) {
-      Fluttertoast.showToast(
-          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
-      Future.delayed(const Duration(seconds: 10)).then((val) {
-        _refresh();
-      });
-    });
+        ? Provider.of<AnimeListProvider>(context, listen: false)
+            .getAnimeCards(status, limit: limit)
+        : Provider.of<MangaListProvider>(context, listen: false)
+            .getMangaCards(status, limit: limit);
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    var dataProvider = getProvider();
+
+    var cardList = dataProvider.getCardList(widget.status);
+
     return RefreshIndicator(
       onRefresh: _refresh,
       child: GridView.builder(
-        itemCount: _cardList.length + 1,
+        itemCount: cardList.length + 1,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
           childAspectRatio: 11 / 23,
         ),
         itemBuilder: (context, index) {
-          if (index < _cardList.length) {
-            return _cardList[index];
+          if (index < cardList.length) {
+            return cardList[index];
           } else {
-            if (_hasMore) {
-              getListCards(widget.status, _offset);
+            if (dataProvider.hasMoreItems(widget.status)) {
+              getListCards(widget.status);
               return const ListEntryCardPlaceholder();
             } else {
               return const Center(

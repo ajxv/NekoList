@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:neko_list/providers/list_provider.dart';
 import 'package:neko_list/providers/session_provider.dart';
 import 'package:neko_list/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,8 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => SessionProvider()),
+        ChangeNotifierProvider(create: (context) => AnimeListProvider()),
+        ChangeNotifierProvider(create: (context) => MangaListProvider()),
       ],
       child: const MyApp(),
     ),

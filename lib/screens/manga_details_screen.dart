@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:neko_list/providers/list_provider.dart';
 import 'package:neko_list/services/mal_services.dart';
 import 'package:neko_list/widgets/list_entry_card_widget.dart';
 import 'package:neko_list/widgets/manga_status_update_widget.dart';
+import 'package:provider/provider.dart';
 
 import '../models/manga_info_model.dart';
 
@@ -381,6 +383,10 @@ class _MangaDetailPageState extends State<MangaDetailPage> {
                         score: 0,
                       )
                           .then((value) {
+                        // refresh list
+                        Provider.of<MangaListProvider>(context, listen: false)
+                            .refresh('plan_to_read');
+                        // show toast
                         Fluttertoast.showToast(msg: "Added to List");
                         // reload animeinfo after update
                         setState(() {

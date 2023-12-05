@@ -4,8 +4,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neko_list/services/mal_services.dart';
 import 'package:neko_list/widgets/list_entry_card_widget.dart';
 import 'package:neko_list/widgets/anime_status_update_widget.dart';
+import 'package:provider/provider.dart';
 
 import '../models/anime_info_model.dart';
+import '../providers/list_provider.dart';
 
 const rowSpacer1 = TableRow(children: [
   SizedBox(
@@ -375,6 +377,10 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                         score: 0,
                       )
                           .then((value) {
+                        // refresh list
+                        Provider.of<AnimeListProvider>(context, listen: false)
+                            .refresh('plan_to_watch');
+                        // show toast
                         Fluttertoast.showToast(msg: "Added to List");
                         // reload animeinfo after update
                         setState(() {

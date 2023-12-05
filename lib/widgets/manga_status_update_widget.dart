@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neko_list/models/manga_info_model.dart';
+import 'package:neko_list/providers/list_provider.dart';
 import 'package:neko_list/services/mal_services.dart';
+import 'package:provider/provider.dart';
 
 class StatusUpdateModal extends StatefulWidget {
   final MyListStatus myListStatus;
@@ -56,6 +58,16 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
     )
         .then((value) {
       Fluttertoast.showToast(msg: "Updated");
+
+      // refresh lists
+      if (widget.myListStatus.status.isNotEmpty &&
+          widget.myListStatus.status != _selectedStatus) {
+        Provider.of<MangaListProvider>(context, listen: false)
+            .refresh(widget.myListStatus.status);
+      }
+      Provider.of<MangaListProvider>(context, listen: false)
+          .refresh(_selectedStatus);
+
       Navigator.of(context).pop();
     }).catchError((error) {
       Fluttertoast.showToast(msg: "Update Failed: ${error.toString()}");
@@ -85,6 +97,10 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
                     MyAnimelistApi()
                         .removeListManga(mangaId: widget.mangaId)
                         .then((value) {
+                      // refresh list
+                      Provider.of<MangaListProvider>(context, listen: false)
+                          .refresh(widget.myListStatus.status);
+                      // show toast
                       Fluttertoast.showToast(msg: "Removed from List");
                       Navigator.of(context)
                         ..pop()
