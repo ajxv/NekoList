@@ -308,7 +308,8 @@ class _EpisodeCounterState extends State<EpisodeCounter> {
   void _increment() {
     FocusScope.of(context).unfocus();
     setState(() {
-      if (_currentValue < widget.totalEpisodes) {
+      if (_currentValue < widget.totalEpisodes ||
+          (_currentValue > 0 && widget.totalEpisodes == 0)) {
         _currentValue++;
       }
       widget.notifyParent(_currentValue);
@@ -365,7 +366,9 @@ class _EpisodeCounterState extends State<EpisodeCounter> {
             onChanged: (value) {
               int parsedValue = int.tryParse(value) ?? _currentValue;
 
-              if (parsedValue <= widget.totalEpisodes && parsedValue > 0) {
+              if (((parsedValue <= widget.totalEpisodes) ||
+                      widget.totalEpisodes == 0) &&
+                  parsedValue > 0) {
                 setState(() {
                   _currentValue = parsedValue;
                 });
@@ -398,11 +401,11 @@ class ScoreSlider extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 15),
+        Padding(
+          padding: const EdgeInsets.only(left: 15),
           child: Text(
-            'Score:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            'Score: $initialScore',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
         ),
         Slider(

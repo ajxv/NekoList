@@ -91,7 +91,10 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Cancel')),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.white70),
+                  )),
               TextButton(
                   onPressed: () {
                     MyAnimelistApi()
@@ -111,7 +114,10 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
                       Navigator.of(context).pop();
                     });
                   },
-                  child: const Text('Delete'))
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.red.shade300),
+                  ))
             ],
           );
         });
@@ -299,7 +305,8 @@ class _ChapterCounterState extends State<ChapterCounter> {
   void _increment() {
     FocusScope.of(context).unfocus();
     setState(() {
-      if (_currentValue < widget.totalChapters) {
+      if ((_currentValue < widget.totalChapters) ||
+          (_currentValue > 0 && widget.totalChapters == 0)) {
         _currentValue++;
       }
       widget.notifyParent(_currentValue);
@@ -356,7 +363,9 @@ class _ChapterCounterState extends State<ChapterCounter> {
             onChanged: (value) {
               int parsedValue = int.tryParse(value) ?? _currentValue;
 
-              if (parsedValue <= widget.totalChapters && parsedValue > 0) {
+              if (((parsedValue <= widget.totalChapters) ||
+                      widget.totalChapters == 0) &&
+                  parsedValue > 0) {
                 setState(() {
                   _currentValue = parsedValue;
                 });
@@ -389,11 +398,11 @@ class ScoreSlider extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 15),
+        Padding(
+          padding: const EdgeInsets.only(left: 15),
           child: Text(
-            'Score:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            'Score: $initialScore',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
         ),
         Slider(

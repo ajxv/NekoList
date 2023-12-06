@@ -28,11 +28,6 @@ const boldText = TextStyle(
   fontWeight: FontWeight.w500,
 );
 
-const headingTextStyle = TextStyle(
-  fontWeight: FontWeight.bold,
-  fontSize: 17,
-);
-
 class MangaDetailPage extends StatefulWidget {
   final int mangaId;
   const MangaDetailPage({super.key, required this.mangaId});
@@ -97,9 +92,9 @@ class _MangaDetailPageState extends State<MangaDetailPage> {
                     text: data.synopsis,
                   ),
                   // More info
-                  const Text(
+                  Text(
                     "More Info",
-                    style: headingTextStyle,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(15),
@@ -207,7 +202,7 @@ class _MangaDetailPageState extends State<MangaDetailPage> {
                   //           children: [
                   //             Text(
                   //               "Opening Themes",
-                  //               style: headingTextStyle,
+                  //               style: Theme.of(context).textTheme.headlineSmall,
                   //               textAlign: TextAlign.center,
                   //             )
                   //           ],
@@ -232,7 +227,7 @@ class _MangaDetailPageState extends State<MangaDetailPage> {
                   //         const TableRow(children: [
                   //           Text(
                   //             "Ending Themes",
-                  //             style: headingTextStyle,
+                  //             style: Theme.of(context).textTheme.headlineSmall,
                   //             textAlign: TextAlign.center,
                   //           )
                   //         ]),
@@ -255,9 +250,9 @@ class _MangaDetailPageState extends State<MangaDetailPage> {
 
                   // related manga
                   if (data.relatedManga.isNotEmpty)
-                    const Text(
+                    Text(
                       "Related Manga",
-                      style: headingTextStyle,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -282,9 +277,9 @@ class _MangaDetailPageState extends State<MangaDetailPage> {
 
                   // related anime
                   if (data.relatedAnime.isNotEmpty)
-                    const Text(
+                    Text(
                       "Related Anime",
-                      style: headingTextStyle,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -309,9 +304,9 @@ class _MangaDetailPageState extends State<MangaDetailPage> {
 
                   // reccomendations
                   if (data.recommendations.isNotEmpty)
-                    const Text(
+                    Text(
                       "Recommendations",
-                      style: headingTextStyle,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   Align(
                     alignment: Alignment.centerLeft,
