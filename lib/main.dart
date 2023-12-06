@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:neko_list/providers/list_provider.dart';
 import 'package:neko_list/providers/session_provider.dart';
 import 'package:neko_list/providers/theme_provider.dart';
+import 'package:neko_list/providers/trending_list_provider.dart';
 import 'package:provider/provider.dart';
 import 'screens/auth/login.dart';
 import 'helpers/secure_storage.dart';
@@ -15,6 +16,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => SessionProvider()),
         ChangeNotifierProvider(create: (context) => AnimeListProvider()),
         ChangeNotifierProvider(create: (context) => MangaListProvider()),
+        ChangeNotifierProvider(create: (context) => TrendingListProvider()),
       ],
       child: const MyApp(),
     ),

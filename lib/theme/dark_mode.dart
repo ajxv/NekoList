@@ -11,6 +11,10 @@ ThemeData darkMode = ThemeData(
     bodyMedium: TextStyle(
       color: Colors.grey.shade100,
     ),
+    headlineSmall: const TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 17,
+    ),
   ),
   // ColorScheme
   colorScheme: ColorScheme.dark(

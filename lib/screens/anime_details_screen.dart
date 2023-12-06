@@ -209,14 +209,11 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       ],
                     ),
                   ),
-                  // Divider(
-                  //   color: Theme.of(context).colorScheme.primary,
-                  //   height: 25,
-                  //   thickness: 1,
-                  // ),
+
                   const SizedBox(
                     height: 15,
                   ),
+
                   // OP/ED
                   if (data.openingThemes != null)
                     Padding(
@@ -266,12 +263,6 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                         ],
                       ),
                     ),
-
-                  // Divider(
-                  //   color: Theme.of(context).colorScheme.primary,
-                  //   height: 25,
-                  //   thickness: 1,
-                  // ),
 
                   // related anime
                   if (data.relatedAnime.isNotEmpty)
@@ -406,14 +397,15 @@ class BasicDetailSection extends StatelessWidget {
   final double meanScore;
   final int numEpisodes;
 
-  const BasicDetailSection(
-      {super.key,
-      required this.imageUrl,
-      required this.animeTitle,
-      required this.mediaType,
-      required this.airingStatus,
-      required this.meanScore,
-      required this.numEpisodes});
+  const BasicDetailSection({
+    super.key,
+    required this.imageUrl,
+    required this.animeTitle,
+    required this.mediaType,
+    required this.airingStatus,
+    required this.meanScore,
+    required this.numEpisodes,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -422,26 +414,23 @@ class BasicDetailSection extends StatelessWidget {
       child: Row(
         children: [
           ClipRRect(
-              borderRadius: BorderRadius.circular(9),
-              child: imageUrl.isNotEmpty
-                  ? CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      height: 200,
-                      width: 130,
-                      fit: BoxFit.cover,
-                    )
-                  // Image.network(
-                  //   imageUrl,
-                  //   height: 200,
-                  //   width: 130,
-                  //   fit: BoxFit.cover,
-                  // )
-                  : Image.asset(
-                      "assets/images/image_placeholder.jpg",
-                      height: 200,
-                      width: 130,
-                      fit: BoxFit.cover,
-                    )),
+            borderRadius: BorderRadius.circular(9),
+            child: imageUrl.isNotEmpty
+                ? CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    height: 200,
+                    width: 130,
+                    fit: BoxFit.cover,
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  )
+                : Image.asset(
+                    "assets/images/image_placeholder.jpg",
+                    height: 200,
+                    width: 130,
+                    fit: BoxFit.cover,
+                  ),
+          ),
           Flexible(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(25, 0, 5, 0),

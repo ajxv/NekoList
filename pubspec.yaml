@@ -44,6 +44,7 @@ dependencies:
   path_provider: ^2.1.1
   shared_preferences: ^2.2.2
   cached_network_image: ^3.3.0
+  carousel_slider: ^4.2.1
   
 dev_dependencies:
   flutter_launcher_icons: ^0.9.2
@@ -104,4 +105,4 @@ flutter_icons:
   android: true
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/icons/logo_catgirl.png"
+  image_path: "assets/icons/neko_pixelated_logo.png"

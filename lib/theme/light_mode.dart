@@ -10,6 +10,10 @@ ThemeData lightMode = ThemeData(
     bodyMedium: TextStyle(
       color: Colors.grey.shade900,
     ),
+    headlineSmall: const TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 17,
+    ),
   ),
   // ColorScheme
   colorScheme: ColorScheme.light(

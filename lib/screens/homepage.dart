@@ -56,7 +56,13 @@ class _HomePageState extends State<HomePage> {
                 )
             // const Icon(Icons.manage_accounts_rounded),
             ),
-        title: const Text("n e k o"),
+        title: Text(
+          "ฅᨐฅ",
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.white.withOpacity(0.5),
+          ),
+        ),
         centerTitle: true,
         actions: [
           IconButton(

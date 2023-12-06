@@ -71,19 +71,30 @@ class ListEntryCard extends StatelessWidget {
                             height: 150,
                             width: 115,
                             fit: BoxFit.cover,
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
                           )
-                        // Image.network(
-                        //     imageUrl,
-                        //     height: 150,
-                        //     width: 115,
-                        //     fit: BoxFit.cover,
-                        //   )
                         : Image.asset(
                             "assets/images/image_placeholder.jpg",
                             height: 150,
                             width: 115,
                             fit: BoxFit.cover,
                           ),
+                    // gradient shadow on image bottom
+                    Positioned.fill(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              colors: [
+                                Colors.transparent,
+                                Colors.black.withOpacity(0.2)
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: const [0.8, 0.99]),
+                        ),
+                      ),
+                    ),
                     if (rating != null)
                       Positioned(
                         top: 4,
@@ -200,6 +211,7 @@ class SimpleListEntryCard extends StatelessWidget {
   final int entryId;
   final String entryTitle;
   final String imageUrl;
+  final double? rating;
 
   const SimpleListEntryCard({
     super.key,
@@ -207,6 +219,7 @@ class SimpleListEntryCard extends StatelessWidget {
     required this.entryId,
     required this.entryTitle,
     required this.imageUrl,
+    this.rating,
   });
 
   @override
@@ -230,29 +243,74 @@ class SimpleListEntryCard extends StatelessWidget {
       },
       child: ConstrainedBox(
         constraints: const BoxConstraints(
-          maxWidth: 124,
-          maxHeight: 210,
+          maxWidth: 115,
+          maxHeight: 220,
         ),
         child: Card(
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: imageUrl.isNotEmpty
-                    ? Image.network(
-                        imageUrl,
-                        height: 150,
-                        width: 115,
-                        fit: BoxFit.cover,
-                      )
-                    : Image.asset(
-                        "assets/images/image_placeholder.jpg",
-                        height: 150,
-                        width: 115,
-                        fit: BoxFit.cover,
+                  borderRadius: BorderRadius.circular(8),
+                  child: Stack(
+                    children: [
+                      imageUrl.isNotEmpty
+                          ? CachedNetworkImage(
+                              imageUrl: imageUrl,
+                              height: 150,
+                              width: 115,
+                              fit: BoxFit.cover,
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                            )
+                          : Image.asset(
+                              "assets/images/image_placeholder.jpg",
+                              height: 150,
+                              width: 115,
+                              fit: BoxFit.cover,
+                            ),
+                      Positioned.fill(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.black.withOpacity(0.2)
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                stops: const [0.8, 0.99]),
+                          ),
+                        ),
                       ),
-              ),
+                      Positioned.fill(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.black.withOpacity(0.2)
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                stops: const [0.8, 0.99]),
+                          ),
+                        ),
+                      ),
+                      if (rating != null)
+                        Positioned(
+                          bottom: 4,
+                          right: 4,
+                          child: Text(
+                            "★ $rating",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                    ],
+                  )),
               Expanded(
                   child: Center(
                 child: Text(

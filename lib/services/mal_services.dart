@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:neko_list/models/anime_ranking_model.dart';
 import '../models/manga_info_model.dart';
 import '../models/search_model.dart';
 import '../models/user_mangalist_model.dart';
@@ -376,5 +377,107 @@ class MyAnimelistApi {
     // } catch (e) {
     //   return Future.error(e.toString());
     // }
+  }
+
+  // ######################
+  // HOME FEED
+  // ######################
+
+  // get trending animes
+  /// rankingType = ['all', 'airing', 'upcoming', 'tv', 'ova', 'movie', 'special', 'bypopularity', 'favorite']
+  Future getTrendingAnimes({rankingType = 'all', limit = 5}) async {
+    var accessToken = await _secureStorage.getAccessToken();
+
+    Uri url = Uri.parse(
+        "$baseUrl/anime/ranking?ranking_type=$rankingType&limit=$limit&fields=mean");
+
+    try {
+      var response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return AnimeRanking.fromJson(jsonDecode(response.body));
+      } else if (response.statusCode == 401) {
+        await auth_services.refreshAccessToken();
+        return getTrendingAnimes(rankingType: rankingType, limit: limit);
+      } else {
+        return Future.error("Failed to load AnimeRankings");
+      }
+    } on SocketException {
+      return Future.error("SocketException: Check your internet connection");
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
+  // get trending mangas
+  /// rankingType = ['all', 'manga', 'novels', 'oneshots', 'doujin', 'manhwa', 'manhua', 'bypopularity', 'favorite']
+  Future getTrendingMangas({rankingType = 'all', limit = 5}) async {
+    var accessToken = await _secureStorage.getAccessToken();
+
+    Uri url = Uri.parse(
+        "$baseUrl/manga/ranking?ranking_type=$rankingType&limit=$limit&fields=mean");
+
+    try {
+      var response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return AnimeRanking.fromJson(jsonDecode(response.body));
+      } else if (response.statusCode == 401) {
+        await auth_services.refreshAccessToken();
+        return getTrendingMangas(rankingType: rankingType, limit: limit);
+      } else {
+        return Future.error("Failed to load AnimeRankings");
+      }
+    } on SocketException {
+      return Future.error("SocketException: Check your internet connection");
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
+  // get anime reccomendations
+  /// rankingType = ['all', 'manga', 'novels', 'oneshots', 'doujin', 'manhwa', 'manhua', 'bypopularity', 'favorite']
+  Future getAnimeSuggestions({limit = 5}) async {
+    var accessToken = await _secureStorage.getAccessToken();
+
+    Uri url = Uri.parse("$baseUrl/anime/suggestions?limit=$limit&fields=mean");
+
+    try {
+      var response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return AnimeSuggestion.fromJson(jsonDecode(response.body));
+      } else if (response.statusCode == 401) {
+        await auth_services.refreshAccessToken();
+        return getAnimeSuggestions(limit: limit);
+      } else {
+        return Future.error("Failed to load AnimeRankings");
+      }
+    } on SocketException {
+      return Future.error("SocketException: Check your internet connection");
+    } catch (e) {
+      return Future.error(e.toString());
+    }
   }
 }
