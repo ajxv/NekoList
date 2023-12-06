@@ -28,11 +28,6 @@ const boldText = TextStyle(
   fontWeight: FontWeight.w500,
 );
 
-const headingTextStyle = TextStyle(
-  fontWeight: FontWeight.bold,
-  fontSize: 17,
-);
-
 class AnimeDetailPage extends StatefulWidget {
   final int animeId;
   const AnimeDetailPage({super.key, required this.animeId});
@@ -97,9 +92,9 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                     text: data.synopsis,
                   ),
                   // More info
-                  const Text(
+                  Text(
                     "More Info",
-                    style: headingTextStyle,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(15),
@@ -220,11 +215,12 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       padding: const EdgeInsets.all(15),
                       child: Table(
                         children: [
-                          const TableRow(
+                          TableRow(
                             children: [
                               Text(
                                 "Opening Themes",
-                                style: headingTextStyle,
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall,
                                 textAlign: TextAlign.center,
                               )
                             ],
@@ -246,10 +242,10 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       child: Table(
                         children: [
                           rowSpacer1,
-                          const TableRow(children: [
+                          TableRow(children: [
                             Text(
                               "Ending Themes",
-                              style: headingTextStyle,
+                              style: Theme.of(context).textTheme.headlineSmall,
                               textAlign: TextAlign.center,
                             )
                           ]),
@@ -266,9 +262,9 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
 
                   // related anime
                   if (data.relatedAnime.isNotEmpty)
-                    const Text(
+                    Text(
                       "Related Anime",
-                      style: headingTextStyle,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -293,9 +289,9 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
 
                   // reccomendations
                   if (data.recommendations.isNotEmpty)
-                    const Text(
+                    Text(
                       "Recommendations",
-                      style: headingTextStyle,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   Align(
                     alignment: Alignment.centerLeft,

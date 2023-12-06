@@ -89,30 +89,38 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
                 const Text('Do you want to remove this anime from your list ?'),
             actions: [
               TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cancel')),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.white70),
+                ),
+              ),
               TextButton(
-                  onPressed: () {
-                    MyAnimelistApi()
-                        .removeListAnime(animeId: widget.animeId)
-                        .then((value) {
-                      // refresh list
-                      Provider.of<AnimeListProvider>(context, listen: false)
-                          .refresh(widget.myListStatus.status);
-                      // show toast
-                      Fluttertoast.showToast(msg: "Removed from List");
-                      Navigator.of(context)
-                        ..pop()
-                        ..pop();
-                    }).catchError((error) {
-                      Fluttertoast.showToast(
-                          msg: "Update Failed: ${error.toString()}");
-                      Navigator.of(context).pop();
-                    });
-                  },
-                  child: const Text('Delete'))
+                onPressed: () {
+                  MyAnimelistApi()
+                      .removeListAnime(animeId: widget.animeId)
+                      .then((value) {
+                    // refresh list
+                    Provider.of<AnimeListProvider>(context, listen: false)
+                        .refresh(widget.myListStatus.status);
+                    // show toast
+                    Fluttertoast.showToast(msg: "Removed from List");
+                    Navigator.of(context)
+                      ..pop()
+                      ..pop();
+                  }).catchError((error) {
+                    Fluttertoast.showToast(
+                        msg: "Update Failed: ${error.toString()}");
+                    Navigator.of(context).pop();
+                  });
+                },
+                child: Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.red.shade300),
+                ),
+              )
             ],
           );
         });
