@@ -66,35 +66,10 @@ class _HomeFeedState extends State<HomeFeed>
                     .toList(),
               ),
 
-            // Top airing animes
-            // if (dataProvider.getTopAiringAnimes.isNotEmpty)
-            //   Padding(
-            //     padding: const EdgeInsets.only(left: 10, top: 10),
-            //     child: Text(
-            //       "Top Airing",
-            //       style: Theme.of(context).textTheme.headlineSmall,
-            //     ),
-            //   ),
-            // SingleChildScrollView(
-            //   padding: const EdgeInsets.all(10),
-            //   scrollDirection: Axis.horizontal,
-            //   child: Row(
-            //     children: dataProvider.getTopAiringAnimes
-            //         .map<Widget>(
-            //           (e) => SimpleListEntryCard(
-            //             contentType: 'anime',
-            //             entryId: e.node.id,
-            //             entryTitle: e.node.title,
-            //             imageUrl: e.node.mainPicture.medium,
-            //             rating: e.node.meanScore,
-            //           ),
-            //         )
-            //         .toList(),
-            //   ),
-            // ),
-
             // Reccomended animes
-            if (dataProvider.getAnimeSuggestions.isNotEmpty)
+            if (!dataProvider.isLoading)
+              // show only after loading is done
+              ...[
               Padding(
                 padding: const EdgeInsets.only(left: 10, top: 10),
                 child: Text(
@@ -102,26 +77,25 @@ class _HomeFeedState extends State<HomeFeed>
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
-            SingleChildScrollView(
-              padding: const EdgeInsets.all(10),
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: dataProvider.getAnimeSuggestions
-                    .map<Widget>(
-                      (e) => SimpleListEntryCard(
-                        contentType: 'anime',
-                        entryId: e.node.id,
-                        entryTitle: e.node.title,
-                        imageUrl: e.node.mainPicture.medium,
-                        rating: e.node.meanScore,
-                      ),
-                    )
-                    .toList(),
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(10),
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: dataProvider.getAnimeSuggestions
+                      .map<Widget>(
+                        (e) => SimpleListEntryCard(
+                          contentType: 'anime',
+                          entryId: e.node.id,
+                          entryTitle: e.node.title,
+                          imageUrl: e.node.mainPicture.medium,
+                          rating: e.node.meanScore,
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
-            ),
 
-            // Top animes
-            if (dataProvider.getTopAnimes.isNotEmpty)
+              // Top animes
               Padding(
                 padding: const EdgeInsets.only(left: 10, top: 10),
                 child: Text(
@@ -129,26 +103,25 @@ class _HomeFeedState extends State<HomeFeed>
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
-            SingleChildScrollView(
-              padding: const EdgeInsets.all(10),
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: dataProvider.getTopAnimes
-                    .map<Widget>(
-                      (e) => SimpleListEntryCard(
-                        contentType: 'anime',
-                        entryId: e.node.id,
-                        entryTitle: e.node.title,
-                        imageUrl: e.node.mainPicture.medium,
-                        rating: e.node.meanScore,
-                      ),
-                    )
-                    .toList(),
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(10),
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: dataProvider.getTopAnimes
+                      .map<Widget>(
+                        (e) => SimpleListEntryCard(
+                          contentType: 'anime',
+                          entryId: e.node.id,
+                          entryTitle: e.node.title,
+                          imageUrl: e.node.mainPicture.medium,
+                          rating: e.node.meanScore,
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
-            ),
 
-            // Popular animes
-            if (dataProvider.getPopularAnimes.isNotEmpty)
+              // Popular animes
               Padding(
                 padding: const EdgeInsets.only(left: 10, top: 10),
                 child: Text(
@@ -156,26 +129,25 @@ class _HomeFeedState extends State<HomeFeed>
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
-            SingleChildScrollView(
-              padding: const EdgeInsets.all(10),
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: dataProvider.getPopularAnimes
-                    .map<Widget>(
-                      (e) => SimpleListEntryCard(
-                        contentType: 'anime',
-                        entryId: e.node.id,
-                        entryTitle: e.node.title,
-                        imageUrl: e.node.mainPicture.medium,
-                        rating: e.node.meanScore,
-                      ),
-                    )
-                    .toList(),
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(10),
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: dataProvider.getPopularAnimes
+                      .map<Widget>(
+                        (e) => SimpleListEntryCard(
+                          contentType: 'anime',
+                          entryId: e.node.id,
+                          entryTitle: e.node.title,
+                          imageUrl: e.node.mainPicture.medium,
+                          rating: e.node.meanScore,
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
-            ),
 
-            // Top mangas
-            if (dataProvider.getTopMangas.isNotEmpty)
+              // Top mangas
               Padding(
                 padding: const EdgeInsets.only(left: 10, top: 10),
                 child: Text(
@@ -183,26 +155,25 @@ class _HomeFeedState extends State<HomeFeed>
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
-            SingleChildScrollView(
-              padding: const EdgeInsets.all(10),
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: dataProvider.getTopMangas
-                    .map<Widget>(
-                      (e) => SimpleListEntryCard(
-                        contentType: 'manga',
-                        entryId: e.node.id,
-                        entryTitle: e.node.title,
-                        imageUrl: e.node.mainPicture.medium,
-                        rating: e.node.meanScore,
-                      ),
-                    )
-                    .toList(),
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(10),
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: dataProvider.getTopMangas
+                      .map<Widget>(
+                        (e) => SimpleListEntryCard(
+                          contentType: 'manga',
+                          entryId: e.node.id,
+                          entryTitle: e.node.title,
+                          imageUrl: e.node.mainPicture.medium,
+                          rating: e.node.meanScore,
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
-            ),
 
-            // Top manhwas
-            if (dataProvider.getTopManhwas.isNotEmpty)
+              // Top manhwas
               Padding(
                 padding: const EdgeInsets.only(left: 10, top: 10),
                 child: Text(
@@ -210,26 +181,25 @@ class _HomeFeedState extends State<HomeFeed>
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
-            SingleChildScrollView(
-              padding: const EdgeInsets.all(10),
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: dataProvider.getTopManhwas
-                    .map<Widget>(
-                      (e) => SimpleListEntryCard(
-                        contentType: 'manga',
-                        entryId: e.node.id,
-                        entryTitle: e.node.title,
-                        imageUrl: e.node.mainPicture.medium,
-                        rating: e.node.meanScore,
-                      ),
-                    )
-                    .toList(),
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(10),
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: dataProvider.getTopManhwas
+                      .map<Widget>(
+                        (e) => SimpleListEntryCard(
+                          contentType: 'manga',
+                          entryId: e.node.id,
+                          entryTitle: e.node.title,
+                          imageUrl: e.node.mainPicture.medium,
+                          rating: e.node.meanScore,
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
-            ),
 
-            // Popular mangas
-            if (dataProvider.getPopularMangas.isNotEmpty)
+              // Popular mangas
               Padding(
                 padding: const EdgeInsets.only(left: 10, top: 10),
                 child: Text(
@@ -237,23 +207,29 @@ class _HomeFeedState extends State<HomeFeed>
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
-            SingleChildScrollView(
-              padding: const EdgeInsets.all(10),
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: dataProvider.getPopularMangas
-                    .map<Widget>(
-                      (e) => SimpleListEntryCard(
-                        contentType: 'manga',
-                        entryId: e.node.id,
-                        entryTitle: e.node.title,
-                        imageUrl: e.node.mainPicture.medium,
-                        rating: e.node.meanScore,
-                      ),
-                    )
-                    .toList(),
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(10),
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: dataProvider.getPopularMangas
+                      .map<Widget>(
+                        (e) => SimpleListEntryCard(
+                          contentType: 'manga',
+                          entryId: e.node.id,
+                          entryTitle: e.node.title,
+                          imageUrl: e.node.mainPicture.medium,
+                          rating: e.node.meanScore,
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
-            ),
+            ] else
+              // show circular progress indicator if loading
+              const Padding(
+                padding: EdgeInsets.all(10),
+                child: Center(child: CircularProgressIndicator()),
+              ),
           ],
         ),
       ),
