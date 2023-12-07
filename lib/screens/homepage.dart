@@ -22,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    Provider.of<SessionProvider>(context, listen: false).fetchUser();
     _pageController = PageController(initialPage: _navSelectedIndex);
   }
 

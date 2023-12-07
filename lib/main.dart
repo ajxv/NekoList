@@ -41,7 +41,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    Provider.of<SessionProvider>(context, listen: false).fetchUser();
   }
 
   // This widget is the root of your application.
