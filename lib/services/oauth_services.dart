@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'dart:math';
 import 'package:http/http.dart' as http;
+import 'package:neko_list/helpers/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../helpers/constants.dart' as constants;
@@ -134,6 +135,9 @@ Future<void> signOut() async {
   // clear secure storage
   final secureStorage = SecureStorage();
   await secureStorage.clear();
+  // clear shared preferences
+  final pref = SharedPreference();
+  await pref.clear();
 
   // clear data
   await _deleteCacheDir();

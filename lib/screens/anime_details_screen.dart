@@ -1,10 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neko_list/services/mal_services.dart';
 import 'package:neko_list/widgets/list_entry_card_widget.dart';
 import 'package:neko_list/widgets/anime_status_update_widget.dart';
+import 'package:provider/provider.dart';
 
 import '../models/anime_info_model.dart';
+import '../providers/list_provider.dart';
 
 const rowSpacer1 = TableRow(children: [
   SizedBox(
@@ -23,11 +26,6 @@ const rowSpacer2 = TableRow(children: [
 
 const boldText = TextStyle(
   fontWeight: FontWeight.w500,
-);
-
-const headingTextStyle = TextStyle(
-  fontWeight: FontWeight.bold,
-  fontSize: 17,
 );
 
 class AnimeDetailPage extends StatefulWidget {
@@ -94,9 +92,9 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                     text: data.synopsis,
                   ),
                   // More info
-                  const Text(
+                  Text(
                     "More Info",
-                    style: headingTextStyle,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(15),
@@ -206,25 +204,23 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       ],
                     ),
                   ),
-                  // Divider(
-                  //   color: Theme.of(context).colorScheme.primary,
-                  //   height: 25,
-                  //   thickness: 1,
-                  // ),
+
                   const SizedBox(
                     height: 15,
                   ),
+
                   // OP/ED
                   if (data.openingThemes != null)
                     Padding(
                       padding: const EdgeInsets.all(15),
                       child: Table(
                         children: [
-                          const TableRow(
+                          TableRow(
                             children: [
                               Text(
                                 "Opening Themes",
-                                style: headingTextStyle,
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall,
                                 textAlign: TextAlign.center,
                               )
                             ],
@@ -246,10 +242,10 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       child: Table(
                         children: [
                           rowSpacer1,
-                          const TableRow(children: [
+                          TableRow(children: [
                             Text(
                               "Ending Themes",
-                              style: headingTextStyle,
+                              style: Theme.of(context).textTheme.headlineSmall,
                               textAlign: TextAlign.center,
                             )
                           ]),
@@ -264,17 +260,11 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       ),
                     ),
 
-                  // Divider(
-                  //   color: Theme.of(context).colorScheme.primary,
-                  //   height: 25,
-                  //   thickness: 1,
-                  // ),
-
                   // related anime
                   if (data.relatedAnime.isNotEmpty)
-                    const Text(
+                    Text(
                       "Related Anime",
-                      style: headingTextStyle,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -299,9 +289,9 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
 
                   // reccomendations
                   if (data.recommendations.isNotEmpty)
-                    const Text(
+                    Text(
                       "Recommendations",
-                      style: headingTextStyle,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -374,6 +364,10 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                         score: 0,
                       )
                           .then((value) {
+                        // refresh list
+                        Provider.of<AnimeListProvider>(context, listen: false)
+                            .refresh('plan_to_watch');
+                        // show toast
                         Fluttertoast.showToast(msg: "Added to List");
                         // reload animeinfo after update
                         setState(() {
@@ -399,14 +393,15 @@ class BasicDetailSection extends StatelessWidget {
   final double meanScore;
   final int numEpisodes;
 
-  const BasicDetailSection(
-      {super.key,
-      required this.imageUrl,
-      required this.animeTitle,
-      required this.mediaType,
-      required this.airingStatus,
-      required this.meanScore,
-      required this.numEpisodes});
+  const BasicDetailSection({
+    super.key,
+    required this.imageUrl,
+    required this.animeTitle,
+    required this.mediaType,
+    required this.airingStatus,
+    required this.meanScore,
+    required this.numEpisodes,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -416,12 +411,21 @@ class BasicDetailSection extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(9),
-            child: Image.network(
-              imageUrl,
-              height: 200,
-              width: 130,
-              fit: BoxFit.cover,
-            ),
+            child: imageUrl.isNotEmpty
+                ? CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    height: 200,
+                    width: 130,
+                    fit: BoxFit.cover,
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  )
+                : Image.asset(
+                    "assets/images/image_placeholder.jpg",
+                    height: 200,
+                    width: 130,
+                    fit: BoxFit.cover,
+                  ),
           ),
           Flexible(
             child: Padding(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neko_list/models/manga_info_model.dart';
+import 'package:neko_list/providers/list_provider.dart';
 import 'package:neko_list/services/mal_services.dart';
+import 'package:provider/provider.dart';
 
 class StatusUpdateModal extends StatefulWidget {
   final MyListStatus myListStatus;
@@ -56,6 +58,16 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
     )
         .then((value) {
       Fluttertoast.showToast(msg: "Updated");
+
+      // refresh lists
+      if (widget.myListStatus.status.isNotEmpty &&
+          widget.myListStatus.status != _selectedStatus) {
+        Provider.of<MangaListProvider>(context, listen: false)
+            .refresh(widget.myListStatus.status);
+      }
+      Provider.of<MangaListProvider>(context, listen: false)
+          .refresh(_selectedStatus);
+
       Navigator.of(context).pop();
     }).catchError((error) {
       Fluttertoast.showToast(msg: "Update Failed: ${error.toString()}");
@@ -79,12 +91,19 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Cancel')),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.white70),
+                  )),
               TextButton(
                   onPressed: () {
                     MyAnimelistApi()
                         .removeListManga(mangaId: widget.mangaId)
                         .then((value) {
+                      // refresh list
+                      Provider.of<MangaListProvider>(context, listen: false)
+                          .refresh(widget.myListStatus.status);
+                      // show toast
                       Fluttertoast.showToast(msg: "Removed from List");
                       Navigator.of(context)
                         ..pop()
@@ -95,7 +114,10 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
                       Navigator.of(context).pop();
                     });
                   },
-                  child: const Text('Delete'))
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.red.shade300),
+                  ))
             ],
           );
         });
@@ -283,7 +305,8 @@ class _ChapterCounterState extends State<ChapterCounter> {
   void _increment() {
     FocusScope.of(context).unfocus();
     setState(() {
-      if (_currentValue < widget.totalChapters) {
+      if ((_currentValue < widget.totalChapters) ||
+          (_currentValue > 0 && widget.totalChapters == 0)) {
         _currentValue++;
       }
       widget.notifyParent(_currentValue);
@@ -340,7 +363,9 @@ class _ChapterCounterState extends State<ChapterCounter> {
             onChanged: (value) {
               int parsedValue = int.tryParse(value) ?? _currentValue;
 
-              if (parsedValue <= widget.totalChapters && parsedValue > 0) {
+              if (((parsedValue <= widget.totalChapters) ||
+                      widget.totalChapters == 0) &&
+                  parsedValue > 0) {
                 setState(() {
                   _currentValue = parsedValue;
                 });
@@ -373,11 +398,11 @@ class ScoreSlider extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 15),
+        Padding(
+          padding: const EdgeInsets.only(left: 15),
           child: Text(
-            'Score:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            'Score: $initialScore',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
         ),
         Slider(

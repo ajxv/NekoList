@@ -1,4 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/session_provider.dart';
 import 'search_screen.dart';
 import 'home/anime_list_screen.dart';
 import 'home/home_feed_screen.dart';
@@ -19,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    Provider.of<SessionProvider>(context, listen: false).fetchUser();
     _pageController = PageController(initialPage: _navSelectedIndex);
   }
 
@@ -31,16 +35,35 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,
         leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const Profile(),
-              ),
-            );
-          },
-          icon: const Icon(Icons.manage_accounts_rounded),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const Profile(),
+                ),
+              );
+            },
+            icon: CircleAvatar(
+                radius: 15,
+                backgroundImage: Provider.of<SessionProvider>(context)
+                        .user
+                        .picture
+                        .isNotEmpty
+                    ? CachedNetworkImageProvider(
+                        context.read<SessionProvider>().user.picture)
+                    : const AssetImage("assets/images/profile_placeholder.jpeg")
+                        as ImageProvider
+                // NetworkImage(
+                //     Provider.of<SessionProvider>(context).user.picture),
+                )
+            // const Icon(Icons.manage_accounts_rounded),
+            ),
+        title: Text(
+          "ฅᨐฅ",
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.white.withOpacity(0.5),
+          ),
         ),
-        title: const Text("n e k o"),
         centerTitle: true,
         actions: [
           IconButton(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neko_list/models/anime_info_model.dart';
+import 'package:neko_list/providers/list_provider.dart';
 import 'package:neko_list/services/mal_services.dart';
+import 'package:provider/provider.dart';
 
 class StatusUpdateModal extends StatefulWidget {
   final MyListStatus myListStatus;
@@ -56,6 +58,17 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
     )
         .then((value) {
       Fluttertoast.showToast(msg: "Updated");
+
+      // refresh lists
+      if (widget.myListStatus.status.isNotEmpty &&
+          widget.myListStatus.status != _selectedStatus) {
+        Provider.of<AnimeListProvider>(context, listen: false)
+            .refresh(widget.myListStatus.status);
+      }
+      Provider.of<AnimeListProvider>(context, listen: false)
+          .refresh(_selectedStatus);
+
+      // hide status update modal
       Navigator.of(context).pop();
     }).catchError((error) {
       Fluttertoast.showToast(msg: "Update Failed: ${error.toString()}");
@@ -76,26 +89,38 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
                 const Text('Do you want to remove this anime from your list ?'),
             actions: [
               TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cancel')),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.white70),
+                ),
+              ),
               TextButton(
-                  onPressed: () {
-                    MyAnimelistApi()
-                        .removeListAnime(animeId: widget.animeId)
-                        .then((value) {
-                      Fluttertoast.showToast(msg: "Removed from List");
-                      Navigator.of(context)
-                        ..pop()
-                        ..pop();
-                    }).catchError((error) {
-                      Fluttertoast.showToast(
-                          msg: "Update Failed: ${error.toString()}");
-                      Navigator.of(context).pop();
-                    });
-                  },
-                  child: const Text('Delete'))
+                onPressed: () {
+                  MyAnimelistApi()
+                      .removeListAnime(animeId: widget.animeId)
+                      .then((value) {
+                    // refresh list
+                    Provider.of<AnimeListProvider>(context, listen: false)
+                        .refresh(widget.myListStatus.status);
+                    // show toast
+                    Fluttertoast.showToast(msg: "Removed from List");
+                    Navigator.of(context)
+                      ..pop()
+                      ..pop();
+                  }).catchError((error) {
+                    Fluttertoast.showToast(
+                        msg: "Update Failed: ${error.toString()}");
+                    Navigator.of(context).pop();
+                  });
+                },
+                child: Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.red.shade300),
+                ),
+              )
             ],
           );
         });
@@ -283,7 +308,8 @@ class _EpisodeCounterState extends State<EpisodeCounter> {
   void _increment() {
     FocusScope.of(context).unfocus();
     setState(() {
-      if (_currentValue < widget.totalEpisodes) {
+      if (_currentValue < widget.totalEpisodes ||
+          (_currentValue > 0 && widget.totalEpisodes == 0)) {
         _currentValue++;
       }
       widget.notifyParent(_currentValue);
@@ -340,7 +366,9 @@ class _EpisodeCounterState extends State<EpisodeCounter> {
             onChanged: (value) {
               int parsedValue = int.tryParse(value) ?? _currentValue;
 
-              if (parsedValue <= widget.totalEpisodes && parsedValue > 0) {
+              if (((parsedValue <= widget.totalEpisodes) ||
+                      widget.totalEpisodes == 0) &&
+                  parsedValue > 0) {
                 setState(() {
                   _currentValue = parsedValue;
                 });
@@ -373,11 +401,11 @@ class ScoreSlider extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 15),
+        Padding(
+          padding: const EdgeInsets.only(left: 15),
           child: Text(
-            'Score:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            'Score: $initialScore',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
         ),
         Slider(

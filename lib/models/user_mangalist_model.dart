@@ -1,5 +1,7 @@
 // generated using https://app.quicktype.io
 
+import 'manga_info_model.dart';
+
 class UserMangaList {
   List<Datum> data;
 
@@ -18,7 +20,7 @@ class UserMangaList {
 
 class Datum {
   Node node;
-  ListStatus listStatus;
+  MyListStatus listStatus;
 
   Datum({
     required this.node,
@@ -27,7 +29,7 @@ class Datum {
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         node: Node.fromJson(json["node"]),
-        listStatus: ListStatus.fromJson(json["list_status"]),
+        listStatus: MyListStatus.fromJson(json["list_status"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -36,41 +38,41 @@ class Datum {
       };
 }
 
-class ListStatus {
-  String status;
-  bool isRereading;
-  int numVolumesRead;
-  int numChaptersRead;
-  int score;
-  DateTime updatedAt;
+// class ListStatus {
+//   String status;
+//   bool isRereading;
+//   int numVolumesRead;
+//   int numChaptersRead;
+//   int score;
+//   DateTime updatedAt;
 
-  ListStatus({
-    required this.status,
-    required this.isRereading,
-    required this.numVolumesRead,
-    required this.numChaptersRead,
-    required this.score,
-    required this.updatedAt,
-  });
+//   ListStatus({
+//     required this.status,
+//     required this.isRereading,
+//     required this.numVolumesRead,
+//     required this.numChaptersRead,
+//     required this.score,
+//     required this.updatedAt,
+//   });
 
-  factory ListStatus.fromJson(Map<String, dynamic> json) => ListStatus(
-        status: json["status"],
-        isRereading: json["is_rereading"],
-        numVolumesRead: json["num_volumes_read"],
-        numChaptersRead: json["num_chapters_read"],
-        score: json["score"],
-        updatedAt: DateTime.parse(json["updated_at"]),
-      );
+//   factory ListStatus.fromJson(Map<String, dynamic> json) => ListStatus(
+//         status: json["status"],
+//         isRereading: json["is_rereading"],
+//         numVolumesRead: json["num_volumes_read"],
+//         numChaptersRead: json["num_chapters_read"],
+//         score: json["score"],
+//         updatedAt: DateTime.parse(json["updated_at"]),
+//       );
 
-  Map<String, dynamic> toJson() => {
-        "status": status,
-        "is_rereading": isRereading,
-        "num_volumes_read": numVolumesRead,
-        "num_chapters_read": numChaptersRead,
-        "score": score,
-        "updated_at": updatedAt.toIso8601String(),
-      };
-}
+//   Map<String, dynamic> toJson() => {
+//         "status": status,
+//         "is_rereading": isRereading,
+//         "num_volumes_read": numVolumesRead,
+//         "num_chapters_read": numChaptersRead,
+//         "score": score,
+//         "updated_at": updatedAt.toIso8601String(),
+//       };
+// }
 
 class Node {
   int id;

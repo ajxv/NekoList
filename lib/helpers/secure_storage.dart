@@ -6,13 +6,12 @@ class SecureStorage {
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
   );
 
+  // keys
   final String _isAuth = 'isAuth';
   final String _pkce = 'pkce';
   final String _authCode = 'authCode';
   final String _accessToken = 'accessToken';
-  // final String _tokenType = 'tokenType';
   final String _refreshToken = 'refreshToken';
-  // final String _user = 'user';
 
   // Authentication Status
   Future setAuthStatus(bool authState) async {
@@ -51,15 +50,6 @@ class SecureStorage {
     return await _storage.read(key: _accessToken) ?? "";
   }
 
-  // Oauth accessTokenType
-  // Future setTokenType(value) async {
-  //   await _storage.write(key: _tokenType, value: value);
-  // }
-
-  // Future<String> getTokenType() async {
-  //   return await _storage.read(key: _tokenType) ?? "";
-  // }
-
   // Oauth RefreshToken
   Future setRefreshToken(value) async {
     await _storage.write(key: _refreshToken, value: value);
@@ -68,15 +58,6 @@ class SecureStorage {
   Future<String> getRefreshToken() async {
     return await _storage.read(key: _refreshToken) ?? "";
   }
-
-  // // UserDetails
-  // Future setUserDetails(value) async {
-  //   await _storage.write(key: _user, value: value);
-  // }
-
-  // Future<String> getUserDetails() async {
-  //   return await _storage.read(key: _user) ?? "";
-  // }
 
   // Clear SecureStorage
   Future clear() async => await _storage.deleteAll();

@@ -4,23 +4,23 @@ class UserDetails {
   int id;
   String name;
   String picture;
-  String location;
-  DateTime joinedAt;
+  String? location;
+  DateTime? joinedAt;
   Map<String, double> animeStatistics;
 
   UserDetails({
     required this.id,
     required this.name,
     required this.picture,
-    required this.location,
-    required this.joinedAt,
+    this.location,
+    this.joinedAt,
     required this.animeStatistics,
   });
 
   factory UserDetails.fromJson(Map<String, dynamic> json) => UserDetails(
         id: json["id"],
         name: json["name"],
-        picture: json["picture"],
+        picture: json.containsKey('picture') ? json["picture"] : '',
         location: json["location"],
         joinedAt: DateTime.parse(json["joined_at"]),
         animeStatistics: Map.from(json["anime_statistics"])
@@ -32,7 +32,7 @@ class UserDetails {
         "name": name,
         "picture": picture,
         "location": location,
-        "joined_at": joinedAt.toIso8601String(),
+        "joined_at": joinedAt!.toIso8601String(),
         "anime_statistics": Map.from(animeStatistics)
             .map((k, v) => MapEntry<String, dynamic>(k, v)),
       };

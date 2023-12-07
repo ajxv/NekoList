@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:neko_list/theme/theme_provider.dart';
+import 'package:neko_list/providers/list_provider.dart';
+import 'package:neko_list/providers/session_provider.dart';
+import 'package:neko_list/providers/theme_provider.dart';
+import 'package:neko_list/providers/trending_list_provider.dart';
 import 'package:provider/provider.dart';
 import 'screens/auth/login.dart';
 import 'helpers/secure_storage.dart';
 import 'screens/homepage.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider(
-    create: (context) => ThemeProvider(),
-    child: const MyApp(),
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => SessionProvider()),
+        ChangeNotifierProvider(create: (context) => AnimeListProvider()),
+        ChangeNotifierProvider(create: (context) => MangaListProvider()),
+        ChangeNotifierProvider(create: (context) => TrendingListProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -27,6 +38,11 @@ class _MyAppState extends State<MyApp> {
     _isAuth = await _secureStorage.getAuthStatus();
   }
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -36,11 +52,6 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp(
             title: 'NekoList',
             theme: Provider.of<ThemeProvider>(context).themeData,
-            // darkTheme: darkMode,
-            // ThemeData(
-            //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-            //   useMaterial3: true,
-            // ),
             home: _isAuth ? const HomePage() : const LoginPage(),
           );
         });

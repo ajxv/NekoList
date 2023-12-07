@@ -75,8 +75,8 @@ class MangaInfo {
         endDate:
             json['end_date'] != null ? DateTime.parse(json["end_date"]) : null,
         synopsis: json["synopsis"],
-        mean: json["mean"]?.toDouble(),
-        rank: json["rank"],
+        mean: json['mean'] != null ? json["mean"]?.toDouble() : 0,
+        rank: json['rank'] != null ? json["rank"] : 0,
         popularity: json["popularity"],
         numListUsers: json["num_list_users"],
         numScoringUsers: json["num_scoring_users"],
