@@ -55,8 +55,8 @@ class _ListGridViewState extends State<ListGridView>
       onRefresh: _refresh,
       child: GridView.builder(
         itemCount: cardList.length + 1,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: MediaQuery.of(context).size.width ~/ 100,
           childAspectRatio: 11 / 23,
         ),
         itemBuilder: (context, index) {
