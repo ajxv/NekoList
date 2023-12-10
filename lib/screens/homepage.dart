@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
           "ฅᨐฅ",
           style: TextStyle(
             fontSize: 20,
-            color: Colors.white.withOpacity(0.5),
+            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
           ),
         ),
         centerTitle: true,
