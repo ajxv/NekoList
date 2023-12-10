@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 ThemeData lightMode = ThemeData(
   useMaterial3: true,
   brightness: Brightness.light,
-  highlightColor: Colors.blueGrey.shade200,
+  highlightColor: const Color.fromRGBO(30, 73, 138, 1),
+
   textTheme: TextTheme(
     bodyMedium: TextStyle(
       color: Colors.grey.shade900,
@@ -18,9 +19,9 @@ ThemeData lightMode = ThemeData(
   // ColorScheme
   colorScheme: ColorScheme.light(
     background: Colors.white,
-    primary: Colors.white,
+    primary: const Color.fromRGBO(25, 49, 83, 1),
     secondary: Colors.grey.shade100,
-    onPrimary: Colors.grey.shade900,
+    onPrimary: Colors.grey.shade100,
     onBackground: Colors.grey.shade900,
     onSecondary: Colors.grey.shade900,
   ),
@@ -32,10 +33,10 @@ ThemeData lightMode = ThemeData(
 
   // NavigationBar Theme (bottom)
   navigationBarTheme: NavigationBarThemeData(
-    backgroundColor: Colors.white,
-    indicatorColor: Colors.blueGrey,
-    shadowColor: Colors.grey.shade900,
-    surfaceTintColor: Colors.blueGrey.shade200,
+    // backgroundColor: Colors.white,
+    // indicatorColor: Colors.blueGrey,
+    // shadowColor: Colors.grey.shade900,
+    // surfaceTintColor: Colors.blueGrey.shade200,
 
     // navigation bar labels
     labelTextStyle: MaterialStateTextStyle.resolveWith((states) {
@@ -56,7 +57,7 @@ ThemeData lightMode = ThemeData(
   tabBarTheme: TabBarTheme(
     labelColor: Colors.grey.shade900,
     unselectedLabelColor: Colors.grey,
-    indicatorColor: Colors.blueGrey,
+    // indicatorColor: Colors.blueGrey,
   ),
 
   // FloatingActionButton Theme

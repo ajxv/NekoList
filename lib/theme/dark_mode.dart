@@ -6,7 +6,7 @@ ThemeData darkMode = ThemeData(
   useMaterial3: true,
   brightness: Brightness.dark,
   highlightColor: const Color.fromRGBO(240, 106, 106, 1),
-  splashColor: const Color.fromRGBO(171, 65, 65, 0.5),
+  splashColor: const Color.fromRGBO(171, 65, 65, 0.2),
 
   textTheme: TextTheme(
     bodyMedium: TextStyle(
@@ -34,9 +34,9 @@ ThemeData darkMode = ThemeData(
 
   // NavigationBar Theme (bottom)
   navigationBarTheme: NavigationBarThemeData(
-    backgroundColor: Colors.black,
-    indicatorColor: Colors.blueGrey,
-    shadowColor: Colors.grey.shade900,
+    // backgroundColor: Colors.black,
+    // indicatorColor: Colors.blueGrey,
+    // shadowColor: Colors.grey.shade900,
     // surfaceTintColor: Colors.grey.shade500,
 
     labelTextStyle: MaterialStateTextStyle.resolveWith((states) {

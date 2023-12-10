@@ -119,6 +119,7 @@ class ListEntryCard extends StatelessWidget {
                         child: Icon(
                           Icons.live_tv_rounded,
                           size: 18,
+                          color: Colors.white,
                         ),
                       )
                   ],

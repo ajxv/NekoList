@@ -92,9 +92,10 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text(
+                child: Text(
                   'Cancel',
-                  style: TextStyle(color: Colors.white70),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground),
                 ),
               ),
               TextButton(
@@ -150,7 +151,7 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
                 child: Text(
                   "Close",
                   style: TextStyle(
-                    color: Colors.grey.shade400,
+                    color: Theme.of(context).colorScheme.onBackground,
                   ),
                 ),
               ),
@@ -224,6 +225,9 @@ class SetListStatus extends StatelessWidget {
       return OutlinedButton.styleFrom(
         backgroundColor:
             status == buttonLabel ? Theme.of(context).highlightColor : null,
+        foregroundColor: status == buttonLabel
+            ? Theme.of(context).colorScheme.onPrimary
+            : null,
         side: BorderSide(
           color: Colors.grey.shade900,
         ),
