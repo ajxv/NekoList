@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 ThemeData darkMode = ThemeData(
   useMaterial3: true,
   brightness: Brightness.dark,
-  highlightColor: Colors.blueGrey,
+  highlightColor: const Color.fromRGBO(240, 106, 106, 1),
+  splashColor: const Color.fromRGBO(171, 65, 65, 0.5),
 
   textTheme: TextTheme(
     bodyMedium: TextStyle(
@@ -19,10 +20,10 @@ ThemeData darkMode = ThemeData(
   // ColorScheme
   colorScheme: ColorScheme.dark(
     background: Colors.black,
-    primary: Colors.grey.shade800,
-    secondary: Colors.grey.shade600,
+    primary: const Color.fromRGBO(68, 7, 11, 1),
+    secondary: const Color.fromRGBO(171, 65, 65, 1),
     onPrimary: Colors.grey.shade300,
-    onBackground: Colors.white,
+    onBackground: Colors.white70,
     onSecondary: Colors.grey.shade300,
   ),
 
@@ -56,17 +57,7 @@ ThemeData darkMode = ThemeData(
   tabBarTheme: const TabBarTheme(
     labelColor: Colors.white,
     unselectedLabelColor: Colors.grey,
-    indicatorColor: Colors.blueGrey,
-  ),
-
-  // FloatingActionButton Theme
-  floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: Colors.blueGrey,
-  ),
-
-  // slider Theme
-  sliderTheme: const SliderThemeData(
-    activeTrackColor: Colors.blueGrey,
+    // indicatorColor: Colors.blueGrey,
   ),
 
   // textfield cursor color

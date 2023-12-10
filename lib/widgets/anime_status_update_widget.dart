@@ -138,6 +138,7 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10),
@@ -149,7 +150,7 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
                 child: Text(
                   "Close",
                   style: TextStyle(
-                    color: Colors.grey.shade600,
+                    color: Colors.grey.shade400,
                   ),
                 ),
               ),
@@ -176,23 +177,23 @@ class _StatusUpdateModalState extends State<StatusUpdateModal> {
           status: _selectedStatus,
           notifyParent: _manageStatusChange,
         ),
-        const SizedBox(height: 20), // add space between widgets
+        // const SizedBox(height: 20), // add space between widgets
         EpisodeCounter(
           totalEpisodes: widget.totalEpisodes,
           epsWatched: _episodesWatched,
           notifyParent: _manageEpisodesChange,
         ),
-        const SizedBox(height: 20), // add space between widgets
+        // const SizedBox(height: 20), // add space between widgets
         ScoreSlider(
           initialScore: _selectedScore,
           notifyParent: _manageScoreChange,
         ),
-        const SizedBox(height: 20), // add space between widgets
+        // const SizedBox(height: 20), // add space between widgets
         TextButton(
           onPressed: onDelete,
           style: ButtonStyle(
             fixedSize: const MaterialStatePropertyAll(Size(200, 10)),
-            backgroundColor: MaterialStatePropertyAll(Colors.red.shade300),
+            backgroundColor: MaterialStatePropertyAll(Colors.red.shade400),
           ),
           child: const Text(
             'Delete',
@@ -230,11 +231,12 @@ class SetListStatus extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(5, 8, 5, 8),
+      padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconButton.outlined(
+            tooltip: "Watching",
             onPressed: () {
               notifyParent('watching');
             },
@@ -244,6 +246,7 @@ class SetListStatus extends StatelessWidget {
             ),
           ),
           IconButton.outlined(
+            tooltip: "Planned",
             onPressed: () {
               notifyParent('plan_to_watch');
             },
@@ -253,6 +256,7 @@ class SetListStatus extends StatelessWidget {
             ),
           ),
           IconButton.outlined(
+            tooltip: "Completed",
             onPressed: () {
               notifyParent('completed');
             },
@@ -262,6 +266,7 @@ class SetListStatus extends StatelessWidget {
             ),
           ),
           IconButton.outlined(
+            tooltip: "On Hold",
             onPressed: () {
               notifyParent('on_hold');
             },
@@ -271,6 +276,7 @@ class SetListStatus extends StatelessWidget {
             ),
           ),
           IconButton.outlined(
+            tooltip: "Dropped",
             onPressed: () {
               notifyParent('dropped');
             },
@@ -409,6 +415,7 @@ class ScoreSlider extends StatelessWidget {
           ),
         ),
         Slider(
+          activeColor: Theme.of(context).highlightColor,
           value: initialScore.toDouble(),
           onChanged: (value) {
             return notifyParent(value.toInt());

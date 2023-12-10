@@ -330,6 +330,7 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
       ),
       floatingActionButton: listStatusLoaded
           ? FloatingActionButton(
+              backgroundColor: Theme.of(context).colorScheme.primary,
               // add anime to list if not already on list else open edit modal
               onPressed: myListStatus.status != ''
                   // condition: anime already on list

@@ -96,6 +96,7 @@ class _HomePageState extends State<HomePage> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(30),
           child: NavigationBar(
+            indicatorColor: Theme.of(context).colorScheme.primary,
             selectedIndex: _navSelectedIndex,
             onDestinationSelected: (int index) {
               setState(() {
