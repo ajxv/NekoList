@@ -55,14 +55,15 @@ class ListEntryCard extends StatelessWidget {
           maxHeight: 230,
         ),
         child: Card(
-          elevation: 2,
+          color: Theme.of(context).colorScheme.background,
+          elevation: 0.5,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
               // entry poster
               ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+                borderRadius: BorderRadius.circular(5),
                 child: Stack(
                   children: [
                     imageUrl.isNotEmpty
@@ -247,11 +248,14 @@ class SimpleListEntryCard extends StatelessWidget {
           maxHeight: 220,
         ),
         child: Card(
+          color: Theme.of(context).colorScheme.background,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          elevation: 0.5,
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
               ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(5),
                   child: Stack(
                     children: [
                       imageUrl.isNotEmpty
