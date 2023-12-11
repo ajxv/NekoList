@@ -136,13 +136,15 @@ class _SearchGridViewState extends State<SearchGridView>
               ))
           .toList();
 
-      setState(() {
-        _cardList.addAll(cardList);
-        _offset += limit;
-        _isLoading = false;
+      if (mounted) {
+        setState(() {
+          _cardList.addAll(cardList);
+          _offset += limit;
+          _isLoading = false;
 
-        if (cardList.length < 10) _hasMore = false;
-      });
+          if (cardList.length < 10) _hasMore = false;
+        });
+      }
     }).catchError((error) {
       Fluttertoast.showToast(
           msg: error.toString(), toastLength: Toast.LENGTH_LONG);
