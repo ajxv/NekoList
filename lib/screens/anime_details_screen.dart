@@ -277,9 +277,15 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                               (e) => ListEntryCard(
                                 entryType: 'anime',
                                 entryId: e.node.id,
-                                entryTitle: e.node.title,
+                                title: e.node.title,
                                 imageUrl: e.node.mainPicture.medium,
-                                relationType: e.relationTypeFormatted,
+                                subtitle: Text(
+                                  "(${e.relationTypeFormatted})",
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
                               ),
                             )
                             .toList(),
@@ -304,9 +310,24 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                               (e) => ListEntryCard(
                                 entryType: 'anime',
                                 entryId: e.node.id,
-                                entryTitle: e.node.title,
+                                title: e.node.title,
                                 imageUrl: e.node.mainPicture.medium,
-                                numRecommendations: e.numRecommendations,
+                                subtitle: Wrap(
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.thumbs_up_down_rounded,
+                                      size: 15,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      e.numRecommendations.toString(),
+                                      style: const TextStyle(fontSize: 12),
+                                    )
+                                  ],
+                                ),
                               ),
                             )
                             .toList(),
@@ -460,7 +481,7 @@ class BasicDetailSection extends StatelessWidget {
                       const Icon(Icons.timer),
                       const SizedBox(width: 10),
                       Text(
-                        "$numEpisodes episodes",
+                        "${numEpisodes == 0 ? '?' : numEpisodes} episodes",
                         style: const TextStyle(fontSize: 15),
                       ),
                     ],

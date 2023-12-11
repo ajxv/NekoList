@@ -83,12 +83,12 @@ class _HomeFeedState extends State<HomeFeed>
                 child: Row(
                   children: dataProvider.getAnimeSuggestions
                       .map<Widget>(
-                        (e) => SimpleListEntryCard(
-                          contentType: 'anime',
+                        (e) => ListEntryCard(
+                          entryType: 'anime',
                           entryId: e.node.id,
-                          entryTitle: e.node.title,
+                          title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
-                          rating: e.node.meanScore,
+                          avgRating: e.node.meanScore,
                         ),
                       )
                       .toList(),
@@ -109,12 +109,12 @@ class _HomeFeedState extends State<HomeFeed>
                 child: Row(
                   children: dataProvider.getTopAnimes
                       .map<Widget>(
-                        (e) => SimpleListEntryCard(
-                          contentType: 'anime',
+                        (e) => ListEntryCard(
+                          entryType: 'anime',
                           entryId: e.node.id,
-                          entryTitle: e.node.title,
+                          title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
-                          rating: e.node.meanScore,
+                          avgRating: e.node.meanScore,
                         ),
                       )
                       .toList(),
@@ -135,12 +135,12 @@ class _HomeFeedState extends State<HomeFeed>
                 child: Row(
                   children: dataProvider.getPopularAnimes
                       .map<Widget>(
-                        (e) => SimpleListEntryCard(
-                          contentType: 'anime',
+                        (e) => ListEntryCard(
+                          entryType: 'anime',
                           entryId: e.node.id,
-                          entryTitle: e.node.title,
+                          title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
-                          rating: e.node.meanScore,
+                          avgRating: e.node.meanScore,
                         ),
                       )
                       .toList(),
@@ -161,12 +161,12 @@ class _HomeFeedState extends State<HomeFeed>
                 child: Row(
                   children: dataProvider.getTopMangas
                       .map<Widget>(
-                        (e) => SimpleListEntryCard(
-                          contentType: 'manga',
+                        (e) => ListEntryCard(
+                          entryType: 'manga',
                           entryId: e.node.id,
-                          entryTitle: e.node.title,
+                          title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
-                          rating: e.node.meanScore,
+                          avgRating: e.node.meanScore,
                         ),
                       )
                       .toList(),
@@ -187,12 +187,12 @@ class _HomeFeedState extends State<HomeFeed>
                 child: Row(
                   children: dataProvider.getTopManhwas
                       .map<Widget>(
-                        (e) => SimpleListEntryCard(
-                          contentType: 'manga',
+                        (e) => ListEntryCard(
+                          entryType: 'manga',
                           entryId: e.node.id,
-                          entryTitle: e.node.title,
+                          title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
-                          rating: e.node.meanScore,
+                          avgRating: e.node.meanScore,
                         ),
                       )
                       .toList(),
@@ -213,12 +213,12 @@ class _HomeFeedState extends State<HomeFeed>
                 child: Row(
                   children: dataProvider.getPopularMangas
                       .map<Widget>(
-                        (e) => SimpleListEntryCard(
-                          contentType: 'manga',
+                        (e) => ListEntryCard(
+                          entryType: 'manga',
                           entryId: e.node.id,
-                          entryTitle: e.node.title,
+                          title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
-                          rating: e.node.meanScore,
+                          avgRating: e.node.meanScore,
                         ),
                       )
                       .toList(),

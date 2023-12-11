@@ -169,84 +169,12 @@ class _MangaDetailPageState extends State<MangaDetailPage> {
                             )
                           ],
                         ),
-                        // rowSpacer2,
-                        // TableRow(
-                        //   children: [
-                        //     const Text("Studio"),
-                        //     Text(
-                        //       data.studios.isNotEmpty
-                        //           ? data.studios[0].name
-                        //           : '',
-                        //       style: boldText,
-                        //     )
-                        //   ],
-                        // ),
                       ],
                     ),
                   ),
-                  // Divider(
-                  //   color: Theme.of(context).colorScheme.primary,
-                  //   height: 25,
-                  //   thickness: 1,
-                  // ),
                   const SizedBox(
                     height: 15,
                   ),
-                  // OP/ED
-                  // if (data.openingThemes != null)
-                  //   Padding(
-                  //     padding: const EdgeInsets.all(15),
-                  //     child: Table(
-                  //       children: [
-                  //         const TableRow(
-                  //           children: [
-                  //             Text(
-                  //               "Opening Themes",
-                  //               style: Theme.of(context).textTheme.headlineSmall,
-                  //               textAlign: TextAlign.center,
-                  //             )
-                  //           ],
-                  //         ),
-                  //         rowSpacer1,
-                  //         ...data.openingThemes!.map(
-                  //           (op) => TableRow(
-                  //             children: [
-                  //               Text("• ${op['text']}"),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // if (data.endingThemes != null)
-                  //   Padding(
-                  //     padding: const EdgeInsets.all(15),
-                  //     child: Table(
-                  //       children: [
-                  //         rowSpacer1,
-                  //         const TableRow(children: [
-                  //           Text(
-                  //             "Ending Themes",
-                  //             style: Theme.of(context).textTheme.headlineSmall,
-                  //             textAlign: TextAlign.center,
-                  //           )
-                  //         ]),
-                  //         rowSpacer1,
-                  //         ...data.endingThemes!.map(
-                  //           (ed) => TableRow(children: [
-                  //             Text("• ${ed['text']}"),
-                  //           ]),
-                  //         ),
-                  //         rowSpacer1,
-                  //       ],
-                  //     ),
-                  //   ),
-
-                  // Divider(
-                  //   color: Theme.of(context).colorScheme.primary,
-                  //   height: 25,
-                  //   thickness: 1,
-                  // ),
 
                   // related manga
                   if (data.relatedManga.isNotEmpty)
@@ -265,9 +193,15 @@ class _MangaDetailPageState extends State<MangaDetailPage> {
                               (e) => ListEntryCard(
                                 entryType: 'manga',
                                 entryId: e.node.id,
-                                entryTitle: e.node.title,
+                                title: e.node.title,
                                 imageUrl: e.node.mainPicture.medium,
-                                relationType: e.relationTypeFormatted,
+                                subtitle: Text(
+                                  "(${e.relationTypeFormatted})",
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
                               ),
                             )
                             .toList(),
@@ -292,9 +226,15 @@ class _MangaDetailPageState extends State<MangaDetailPage> {
                               (e) => ListEntryCard(
                                 entryType: 'anime',
                                 entryId: e.node.id,
-                                entryTitle: e.node.title,
+                                title: e.node.title,
                                 imageUrl: e.node.mainPicture.medium,
-                                relationType: e.relationTypeFormatted,
+                                subtitle: Text(
+                                  "(${e.relationTypeFormatted})",
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
                               ),
                             )
                             .toList(),
@@ -319,9 +259,24 @@ class _MangaDetailPageState extends State<MangaDetailPage> {
                               (e) => ListEntryCard(
                                 entryType: 'manga',
                                 entryId: e.node.id,
-                                entryTitle: e.node.title,
+                                title: e.node.title,
                                 imageUrl: e.node.mainPicture.medium,
-                                numRecommendations: e.numRecommendations,
+                                subtitle: Wrap(
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.thumbs_up_down_rounded,
+                                      size: 15,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      e.numRecommendations.toString(),
+                                      style: const TextStyle(fontSize: 12),
+                                    )
+                                  ],
+                                ),
                               ),
                             )
                             .toList(),
@@ -474,7 +429,7 @@ class BasicDetailSection extends StatelessWidget {
                       const Icon(Icons.timer),
                       const SizedBox(width: 10),
                       Text(
-                        "$numChapters chapters",
+                        "${numChapters == 0 ? '?' : numChapters} chapters",
                         style: const TextStyle(fontSize: 15),
                       ),
                     ],

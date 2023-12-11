@@ -12,7 +12,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(168, 191, 255, 1),
+      backgroundColor: const Color.fromRGBO(117, 140, 206, 1),
       body: Padding(
         padding: const EdgeInsets.only(bottom: 40),
         child: Column(
@@ -28,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
             ElevatedButton(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith(
-                      (states) => const Color.fromRGBO(113, 138, 198, 1))),
+                      (states) => const Color.fromARGB(255, 95, 118, 182))),
               onPressed: () async {
                 await Navigator.push(
                   context,

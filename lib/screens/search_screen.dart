@@ -43,9 +43,9 @@ class NekoSearchDelgate extends SearchDelegate {
               ActionChip(
                 avatar: _contentType != "anime"
                     ? Icon(Icons.movie,
-                        color: Theme.of(context).colorScheme.onPrimary)
+                        color: Theme.of(context).colorScheme.onBackground)
                     : Icon(Icons.check_rounded,
-                        color: Theme.of(context).colorScheme.onPrimary),
+                        color: Theme.of(context).colorScheme.onBackground),
                 label: const Text("Anime"),
                 labelStyle: const TextStyle(fontSize: 12),
                 onPressed: () {
@@ -60,9 +60,9 @@ class NekoSearchDelgate extends SearchDelegate {
               ActionChip(
                 avatar: _contentType != "manga"
                     ? Icon(Icons.book,
-                        color: Theme.of(context).colorScheme.onPrimary)
+                        color: Theme.of(context).colorScheme.onBackground)
                     : Icon(Icons.check_rounded,
-                        color: Theme.of(context).colorScheme.onPrimary),
+                        color: Theme.of(context).colorScheme.onBackground),
                 label: const Text("Manga"),
                 labelStyle: const TextStyle(fontSize: 12),
                 onPressed: () {
@@ -92,7 +92,7 @@ class SearchGridView extends StatefulWidget {
 
 class _SearchGridViewState extends State<SearchGridView>
     with AutomaticKeepAliveClientMixin<SearchGridView> {
-  final List<SimpleListEntryCard> _cardList = [];
+  final List<ListEntryCard> _cardList = [];
   int _offset = 0;
   bool _hasMore = true;
   bool _isLoading = false;
@@ -125,13 +125,13 @@ class _SearchGridViewState extends State<SearchGridView>
             offset: offset,
             limit: limit)
         .then((searchResult) {
-      List<SimpleListEntryCard> cardList = [];
+      List<ListEntryCard> cardList = [];
 
       cardList = searchResult.data
-          .map((data) => SimpleListEntryCard(
-                contentType: contentType,
+          .map((data) => ListEntryCard(
+                entryType: contentType,
                 entryId: data.node.id,
-                entryTitle: data.node.title,
+                title: data.node.title,
                 imageUrl: data.node.mainPicture.medium,
               ))
           .toList();

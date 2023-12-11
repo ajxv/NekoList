@@ -56,11 +56,15 @@ class AnimeListProvider extends ChangeNotifier {
                 entryType: 'anime',
                 entryId: data.node.id,
                 imageUrl: data.node.mainPicture.medium,
-                entryTitle: data.node.title,
-                numCompleted: data.listStatus.numEpisodesWatched,
-                numTotal: data.node.numEpisodes,
-                rating: data.listStatus.score,
-                status: data.node.airingStatus,
+                title: data.node.title,
+                subtitle: Text(
+                  "${data.listStatus.numEpisodesWatched}/${data.node.numEpisodes != 0 ? data.node.numEpisodes : '?'}",
+                  style: const TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                userRating: data.listStatus.score,
+                isAiring: data.node.airingStatus == 'currently_airing',
                 labelMaxLines: 1,
               ))
           .toList();
@@ -145,10 +149,14 @@ class MangaListProvider extends ChangeNotifier {
                 entryType: 'manga',
                 entryId: data.node.id,
                 imageUrl: data.node.mainPicture.medium,
-                entryTitle: data.node.title,
-                numCompleted: data.listStatus.numChaptersRead,
-                numTotal: data.node.numChapters,
-                rating: data.listStatus.score,
+                title: data.node.title,
+                subtitle: Text(
+                  "${data.listStatus.numChaptersRead}/${data.node.numChapters != 0 ? data.node.numChapters : '?'}",
+                  style: const TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                userRating: data.listStatus.score,
                 labelMaxLines: 1,
               ))
           .toList();
