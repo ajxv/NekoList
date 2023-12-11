@@ -210,130 +210,107 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                   ),
 
                   // OP/ED
-                  if (data.openingThemes != null)
-                    Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Table(
-                        children: [
-                          TableRow(
-                            children: [
-                              Text(
-                                "Opening Themes",
-                                style:
-                                    Theme.of(context).textTheme.headlineSmall,
-                                textAlign: TextAlign.center,
-                              )
-                            ],
-                          ),
-                          rowSpacer1,
-                          ...data.openingThemes!.map(
-                            (op) => TableRow(
-                              children: [
-                                Text("• ${op['text']}"),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                  if (data.openingThemes != null) ...[
+                    Text(
+                      "Opening Themes",
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      textAlign: TextAlign.center,
                     ),
-                  if (data.endingThemes != null)
-                    Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Table(
-                        children: [
-                          rowSpacer1,
-                          TableRow(children: [
-                            Text(
-                              "Ending Themes",
-                              style: Theme.of(context).textTheme.headlineSmall,
-                              textAlign: TextAlign.center,
-                            )
-                          ]),
-                          rowSpacer1,
-                          ...data.endingThemes!.map(
-                            (ed) => TableRow(children: [
-                              Text("• ${ed['text']}"),
-                            ]),
-                          ),
-                          rowSpacer1,
-                        ],
-                      ),
+                    DescriptionTextWidget(
+                      text:
+                          data.endingThemes!.map((ed) => ed['text']).join('\n'),
                     ),
+                  ],
+
+                  if (data.endingThemes != null) ...[
+                    Text(
+                      "Ending Themes",
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      textAlign: TextAlign.center,
+                    ),
+                    DescriptionTextWidget(
+                      text:
+                          data.endingThemes!.map((ed) => ed['text']).join('\n'),
+                    ),
+                  ],
 
                   // related anime
-                  if (data.relatedAnime.isNotEmpty)
+                  if (data.relatedAnime.isNotEmpty) ...[
                     Text(
                       "Related Anime",
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(10),
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: data.relatedAnime
-                            .map(
-                              (e) => ListEntryCard(
-                                entryType: 'anime',
-                                entryId: e.node.id,
-                                title: e.node.title,
-                                imageUrl: e.node.mainPicture.medium,
-                                subtitle: Text(
-                                  "(${e.relationTypeFormatted})",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    overflow: TextOverflow.ellipsis,
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(10),
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: data.relatedAnime
+                              .map(
+                                (e) => ListEntryCard(
+                                  entryType: 'anime',
+                                  entryId: e.node.id,
+                                  title: e.node.title,
+                                  imageUrl: e.node.mainPicture.medium,
+                                  subtitle: Text(
+                                    "(${e.relationTypeFormatted})",
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            )
-                            .toList(),
+                              )
+                              .toList(),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
 
                   // reccomendations
-                  if (data.recommendations.isNotEmpty)
+                  if (data.recommendations.isNotEmpty) ...[
                     Text(
                       "Recommendations",
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(10),
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: data.recommendations
-                            .map(
-                              (e) => ListEntryCard(
-                                entryType: 'anime',
-                                entryId: e.node.id,
-                                title: e.node.title,
-                                imageUrl: e.node.mainPicture.medium,
-                                subtitle: Wrap(
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  children: [
-                                    const Icon(
-                                      Icons.thumbs_up_down_rounded,
-                                      size: 15,
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      e.numRecommendations.toString(),
-                                      style: const TextStyle(fontSize: 12),
-                                    )
-                                  ],
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(10),
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: data.recommendations
+                              .map(
+                                (e) => ListEntryCard(
+                                  entryType: 'anime',
+                                  entryId: e.node.id,
+                                  title: e.node.title,
+                                  imageUrl: e.node.mainPicture.medium,
+                                  subtitle: Wrap(
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.center,
+                                    children: [
+                                      const Icon(
+                                        Icons.thumbs_up_down_rounded,
+                                        size: 15,
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        e.numRecommendations.toString(),
+                                        style: const TextStyle(fontSize: 12),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            )
-                            .toList(),
+                              )
+                              .toList(),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ],
               ),
             );
@@ -579,6 +556,7 @@ class _DescriptionTextWidgetState extends State<DescriptionTextWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      alignment: Alignment.centerLeft,
       padding: const EdgeInsets.all(15),
       child: secondHalf.isEmpty
           ? Text(firstHalf)
