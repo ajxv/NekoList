@@ -71,6 +71,7 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
           if (snapshot.hasData) {
             var data = snapshot.data!;
             return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.only(bottom: 30),
               child: Column(
                 children: [
@@ -217,8 +218,9 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       textAlign: TextAlign.center,
                     ),
                     DescriptionTextWidget(
-                      text:
-                          data.endingThemes!.map((ed) => ed['text']).join('\n'),
+                      text: data.openingThemes!
+                          .map((op) => op['text'])
+                          .join('\n'),
                     ),
                   ],
 
