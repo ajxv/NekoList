@@ -270,6 +270,40 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                     ),
                   ],
 
+                  // related manga
+                  if (data.relatedManga.isNotEmpty) ...[
+                    Text(
+                      "Related Manga",
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(10),
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: data.relatedManga
+                              .map(
+                                (e) => ListEntryCard(
+                                  entryType: 'manga',
+                                  entryId: e.node.id,
+                                  title: e.node.title,
+                                  imageUrl: e.node.mainPicture.medium,
+                                  subtitle: Text(
+                                    "(${e.relationTypeFormatted})",
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    ),
+                  ],
+
                   // reccomendations
                   if (data.recommendations.isNotEmpty) ...[
                     Text(
