@@ -54,14 +54,17 @@ class MangaInfo {
   factory MangaInfo.fromJson(Map<String, dynamic> json) => MangaInfo(
         id: json["id"],
         title: json["title"],
-        mainPicture: Picture.fromJson(json["main_picture"]),
+        mainPicture: json["main_picture"] != null
+            ? Picture.fromJson(json["main_picture"])
+            : Picture(medium: '', large: ''),
         alternativeTitles:
             AlternativeTitles.fromJson(json["alternative_titles"]),
         startDate: json['start_date'] != null
             ? DateTime.tryParse(json["start_date"])
             : null,
-        endDate:
-            json['end_date'] != null ? DateTime.parse(json["end_date"]) : null,
+        endDate: json['end_date'] != null
+            ? DateTime.tryParse(json["end_date"])
+            : null,
         synopsis: json["synopsis"],
         mean: json['mean'] != null ? json["mean"]?.toDouble() : 0,
         rank: json['rank'] != null ? json["rank"] : 0,
@@ -90,7 +93,7 @@ class MangaInfo {
   Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
-        "main_picture": mainPicture.toJson(),
+        "main_picture": mainPicture!.toJson(),
         "alternative_titles": alternativeTitles.toJson(),
         "start_date":
             "${startDate!.year.toString().padLeft(4, '0')}-${startDate!.month.toString().padLeft(2, '0')}-${startDate!.day.toString().padLeft(2, '0')}",
