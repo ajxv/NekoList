@@ -21,8 +21,11 @@ class _SplashScreenState extends State<SplashScreen> {
     _secureStorage.getAuthStatus().then((value) => _isAuth = value);
 
     Future.delayed(const Duration(seconds: 2), () {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (_) => _isAuth ? const HomePage() : const LoginPage()));
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => _isAuth ? const HomePage() : const LoginPage(),
+        ),
+      );
     });
   }
 
