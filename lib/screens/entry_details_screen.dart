@@ -64,10 +64,34 @@ class _EntryDetailPageState extends State<EntryDetailPage> {
           });
   }
 
+  void _reload() {
+    // reload screen
+    setState(() {
+      _futureEntryInfo = widget.isAnime
+          ? MyAnimelistApi().getAnimeInfo(animeId: widget.entryId).then((data) {
+              setState(() {
+                _isLoading = false;
+                _myListStatus = data.myListStatus;
+                _totalCount = data.numEpisodes;
+              });
+              return data;
+            })
+          : MyAnimelistApi().getMangaInfo(mangaId: widget.entryId).then((data) {
+              setState(() {
+                _isLoading = false;
+                _myListStatus = data.myListStatus;
+                _totalCount = data.numChapters;
+              });
+              return data;
+            });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.chevron_left),
@@ -408,6 +432,9 @@ class _EntryDetailPageState extends State<EntryDetailPage> {
                             ? context.read<AnimeListProvider>().refresh
                             : context.read<MangaListProvider>().refresh,
                       );
+
+                  // reload animeinfo after update
+                  _reload();
                 } else {
                   context.read<EntryStatusProvider>().loadListStatus(
                       widget.isAnime, _myListStatus, _totalCount);
@@ -424,29 +451,7 @@ class _EntryDetailPageState extends State<EntryDetailPage> {
                     },
                   ).whenComplete(() {
                     // reload animeinfo after update (when closing bottomSheet)
-                    setState(() {
-                      _futureEntryInfo = widget.isAnime
-                          ? MyAnimelistApi()
-                              .getAnimeInfo(animeId: widget.entryId)
-                              .then((data) {
-                              setState(() {
-                                _isLoading = false;
-                                _myListStatus = data.myListStatus;
-                                _totalCount = data.numEpisodes;
-                              });
-                              return data;
-                            })
-                          : MyAnimelistApi()
-                              .getMangaInfo(mangaId: widget.entryId)
-                              .then((data) {
-                              setState(() {
-                                _isLoading = false;
-                                _myListStatus = data.myListStatus;
-                                _totalCount = data.numChapters;
-                              });
-                              return data;
-                            });
-                    });
+                    _reload();
                   });
                 }
               },

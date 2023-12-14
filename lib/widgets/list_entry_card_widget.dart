@@ -56,7 +56,7 @@ class ListEntryCard extends StatelessWidget {
         ),
         child: Card(
           color: Theme.of(context).colorScheme.background,
-          elevation: 0.5,
+          elevation: 0.2,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           clipBehavior: Clip.antiAlias,
           child: Column(

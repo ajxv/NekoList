@@ -51,6 +51,7 @@ class StatusUpdateModal extends StatelessWidget {
                         );
                     Navigator.of(context)
                       ..pop()
+                      ..pop()
                       ..pop();
                   },
                   child: Text(

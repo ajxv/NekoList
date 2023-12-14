@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../services/mal_services.dart';
 
 class EntryStatusProvider extends ChangeNotifier {
-  late String initialStatus;
+  String initialStatus = '';
   final _myListStatus = {};
 
   get myListStatus => _myListStatus;
@@ -47,7 +47,8 @@ class EntryStatusProvider extends ChangeNotifier {
           Fluttertoast.showToast(msg: "Updated");
 
           // refresh lists
-          if (initialStatus != _myListStatus['status']) {
+          if (initialStatus.isNotEmpty &&
+              initialStatus != _myListStatus['status']) {
             refreshFunction(initialStatus);
           }
 

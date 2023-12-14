@@ -259,6 +259,16 @@ class HorizontalEntryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 5,
+            offset: const Offset(6, 6),
+          )
+        ],
+      ),
       margin: const EdgeInsets.only(top: 10, bottom: 10),
       height: 200,
       child: AspectRatio(

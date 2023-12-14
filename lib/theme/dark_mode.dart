@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 ThemeData darkMode = ThemeData(
   useMaterial3: true,
   brightness: Brightness.dark,
-  highlightColor: const Color.fromRGBO(240, 106, 106, 1),
-  splashColor: const Color.fromRGBO(171, 65, 65, 0.2),
+  highlightColor: const Color.fromRGBO(245, 111, 108, 1),
+  splashColor: const Color.fromARGB(50, 0, 0, 0),
 
   textTheme: TextTheme(
     bodyMedium: TextStyle(
@@ -19,8 +19,8 @@ ThemeData darkMode = ThemeData(
   ),
   // ColorScheme
   colorScheme: ColorScheme.dark(
-    background: Colors.black,
-    primary: const Color.fromRGBO(68, 7, 11, 1),
+    background: const Color.fromARGB(255, 12, 14, 20),
+    primary: const Color.fromRGBO(130, 0, 36, 1),
     secondary: const Color.fromRGBO(171, 65, 65, 1),
     onPrimary: Colors.grey.shade300,
     onBackground: Colors.white70,
@@ -34,9 +34,6 @@ ThemeData darkMode = ThemeData(
 
   // NavigationBar Theme (bottom)
   navigationBarTheme: NavigationBarThemeData(
-    // backgroundColor: Colors.black,
-    // indicatorColor: Colors.blueGrey,
-    // shadowColor: Colors.grey.shade900,
     // surfaceTintColor: Colors.grey.shade500,
 
     labelTextStyle: MaterialStateTextStyle.resolveWith((states) {
