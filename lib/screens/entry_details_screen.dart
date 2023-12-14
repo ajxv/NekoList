@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 import '../services/mal_services.dart';
@@ -513,11 +515,17 @@ class BasicDetailSection extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    animeTitle,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  GestureDetector(
+                    onLongPress: () async {
+                      await Clipboard.setData(ClipboardData(text: animeTitle));
+                      Fluttertoast.showToast(msg: "Title copied to clipboard");
+                    },
+                    child: Text(
+                      animeTitle,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 9),
