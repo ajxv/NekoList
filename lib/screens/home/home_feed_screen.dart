@@ -230,8 +230,8 @@ class _HomeFeedState extends State<HomeFeed>
             ] else
               // show circular progress indicator if loading
               const Padding(
-                padding: EdgeInsets.all(10),
-                child: Center(child: CircularProgressIndicator()),
+                padding: EdgeInsets.all(20),
+                child: Center(child: LinearProgressIndicator()),
               ),
           ],
         ),
