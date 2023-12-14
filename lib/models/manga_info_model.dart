@@ -93,7 +93,7 @@ class MangaInfo {
   Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
-        "main_picture": mainPicture!.toJson(),
+        "main_picture": mainPicture.toJson(),
         "alternative_titles": alternativeTitles.toJson(),
         "start_date":
             "${startDate!.year.toString().padLeft(4, '0')}-${startDate!.month.toString().padLeft(2, '0')}-${startDate!.day.toString().padLeft(2, '0')}",
