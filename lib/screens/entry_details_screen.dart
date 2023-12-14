@@ -1,21 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:neko_list/services/mal_services.dart';
-import 'package:neko_list/widgets/list_entry_card_widget.dart';
-import 'package:neko_list/widgets/anime_status_update_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../models/anime_info_model.dart';
+import '../services/mal_services.dart';
+import '../widgets/list_entry_card_widget.dart';
+import '../providers/entry_status_provider.dart';
 import '../providers/list_provider.dart';
+import '../widgets/status_update_widget.dart';
 
-const rowSpacer1 = TableRow(children: [
-  SizedBox(
-    height: 10,
-  )
-]);
-
-const rowSpacer2 = TableRow(children: [
+const rowSpacer = TableRow(children: [
   SizedBox(
     height: 10,
   ),
@@ -28,24 +21,47 @@ const boldText = TextStyle(
   fontWeight: FontWeight.w500,
 );
 
-class AnimeDetailPage extends StatefulWidget {
-  final int animeId;
-  const AnimeDetailPage({super.key, required this.animeId});
+class EntryDetailPage extends StatefulWidget {
+  final int entryId;
+  final bool isAnime;
+
+  const EntryDetailPage({
+    super.key,
+    required this.entryId,
+    required this.isAnime,
+  });
 
   @override
-  State<StatefulWidget> createState() => _AnimeDetailPageState();
+  State<StatefulWidget> createState() => _EntryDetailPageState();
 }
 
-class _AnimeDetailPageState extends State<AnimeDetailPage> {
-  late Future<AnimeInfo> _futureAnimeInfo;
-  late MyListStatus myListStatus;
-  var listStatusLoaded = false; // show floatingActionButton only if true
-  late int totalEpisodes;
+class _EntryDetailPageState extends State<EntryDetailPage> {
+  late Future _futureEntryInfo;
+  late dynamic _myListStatus;
+  late int _totalCount;
+
+  bool _isLoading = true; // show floatingActionButton only if true
 
   @override
   void initState() {
     super.initState();
-    _futureAnimeInfo = MyAnimelistApi().getAnimeInfo(animeId: widget.animeId);
+    _futureEntryInfo = widget.isAnime
+        ? MyAnimelistApi().getAnimeInfo(animeId: widget.entryId).then((data) {
+            setState(() {
+              _isLoading = false;
+              _myListStatus = data.myListStatus;
+              _totalCount = data.numEpisodes;
+            });
+            return data;
+          })
+        : MyAnimelistApi().getMangaInfo(mangaId: widget.entryId).then((data) {
+            setState(() {
+              _isLoading = false;
+              _myListStatus = data.myListStatus;
+              _totalCount = data.numChapters;
+            });
+            return data;
+          });
   }
 
   @override
@@ -58,41 +74,37 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
         ),
       ),
       body: FutureBuilder(
-        future: _futureAnimeInfo.then((value) {
-          setState(() {
-            myListStatus = value.myListStatus ??
-                MyListStatus(status: '', score: 0, numEpisodesWatched: 0);
-            listStatusLoaded = true;
-            totalEpisodes = value.numEpisodes;
-          });
-          return value;
-        }),
+        future: _futureEntryInfo,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            var data = snapshot.data!;
+            var entryDetails = snapshot.data!;
+
             return SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.only(bottom: 30),
               child: Column(
                 children: [
-                  // Basic Details with image
+                  // basic details
                   BasicDetailSection(
-                    imageUrl: data.mainPicture.large,
-                    animeTitle: data.title,
-                    meanScore: data.mean,
-                    mediaType: data.mediaType,
-                    airingStatus: data.status,
-                    numEpisodes: data.numEpisodes,
+                    imageUrl: entryDetails.mainPicture.large,
+                    animeTitle: entryDetails.title,
+                    mediaType: entryDetails.mediaType,
+                    airingStatus: entryDetails.status,
+                    meanScore: entryDetails.mean,
+                    totalCount: widget.isAnime
+                        ? entryDetails.numEpisodes
+                        : entryDetails.numChapters,
+                    countLabel: widget.isAnime ? "episodes" : "chapters",
                   ),
-                  // Tags
+                  // tags
                   TagsSection(
-                    genres: data.genres,
+                    genres: entryDetails.genres,
                   ),
-                  // Summary
+                  // synopsis
                   DescriptionTextWidget(
-                    text: data.synopsis,
+                    text: entryDetails.synopsis,
                   ),
-                  // More info
+                  // more info
                   Text(
                     "More Info",
                     style: Theme.of(context).textTheme.headlineSmall,
@@ -105,103 +117,118 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                           children: [
                             const Text("Synonyms"),
                             Text(
-                              data.alternativeTitles.synonyms.join(',\n'),
+                              entryDetails.alternativeTitles.synonyms
+                                  .join(',\n'),
                               style: boldText,
                             )
                           ],
                         ),
-                        rowSpacer2,
+                        rowSpacer,
                         TableRow(
                           children: [
                             const Text("English"),
                             Text(
-                              data.alternativeTitles.en,
+                              entryDetails.alternativeTitles.en,
                               style: boldText,
                             )
                           ],
                         ),
-                        rowSpacer2,
+                        rowSpacer,
                         TableRow(
                           children: [
                             const Text("Japanese"),
                             Text(
-                              data.alternativeTitles.ja,
+                              entryDetails.alternativeTitles.ja,
                               style: boldText,
                             )
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Table(
-                      children: [
+                        rowSpacer,
                         TableRow(
                           children: [
                             const Text("Start Date"),
                             Text(
-                              data.startDate.toString().split(' ')[0],
+                              entryDetails.startDate.toString().split(' ')[0],
                               style: boldText,
                             )
                           ],
                         ),
-                        rowSpacer2,
+                        rowSpacer,
                         TableRow(
                           children: [
                             const Text("End Date"),
                             Text(
-                              data.endDate.toString().split(' ')[0],
+                              entryDetails.endDate.toString().split(' ')[0],
                               style: boldText,
                             )
                           ],
                         ),
-                        rowSpacer2,
-                        TableRow(
-                          children: [
-                            const Text("Season"),
-                            Text(
-                              data.startSeason != null
-                                  ? "${data.startSeason!.season.toUpperCase()} ${data.startSeason!.year}"
-                                  : "",
-                              style: boldText,
-                            )
-                          ],
-                        ),
-                        rowSpacer2,
-                        TableRow(
-                          children: [
-                            const Text("Duration"),
-                            Text(
-                              "${(data.averageEpisodeDuration / 60).round().toString()} min",
-                              style: boldText,
-                            )
-                          ],
-                        ),
-                        rowSpacer2,
-                        TableRow(
-                          children: [
-                            const Text("Source"),
-                            Text(
-                              data.source == null
-                                  ? ''
-                                  : data.source!.replaceAll('_', ' '),
-                              style: boldText,
-                            )
-                          ],
-                        ),
-                        rowSpacer2,
-                        TableRow(
-                          children: [
-                            const Text("Studio"),
-                            Text(
-                              data.studios.isNotEmpty
-                                  ? data.studios[0].name
-                                  : '',
-                              style: boldText,
-                            )
-                          ],
-                        ),
+                        // more anime specific details
+                        if (widget.isAnime) ...[
+                          rowSpacer,
+                          TableRow(
+                            children: [
+                              const Text("Season"),
+                              Text(
+                                entryDetails.startSeason != null
+                                    ? "${entryDetails.startSeason!.season.toUpperCase()} ${entryDetails.startSeason!.year}"
+                                    : "",
+                                style: boldText,
+                              )
+                            ],
+                          ),
+                          rowSpacer,
+                          TableRow(
+                            children: [
+                              const Text("Duration"),
+                              Text(
+                                "${(entryDetails.averageEpisodeDuration / 60).round().toString()} min",
+                                style: boldText,
+                              )
+                            ],
+                          ),
+                          rowSpacer,
+                          TableRow(
+                            children: [
+                              const Text("Source"),
+                              Text(
+                                entryDetails.source == null
+                                    ? ''
+                                    : entryDetails.source!.replaceAll('_', ' '),
+                                style: boldText,
+                              )
+                            ],
+                          ),
+                          rowSpacer,
+                          TableRow(
+                            children: [
+                              const Text("Studio"),
+                              Text(
+                                entryDetails.studios.isNotEmpty
+                                    ? entryDetails.studios[0].name
+                                    : '',
+                                style: boldText,
+                              )
+                            ],
+                          ),
+                        ]
+                        // more manga specific details
+                        else ...[
+                          rowSpacer,
+                          TableRow(
+                            children: [
+                              const Text("Authors"),
+                              Text(
+                                entryDetails.authors
+                                    .map((e) =>
+                                        "${e.node.firstName} ${e.node.lastName} (${e.role})")
+                                    .toList()
+                                    .join(','),
+                                style: boldText,
+                              )
+                            ],
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -211,33 +238,33 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                   ),
 
                   // OP/ED
-                  if (data.openingThemes != null) ...[
+                  if (widget.isAnime && entryDetails.openingThemes != null) ...[
                     Text(
                       "Opening Themes",
                       style: Theme.of(context).textTheme.headlineSmall,
                       textAlign: TextAlign.center,
                     ),
                     DescriptionTextWidget(
-                      text: data.openingThemes!
+                      text: entryDetails.openingThemes!
                           .map((op) => op['text'])
                           .join('\n'),
                     ),
                   ],
 
-                  if (data.endingThemes != null) ...[
+                  if (widget.isAnime && entryDetails.endingThemes != null) ...[
                     Text(
                       "Ending Themes",
                       style: Theme.of(context).textTheme.headlineSmall,
                       textAlign: TextAlign.center,
                     ),
                     DescriptionTextWidget(
-                      text:
-                          data.endingThemes!.map((ed) => ed['text']).join('\n'),
+                      text: entryDetails.endingThemes!
+                          .map((ed) => ed['text'])
+                          .join('\n'),
                     ),
                   ],
-
                   // related anime
-                  if (data.relatedAnime.isNotEmpty) ...[
+                  if (entryDetails.relatedAnime.isNotEmpty) ...[
                     Text(
                       "Related Anime",
                       style: Theme.of(context).textTheme.headlineSmall,
@@ -248,10 +275,10 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                         padding: const EdgeInsets.all(10),
                         scrollDirection: Axis.horizontal,
                         child: Row(
-                          children: data.relatedAnime
-                              .map(
+                          children: entryDetails.relatedAnime
+                              .map<Widget>(
                                 (e) => ListEntryCard(
-                                  entryType: 'anime',
+                                  isAnime: true,
                                   entryId: e.node.id,
                                   title: e.node.title,
                                   imageUrl: e.node.mainPicture.medium,
@@ -271,7 +298,7 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                   ],
 
                   // related manga
-                  if (data.relatedManga.isNotEmpty) ...[
+                  if (entryDetails.relatedManga.isNotEmpty) ...[
                     Text(
                       "Related Manga",
                       style: Theme.of(context).textTheme.headlineSmall,
@@ -282,10 +309,10 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                         padding: const EdgeInsets.all(10),
                         scrollDirection: Axis.horizontal,
                         child: Row(
-                          children: data.relatedManga
-                              .map(
+                          children: entryDetails.relatedManga
+                              .map<Widget>(
                                 (e) => ListEntryCard(
-                                  entryType: 'manga',
+                                  isAnime: false,
                                   entryId: e.node.id,
                                   title: e.node.title,
                                   imageUrl: e.node.mainPicture.medium,
@@ -305,7 +332,7 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                   ],
 
                   // reccomendations
-                  if (data.recommendations.isNotEmpty) ...[
+                  if (entryDetails.recommendations.isNotEmpty) ...[
                     Text(
                       "Recommendations",
                       style: Theme.of(context).textTheme.headlineSmall,
@@ -316,10 +343,10 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                         padding: const EdgeInsets.all(10),
                         scrollDirection: Axis.horizontal,
                         child: Row(
-                          children: data.recommendations
-                              .map(
+                          children: entryDetails.recommendations
+                              .map<Widget>(
                                 (e) => ListEntryCard(
-                                  entryType: 'anime',
+                                  isAnime: widget.isAnime,
                                   entryId: e.node.id,
                                   title: e.node.title,
                                   imageUrl: e.node.mainPicture.medium,
@@ -362,60 +389,71 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
           }
         },
       ),
-      floatingActionButton: listStatusLoaded
-          ? FloatingActionButton(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              // add anime to list if not already on list else open edit modal
-              onPressed: myListStatus.status != ''
-                  // condition: anime already on list
-                  ? () {
-                      showModalBottomSheet<void>(
-                        context: context,
-                        builder: (context) {
-                          return SizedBox(
-                            height: 400,
-                            child: StatusUpdateModal(
-                              animeId: widget.animeId,
-                              myListStatus: myListStatus,
-                              totalEpisodes: totalEpisodes,
-                            ),
-                          );
-                        },
-                      ).whenComplete(() {
-                        // reload animeinfo after update (when closing bottomSheet)
-                        setState(() {
-                          _futureAnimeInfo = MyAnimelistApi()
-                              .getAnimeInfo(animeId: widget.animeId);
-                        });
-                      });
-                    }
-                  // condition: anime not in list
-                  : () {
-                      MyAnimelistApi()
-                          .updateListAnime(
-                        animeId: widget.animeId,
-                        status: 'plan_to_watch',
-                        epsWatched: 0,
+      floatingActionButton: _isLoading
+          ? const SizedBox()
+          : FloatingActionButton(
+              onPressed: () {
+                if (_myListStatus == null) {
+                  // add to list
+                  context.read<EntryStatusProvider>().setMyListStatus(
+                        status:
+                            widget.isAnime ? 'plan_to_watch' : 'plan_to_read',
                         score: 0,
-                      )
-                          .then((value) {
-                        // refresh list
-                        Provider.of<AnimeListProvider>(context, listen: false)
-                            .refresh('plan_to_watch');
-                        // show toast
-                        Fluttertoast.showToast(msg: "Added to List");
-                        // reload animeinfo after update
-                        setState(() {
-                          _futureAnimeInfo = MyAnimelistApi()
-                              .getAnimeInfo(animeId: widget.animeId);
-                        });
-                      });
+                        completed: 0,
+                      );
+                  context.read<EntryStatusProvider>().updateStatus(
+                        widget.entryId,
+                        widget.isAnime,
+                        widget.isAnime
+                            ? context.read<AnimeListProvider>().refresh
+                            : context.read<MangaListProvider>().refresh,
+                      );
+                } else {
+                  context.read<EntryStatusProvider>().loadListStatus(
+                      widget.isAnime, _myListStatus, _totalCount);
+                  showModalBottomSheet<void>(
+                    context: context,
+                    builder: (context) {
+                      return SizedBox(
+                        height: 400,
+                        child: StatusUpdateModal(
+                          isAnime: widget.isAnime,
+                          entryId: widget.entryId,
+                        ),
+                      );
                     },
-              child: myListStatus.status == ''
+                  ).whenComplete(() {
+                    // reload animeinfo after update (when closing bottomSheet)
+                    setState(() {
+                      _futureEntryInfo = widget.isAnime
+                          ? MyAnimelistApi()
+                              .getAnimeInfo(animeId: widget.entryId)
+                              .then((data) {
+                              setState(() {
+                                _isLoading = false;
+                                _myListStatus = data.myListStatus;
+                                _totalCount = data.numEpisodes;
+                              });
+                              return data;
+                            })
+                          : MyAnimelistApi()
+                              .getMangaInfo(mangaId: widget.entryId)
+                              .then((data) {
+                              setState(() {
+                                _isLoading = false;
+                                _myListStatus = data.myListStatus;
+                                _totalCount = data.numChapters;
+                              });
+                              return data;
+                            });
+                    });
+                  });
+                }
+              },
+              child: _myListStatus == null
                   ? const Icon(Icons.add)
-                  : const Icon(Icons.mode_edit_outline_rounded),
-            )
-          : const SizedBox(),
+                  : const Icon(Icons.edit),
+            ),
     );
   }
 }
@@ -426,7 +464,8 @@ class BasicDetailSection extends StatelessWidget {
   final String mediaType;
   final String airingStatus;
   final double meanScore;
-  final int numEpisodes;
+  final int totalCount;
+  final String countLabel;
 
   const BasicDetailSection({
     super.key,
@@ -435,7 +474,8 @@ class BasicDetailSection extends StatelessWidget {
     required this.mediaType,
     required this.airingStatus,
     required this.meanScore,
-    required this.numEpisodes,
+    required this.totalCount,
+    required this.countLabel,
   });
 
   @override
@@ -494,7 +534,7 @@ class BasicDetailSection extends StatelessWidget {
                       const Icon(Icons.timer),
                       const SizedBox(width: 10),
                       Text(
-                        "${numEpisodes == 0 ? '?' : numEpisodes} episodes",
+                        "${totalCount == 0 ? '?' : totalCount} $countLabel",
                         style: const TextStyle(fontSize: 15),
                       ),
                     ],

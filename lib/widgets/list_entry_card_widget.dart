@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:neko_list/screens/anime_details_screen.dart';
-import 'package:neko_list/screens/manga_details_screen.dart';
+
+import '../screens/entry_details_screen.dart';
 
 class ListEntryCard extends StatelessWidget {
-  final String entryType;
+  final bool isAnime;
   final int entryId;
   final String imageUrl;
   final String title;
@@ -17,7 +17,7 @@ class ListEntryCard extends StatelessWidget {
 
   const ListEntryCard({
     super.key,
-    required this.entryType,
+    required this.isAnime,
     required this.entryId,
     required this.imageUrl,
     required this.title,
@@ -34,9 +34,15 @@ class ListEntryCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => entryType == 'anime'
-                ? AnimeDetailPage(animeId: entryId)
-                : MangaDetailPage(mangaId: entryId),
+            builder: (context) => isAnime
+                ? EntryDetailPage(
+                    entryId: entryId,
+                    isAnime: true,
+                  )
+                : EntryDetailPage(
+                    entryId: entryId,
+                    isAnime: false,
+                  ),
           ),
         );
       },

@@ -53,7 +53,7 @@ class AnimeListProvider extends ChangeNotifier {
 
       cardList = userAnimeList.data
           .map((data) => ListEntryCard(
-                entryType: 'anime',
+                isAnime: true,
                 entryId: data.node.id,
                 imageUrl: data.node.mainPicture.medium,
                 title: data.node.title,
@@ -146,7 +146,7 @@ class MangaListProvider extends ChangeNotifier {
 
       cardList = userMangaList.data
           .map((data) => ListEntryCard(
-                entryType: 'manga',
+                isAnime: false,
                 entryId: data.node.id,
                 imageUrl: data.node.mainPicture.medium,
                 title: data.node.title,

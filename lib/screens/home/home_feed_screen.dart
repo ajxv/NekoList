@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:neko_list/providers/trending_list_provider.dart';
-import 'package:neko_list/screens/anime_details_screen.dart';
+import 'package:neko_list/screens/entry_details_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/list_entry_card_widget.dart';
@@ -52,8 +52,11 @@ class _HomeFeedState extends State<HomeFeed>
                       (item) => GestureDetector(
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  AnimeDetailPage(animeId: item.node.id)),
+                            builder: (context) => EntryDetailPage(
+                              entryId: item.node.id,
+                              isAnime: true,
+                            ),
+                          ),
                         ),
                         child: HorizontalEntryCard(
                           imageUrl: item.node.mainPicture.large,
@@ -84,7 +87,7 @@ class _HomeFeedState extends State<HomeFeed>
                   children: dataProvider.getAnimeSuggestions
                       .map<Widget>(
                         (e) => ListEntryCard(
-                          entryType: 'anime',
+                          isAnime: true,
                           entryId: e.node.id,
                           title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
@@ -110,7 +113,7 @@ class _HomeFeedState extends State<HomeFeed>
                   children: dataProvider.getTopAnimes
                       .map<Widget>(
                         (e) => ListEntryCard(
-                          entryType: 'anime',
+                          isAnime: true,
                           entryId: e.node.id,
                           title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
@@ -136,7 +139,7 @@ class _HomeFeedState extends State<HomeFeed>
                   children: dataProvider.getPopularAnimes
                       .map<Widget>(
                         (e) => ListEntryCard(
-                          entryType: 'anime',
+                          isAnime: true,
                           entryId: e.node.id,
                           title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
@@ -162,7 +165,7 @@ class _HomeFeedState extends State<HomeFeed>
                   children: dataProvider.getTopMangas
                       .map<Widget>(
                         (e) => ListEntryCard(
-                          entryType: 'manga',
+                          isAnime: false,
                           entryId: e.node.id,
                           title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
@@ -188,7 +191,7 @@ class _HomeFeedState extends State<HomeFeed>
                   children: dataProvider.getTopManhwas
                       .map<Widget>(
                         (e) => ListEntryCard(
-                          entryType: 'manga',
+                          isAnime: false,
                           entryId: e.node.id,
                           title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
@@ -214,7 +217,7 @@ class _HomeFeedState extends State<HomeFeed>
                   children: dataProvider.getPopularMangas
                       .map<Widget>(
                         (e) => ListEntryCard(
-                          entryType: 'manga',
+                          isAnime: false,
                           entryId: e.node.id,
                           title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,

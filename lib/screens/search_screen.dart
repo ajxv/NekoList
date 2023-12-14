@@ -129,7 +129,7 @@ class _SearchGridViewState extends State<SearchGridView>
 
       cardList = searchResult.data
           .map((data) => ListEntryCard(
-                entryType: contentType,
+                isAnime: contentType == "anime",
                 entryId: data.node.id,
                 title: data.node.title,
                 imageUrl: data.node.mainPicture.medium,
