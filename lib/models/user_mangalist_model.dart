@@ -79,12 +79,14 @@ class Node {
   String title;
   MainPicture mainPicture;
   final int numChapters;
+  String publishingStatus;
 
   Node({
     required this.id,
     required this.title,
     required this.mainPicture,
     required this.numChapters,
+    required this.publishingStatus,
   });
 
   factory Node.fromJson(Map<String, dynamic> json) => Node(
@@ -96,6 +98,7 @@ class Node {
               : {'medium': '', 'large': ''},
         ),
         numChapters: json['num_chapters'],
+        publishingStatus: json['status'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -103,6 +106,7 @@ class Node {
         "title": title,
         "main_picture": mainPicture.toJson(),
         "num_chapters": numChapters,
+        "publishingStatus": publishingStatus,
       };
 }
 

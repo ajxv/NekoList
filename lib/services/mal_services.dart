@@ -243,7 +243,7 @@ class MyAnimelistApi {
     status = status != 'all' ? "status=$status&" : "";
 
     Uri url = Uri.parse(
-        "$baseUrl/users/@me/mangalist?nsfw=true&fields=list_status,num_chapters&${status}sort=$sort&limit=$limit&offset=$offset");
+        "$baseUrl/users/@me/mangalist?nsfw=true&fields=list_status,num_chapters,status&${status}sort=$sort&limit=$limit&offset=$offset");
 
     try {
       var response = await http.get(
