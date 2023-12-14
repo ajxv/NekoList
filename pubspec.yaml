@@ -106,4 +106,4 @@ flutter_icons:
   android: true
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/icons/neko_pixelated_logo.png"
+  image_path: "assets/icons/logo.png"

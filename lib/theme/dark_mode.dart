@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 ThemeData darkMode = ThemeData(
   useMaterial3: true,
   brightness: Brightness.dark,
-  highlightColor: Colors.blueGrey,
+  highlightColor: const Color.fromRGBO(245, 111, 108, 1),
+  splashColor: const Color.fromARGB(50, 0, 0, 0),
 
   textTheme: TextTheme(
     bodyMedium: TextStyle(
@@ -18,11 +19,11 @@ ThemeData darkMode = ThemeData(
   ),
   // ColorScheme
   colorScheme: ColorScheme.dark(
-    background: Colors.black,
-    primary: Colors.grey.shade800,
-    secondary: Colors.grey.shade600,
+    background: const Color.fromARGB(255, 12, 14, 20),
+    primary: const Color.fromRGBO(130, 0, 36, 1),
+    secondary: const Color.fromRGBO(171, 65, 65, 1),
     onPrimary: Colors.grey.shade300,
-    onBackground: Colors.white,
+    onBackground: Colors.white70,
     onSecondary: Colors.grey.shade300,
   ),
 
@@ -33,9 +34,6 @@ ThemeData darkMode = ThemeData(
 
   // NavigationBar Theme (bottom)
   navigationBarTheme: NavigationBarThemeData(
-    backgroundColor: Colors.black,
-    indicatorColor: Colors.blueGrey,
-    shadowColor: Colors.grey.shade900,
     // surfaceTintColor: Colors.grey.shade500,
 
     labelTextStyle: MaterialStateTextStyle.resolveWith((states) {
@@ -56,17 +54,7 @@ ThemeData darkMode = ThemeData(
   tabBarTheme: const TabBarTheme(
     labelColor: Colors.white,
     unselectedLabelColor: Colors.grey,
-    indicatorColor: Colors.blueGrey,
-  ),
-
-  // FloatingActionButton Theme
-  floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: Colors.blueGrey,
-  ),
-
-  // slider Theme
-  sliderTheme: const SliderThemeData(
-    activeTrackColor: Colors.blueGrey,
+    // indicatorColor: Colors.blueGrey,
   ),
 
   // textfield cursor color

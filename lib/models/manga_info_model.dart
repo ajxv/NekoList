@@ -12,12 +12,7 @@ class MangaInfo {
   String synopsis;
   double mean;
   int rank;
-  int popularity;
-  int numListUsers;
-  int numScoringUsers;
   String nsfw;
-  DateTime createdAt;
-  DateTime updatedAt;
   String mediaType;
   String status;
   List<Genre> genres;
@@ -30,7 +25,6 @@ class MangaInfo {
   List<RelatedAnime> relatedAnime;
   List<RelatedManga> relatedManga;
   List<Recommendation> recommendations;
-  // List<Serialization> serialization;
 
   MangaInfo({
     required this.id,
@@ -42,12 +36,7 @@ class MangaInfo {
     required this.synopsis,
     required this.mean,
     required this.rank,
-    required this.popularity,
-    required this.numListUsers,
-    required this.numScoringUsers,
     required this.nsfw,
-    required this.createdAt,
-    required this.updatedAt,
     required this.mediaType,
     required this.status,
     required this.genres,
@@ -60,7 +49,6 @@ class MangaInfo {
     required this.relatedAnime,
     required this.relatedManga,
     required this.recommendations,
-    // required this.serialization,
   });
 
   factory MangaInfo.fromJson(Map<String, dynamic> json) => MangaInfo(
@@ -77,12 +65,7 @@ class MangaInfo {
         synopsis: json["synopsis"],
         mean: json['mean'] != null ? json["mean"]?.toDouble() : 0,
         rank: json['rank'] != null ? json["rank"] : 0,
-        popularity: json["popularity"],
-        numListUsers: json["num_list_users"],
-        numScoringUsers: json["num_scoring_users"],
         nsfw: json["nsfw"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
         mediaType: json["media_type"],
         status: json["status"],
         genres: List<Genre>.from(json["genres"].map((x) => Genre.fromJson(x))),
@@ -102,8 +85,6 @@ class MangaInfo {
             json["related_manga"].map((x) => RelatedManga.fromJson(x))),
         recommendations: List<Recommendation>.from(
             json["recommendations"].map((x) => Recommendation.fromJson(x))),
-        // serialization: List<Serialization>.from(
-        // json["serialization"].map((x) => Serialization.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -118,12 +99,7 @@ class MangaInfo {
         "synopsis": synopsis,
         "mean": mean,
         "rank": rank,
-        "popularity": popularity,
-        "num_list_users": numListUsers,
-        "num_scoring_users": numScoringUsers,
         "nsfw": nsfw,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
         "media_type": mediaType,
         "status": status,
         "genres": List<dynamic>.from(genres.map((x) => x.toJson())),
@@ -139,8 +115,6 @@ class MangaInfo {
             List<dynamic>.from(relatedManga.map((x) => x.toJson())),
         "recommendations":
             List<dynamic>.from(recommendations.map((x) => x.toJson())),
-        // "serialization":
-        //     List<dynamic>.from(serialization.map((x) => x.toJson())),
       };
 }
 
@@ -361,20 +335,3 @@ class RelatedManga {
         "relation_type_formatted": relationTypeFormatted,
       };
 }
-
-
-// class Serialization {
-//   Genre node;
-
-//   Serialization({
-//     required this.node,
-//   });
-
-//   factory Serialization.fromJson(Map<String, dynamic> json) => Serialization(
-//         node: Genre.fromJson(json["node"]),
-//       );
-
-//   Map<String, dynamic> toJson() => {
-//         "node": node.toJson(),
-//       };
-// }

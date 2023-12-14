@@ -1,6 +1,6 @@
 // generated using https://app.quicktype.io
 
-import 'manga_info_model.dart';
+import './manga_info_model.dart';
 
 class UserMangaList {
   List<Datum> data;

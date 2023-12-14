@@ -1,26 +1,22 @@
 // generated using https://app.quicktype.io
 
-import 'package:neko_list/models/anime_info_model.dart';
+import './anime_info_model.dart';
 
 class UserAnimeList {
   final List<Data> data;
-  // final Paging paging;
 
   UserAnimeList({
     required this.data,
-    // required this.paging,
   });
 
   factory UserAnimeList.fromJson(Map<String, dynamic> json) {
     return UserAnimeList(
       data: List<Data>.from(json["data"].map((x) => Data.fromJson(x))),
-      // paging: Paging.fromJson(json["paging"]),
     );
   }
 
   Map<String, dynamic> toJson() => {
         "data": List<dynamic>.from(data.map((x) => x.toJson())),
-        // "paging": paging.toJson(),
       };
 }
 
@@ -131,19 +127,3 @@ class MainPicture {
         "large": large,
       };
 }
-
-// class Paging {
-//   final String next;
-
-//   Paging({
-//     required this.next,
-//   });
-
-//   factory Paging.fromJson(Map<String, dynamic> json) => Paging(
-//         next: json["next"] != null ? json['next'] : "",
-//       );
-
-//   Map<String, dynamic> toJson() => {
-//         "next": next,
-//       };
-// }

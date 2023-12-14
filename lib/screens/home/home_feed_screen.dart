@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:neko_list/providers/trending_list_provider.dart';
-import 'package:neko_list/screens/anime_details_screen.dart';
+import 'package:neko_list/screens/entry_details_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/list_entry_card_widget.dart';
@@ -52,8 +52,11 @@ class _HomeFeedState extends State<HomeFeed>
                       (item) => GestureDetector(
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  AnimeDetailPage(animeId: item.node.id)),
+                            builder: (context) => EntryDetailPage(
+                              entryId: item.node.id,
+                              isAnime: true,
+                            ),
+                          ),
                         ),
                         child: HorizontalEntryCard(
                           imageUrl: item.node.mainPicture.large,
@@ -83,12 +86,12 @@ class _HomeFeedState extends State<HomeFeed>
                 child: Row(
                   children: dataProvider.getAnimeSuggestions
                       .map<Widget>(
-                        (e) => SimpleListEntryCard(
-                          contentType: 'anime',
+                        (e) => ListEntryCard(
+                          isAnime: true,
                           entryId: e.node.id,
-                          entryTitle: e.node.title,
+                          title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
-                          rating: e.node.meanScore,
+                          avgRating: e.node.meanScore,
                         ),
                       )
                       .toList(),
@@ -109,12 +112,12 @@ class _HomeFeedState extends State<HomeFeed>
                 child: Row(
                   children: dataProvider.getTopAnimes
                       .map<Widget>(
-                        (e) => SimpleListEntryCard(
-                          contentType: 'anime',
+                        (e) => ListEntryCard(
+                          isAnime: true,
                           entryId: e.node.id,
-                          entryTitle: e.node.title,
+                          title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
-                          rating: e.node.meanScore,
+                          avgRating: e.node.meanScore,
                         ),
                       )
                       .toList(),
@@ -135,12 +138,12 @@ class _HomeFeedState extends State<HomeFeed>
                 child: Row(
                   children: dataProvider.getPopularAnimes
                       .map<Widget>(
-                        (e) => SimpleListEntryCard(
-                          contentType: 'anime',
+                        (e) => ListEntryCard(
+                          isAnime: true,
                           entryId: e.node.id,
-                          entryTitle: e.node.title,
+                          title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
-                          rating: e.node.meanScore,
+                          avgRating: e.node.meanScore,
                         ),
                       )
                       .toList(),
@@ -161,12 +164,12 @@ class _HomeFeedState extends State<HomeFeed>
                 child: Row(
                   children: dataProvider.getTopMangas
                       .map<Widget>(
-                        (e) => SimpleListEntryCard(
-                          contentType: 'manga',
+                        (e) => ListEntryCard(
+                          isAnime: false,
                           entryId: e.node.id,
-                          entryTitle: e.node.title,
+                          title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
-                          rating: e.node.meanScore,
+                          avgRating: e.node.meanScore,
                         ),
                       )
                       .toList(),
@@ -187,12 +190,12 @@ class _HomeFeedState extends State<HomeFeed>
                 child: Row(
                   children: dataProvider.getTopManhwas
                       .map<Widget>(
-                        (e) => SimpleListEntryCard(
-                          contentType: 'manga',
+                        (e) => ListEntryCard(
+                          isAnime: false,
                           entryId: e.node.id,
-                          entryTitle: e.node.title,
+                          title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
-                          rating: e.node.meanScore,
+                          avgRating: e.node.meanScore,
                         ),
                       )
                       .toList(),
@@ -213,12 +216,12 @@ class _HomeFeedState extends State<HomeFeed>
                 child: Row(
                   children: dataProvider.getPopularMangas
                       .map<Widget>(
-                        (e) => SimpleListEntryCard(
-                          contentType: 'manga',
+                        (e) => ListEntryCard(
+                          isAnime: false,
                           entryId: e.node.id,
-                          entryTitle: e.node.title,
+                          title: e.node.title,
                           imageUrl: e.node.mainPicture.medium,
-                          rating: e.node.meanScore,
+                          avgRating: e.node.meanScore,
                         ),
                       )
                       .toList(),
@@ -256,64 +259,74 @@ class HorizontalEntryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 5,
+            offset: const Offset(6, 6),
+          )
+        ],
+      ),
       margin: const EdgeInsets.only(top: 10, bottom: 10),
       height: 200,
       child: AspectRatio(
         aspectRatio: 16 / 9,
-        child: Stack(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: CachedNetworkImage(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: Stack(
+            children: [
+              CachedNetworkImage(
                 imageUrl: imageUrl,
                 width: double.infinity,
                 // height: 350,
                 key: backgroundImageKey,
                 fit: BoxFit.cover,
               ),
-            ),
-            Positioned.fill(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withOpacity(0.7)
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: const [0.6, 0.90]),
+              Positioned.fill(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.7)
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: const [0.6, 0.90]),
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              left: 10,
-              bottom: 12,
-              right: 10,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      overflow: TextOverflow.ellipsis,
+              Positioned(
+                left: 10,
+                bottom: 12,
+                right: 10,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            )
-          ],
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

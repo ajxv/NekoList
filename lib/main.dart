@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:neko_list/providers/list_provider.dart';
-import 'package:neko_list/providers/session_provider.dart';
-import 'package:neko_list/providers/theme_provider.dart';
-import 'package:neko_list/providers/trending_list_provider.dart';
 import 'package:provider/provider.dart';
+
 import 'screens/auth/login.dart';
 import 'helpers/secure_storage.dart';
 import 'screens/homepage.dart';
+import 'providers/entry_status_provider.dart';
+import 'providers/list_provider.dart';
+import 'providers/session_provider.dart';
+import 'providers/theme_provider.dart';
+import 'providers/trending_list_provider.dart';
 
 void main() {
   runApp(
@@ -17,6 +19,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => AnimeListProvider()),
         ChangeNotifierProvider(create: (context) => MangaListProvider()),
         ChangeNotifierProvider(create: (context) => TrendingListProvider()),
+        ChangeNotifierProvider(create: (context) => EntryStatusProvider()),
       ],
       child: const MyApp(),
     ),

@@ -1,5 +1,7 @@
 // generated using https://app.quicktype.io
 
+import './manga_info_model.dart';
+
 class AnimeInfo {
   final int id;
   final String title;
@@ -10,12 +12,7 @@ class AnimeInfo {
   final String synopsis;
   final double mean;
   final int rank;
-  final int popularity;
-  final int numListUsers;
-  final int numScoringUsers;
   final String nsfw;
-  final DateTime createdAt;
-  final DateTime updatedAt;
   final String mediaType;
   final String status;
   final List<Genre> genres;
@@ -27,9 +24,9 @@ class AnimeInfo {
   final String? rating;
   final List<Picture> pictures;
   final List<RelatedAnime> relatedAnime;
+  final List<RelatedManga> relatedManga;
   final List<Recommendation> recommendations;
   final List<Genre> studios;
-  final Statistics statistics;
   final List? openingThemes;
   final List? endingThemes;
 
@@ -43,12 +40,7 @@ class AnimeInfo {
     required this.synopsis,
     required this.mean,
     required this.rank,
-    required this.popularity,
-    required this.numListUsers,
-    required this.numScoringUsers,
     required this.nsfw,
-    required this.createdAt,
-    required this.updatedAt,
     required this.mediaType,
     required this.status,
     required this.genres,
@@ -60,9 +52,9 @@ class AnimeInfo {
     this.rating,
     required this.pictures,
     required this.relatedAnime,
+    required this.relatedManga,
     required this.recommendations,
     required this.studios,
-    required this.statistics,
     this.openingThemes,
     this.endingThemes,
   });
@@ -81,12 +73,7 @@ class AnimeInfo {
         synopsis: json["synopsis"],
         mean: json['mean'] != null ? json["mean"]?.toDouble() : 0,
         rank: json['rank'] != null ? json["rank"] : 0,
-        popularity: json["popularity"],
-        numListUsers: json["num_list_users"],
-        numScoringUsers: json["num_scoring_users"],
         nsfw: json["nsfw"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
         mediaType: json["media_type"],
         status: json["status"],
         genres: List<Genre>.from(json["genres"].map((x) => Genre.fromJson(x))),
@@ -104,11 +91,12 @@ class AnimeInfo {
             json["pictures"].map((x) => Picture.fromJson(x))),
         relatedAnime: List<RelatedAnime>.from(
             json["related_anime"].map((x) => RelatedAnime.fromJson(x))),
+        relatedManga: List<RelatedManga>.from(
+            json["related_manga"].map((x) => RelatedManga.fromJson(x))),
         recommendations: List<Recommendation>.from(
             json["recommendations"].map((x) => Recommendation.fromJson(x))),
         studios:
             List<Genre>.from(json["studios"].map((x) => Genre.fromJson(x))),
-        statistics: Statistics.fromJson(json["statistics"]),
         openingThemes: json['opening_themes'],
         endingThemes: json['ending_themes'],
       );
@@ -125,12 +113,7 @@ class AnimeInfo {
         "synopsis": synopsis,
         "mean": mean,
         "rank": rank,
-        "popularity": popularity,
-        "num_list_users": numListUsers,
-        "num_scoring_users": numScoringUsers,
         "nsfw": nsfw,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
         "media_type": mediaType,
         "status": status,
         "genres": List<dynamic>.from(genres.map((x) => x.toJson())),
@@ -143,10 +126,11 @@ class AnimeInfo {
         "pictures": List<dynamic>.from(pictures.map((x) => x.toJson())),
         "related_anime":
             List<dynamic>.from(relatedAnime.map((x) => x.toJson())),
+        "related_manga":
+            List<dynamic>.from(relatedManga.map((x) => x.toJson())),
         "recommendations":
             List<dynamic>.from(recommendations.map((x) => x.toJson())),
         "studios": List<dynamic>.from(studios.map((x) => x.toJson())),
-        "statistics": statistics.toJson(),
         'opening_theme': openingThemes,
         'ending_theme': endingThemes,
       };
@@ -334,26 +318,6 @@ class StartSeason {
   Map<String, dynamic> toJson() => {
         "year": year,
         "season": season,
-      };
-}
-
-class Statistics {
-  final Status status;
-  final int numListUsers;
-
-  Statistics({
-    required this.status,
-    required this.numListUsers,
-  });
-
-  factory Statistics.fromJson(Map<String, dynamic> json) => Statistics(
-        status: Status?.fromJson(json["status"]),
-        numListUsers: json["num_list_users"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "status": status.toJson(),
-        "num_list_users": numListUsers,
       };
 }
 
