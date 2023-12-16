@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:neko_list/helpers/shared_preferences.dart';
 import 'package:neko_list/models/anime_ranking_model.dart';
 import '../models/manga_info_model.dart';
 import '../models/search_model.dart';
@@ -16,6 +17,7 @@ import './oauth_services.dart' as auth_services;
 
 class MyAnimelistApi {
   final _secureStorage = SecureStorage();
+  final _sharedPref = SharedPreference();
 
   final String baseUrl = constants.apiEndpoint;
 
@@ -54,11 +56,12 @@ class MyAnimelistApi {
   Future<UserAnimeList> getUserAnimeList(
       {status, sort = "list_updated_at", limit = 100, offset = 0}) async {
     var accessToken = await _secureStorage.getAccessToken();
+    bool showNSFW = await _sharedPref.getShowNSFW();
 
     status = status != 'all' ? "status=$status&" : "";
 
     Uri url = Uri.parse(
-        "$baseUrl/users/@me/animelist?nsfw=true&fields=list_status,num_episodes,status&${status}sort=$sort&limit=$limit&offset=$offset");
+        "$baseUrl/users/@me/animelist?nsfw=$showNSFW&fields=list_status,num_episodes,status&${status}sort=$sort&limit=$limit&offset=$offset");
 
     try {
       var response = await http.get(
@@ -122,9 +125,10 @@ class MyAnimelistApi {
   Future<SearchResult> search(
       {required query, required contentType, limit = 100, offset = 0}) async {
     var accessToken = await _secureStorage.getAccessToken();
+    bool showNSFW = await _sharedPref.getShowNSFW();
 
-    Uri url =
-        Uri.parse("$baseUrl/$contentType?q=$query&limit=$limit&offset=$offset");
+    Uri url = Uri.parse(
+        "$baseUrl/$contentType?q=$query&limit=$limit&offset=$offset&nsfw=$showNSFW");
 
     try {
       var response = await http.get(
@@ -239,11 +243,12 @@ class MyAnimelistApi {
   Future<UserMangaList> getUserMangaList(
       {status, sort = "list_updated_at", limit = 100, offset = 0}) async {
     var accessToken = await _secureStorage.getAccessToken();
+    bool showNSFW = await _sharedPref.getShowNSFW();
 
     status = status != 'all' ? "status=$status&" : "";
 
     Uri url = Uri.parse(
-        "$baseUrl/users/@me/mangalist?nsfw=true&fields=list_status,num_chapters,status&${status}sort=$sort&limit=$limit&offset=$offset");
+        "$baseUrl/users/@me/mangalist?nsfw=$showNSFW&fields=list_status,num_chapters,status&${status}sort=$sort&limit=$limit&offset=$offset");
 
     try {
       var response = await http.get(
@@ -387,9 +392,10 @@ class MyAnimelistApi {
   /// rankingType = ['all', 'airing', 'upcoming', 'tv', 'ova', 'movie', 'special', 'bypopularity', 'favorite']
   Future getTrendingAnimes({rankingType = 'all', limit = 5}) async {
     var accessToken = await _secureStorage.getAccessToken();
+    bool showNSFW = await _sharedPref.getShowNSFW();
 
     Uri url = Uri.parse(
-        "$baseUrl/anime/ranking?ranking_type=$rankingType&limit=$limit&fields=mean");
+        "$baseUrl/anime/ranking?ranking_type=$rankingType&limit=$limit&fields=mean&nsfw=$showNSFW");
 
     try {
       var response = await http.get(
@@ -420,9 +426,10 @@ class MyAnimelistApi {
   /// rankingType = ['all', 'manga', 'novels', 'oneshots', 'doujin', 'manhwa', 'manhua', 'bypopularity', 'favorite']
   Future getTrendingMangas({rankingType = 'all', limit = 5}) async {
     var accessToken = await _secureStorage.getAccessToken();
+    bool showNSFW = await _sharedPref.getShowNSFW();
 
     Uri url = Uri.parse(
-        "$baseUrl/manga/ranking?ranking_type=$rankingType&limit=$limit&fields=mean");
+        "$baseUrl/manga/ranking?ranking_type=$rankingType&limit=$limit&fields=mean&nsfw=$showNSFW");
 
     try {
       var response = await http.get(
@@ -453,8 +460,10 @@ class MyAnimelistApi {
   /// rankingType = ['all', 'manga', 'novels', 'oneshots', 'doujin', 'manhwa', 'manhua', 'bypopularity', 'favorite']
   Future getAnimeSuggestions({limit = 5}) async {
     var accessToken = await _secureStorage.getAccessToken();
+    bool showNSFW = await _sharedPref.getShowNSFW();
 
-    Uri url = Uri.parse("$baseUrl/anime/suggestions?limit=$limit&fields=mean");
+    Uri url = Uri.parse(
+        "$baseUrl/anime/suggestions?limit=$limit&fields=mean&nsfw=$showNSFW");
 
     try {
       var response = await http.get(

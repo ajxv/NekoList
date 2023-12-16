@@ -37,6 +37,7 @@ class TrendingListProvider extends ChangeNotifier {
 
   void getData() async {
     _isLoading = true;
+    notifyListeners();
 
     // ANIME
     // get top airing animes

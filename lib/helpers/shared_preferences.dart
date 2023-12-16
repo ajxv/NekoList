@@ -6,6 +6,7 @@ class SharedPreference {
 
   // keys
   final String _isDarkMode = 'isDarkMode';
+  final String _showNSFW = 'showNSFW';
 
   // get shared preference instance
   static Future<SharedPreferences> getSharedPreferences() async {
@@ -28,6 +29,20 @@ class SharedPreference {
     String s = sharedPreference.getString(_isDarkMode) ?? "true";
 
     return s == "true" ? 'dark' : 'light';
+  }
+
+  // Theme
+  Future setShowNSFW(bool showNSFW) async {
+    final sharedPreference = await getSharedPreferences();
+
+    await sharedPreference.setBool(_showNSFW, showNSFW);
+  }
+
+  Future<bool> getShowNSFW() async {
+    final sharedPreference = await getSharedPreferences();
+    bool b = sharedPreference.getBool(_showNSFW) ?? false;
+
+    return b;
   }
 
   // clear sharedPreferences
