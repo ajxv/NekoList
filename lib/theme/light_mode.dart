@@ -6,6 +6,7 @@ ThemeData lightMode = ThemeData(
   useMaterial3: true,
   brightness: Brightness.light,
   highlightColor: const Color.fromRGBO(58, 68, 97, 1),
+  splashColor: Colors.transparent,
 
   textTheme: TextTheme(
     bodyMedium: TextStyle(
@@ -34,6 +35,7 @@ ThemeData lightMode = ThemeData(
   // NavigationBar Theme (bottom)
   navigationBarTheme: NavigationBarThemeData(
     // surfaceTintColor: Colors.blue.shade900,
+    backgroundColor: Color.fromARGB(255, 102, 0, 29),
 
     // navigation bar labels
     labelTextStyle: MaterialStateTextStyle.resolveWith((states) {
@@ -46,7 +48,7 @@ ThemeData lightMode = ThemeData(
       if (states.contains(MaterialState.selected)) {
         return const IconThemeData(color: Colors.white);
       }
-      return IconThemeData(color: Colors.grey.shade600);
+      return IconThemeData(color: Colors.grey.shade300);
     }),
   ),
 

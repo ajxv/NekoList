@@ -35,6 +35,7 @@ ThemeData darkMode = ThemeData(
   // NavigationBar Theme (bottom)
   navigationBarTheme: NavigationBarThemeData(
     // surfaceTintColor: Colors.grey.shade500,
+    backgroundColor: Color.fromARGB(255, 53, 0, 15),
 
     labelTextStyle: MaterialStateTextStyle.resolveWith((states) {
       if (states.contains(MaterialState.selected)) {
