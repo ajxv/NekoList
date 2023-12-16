@@ -51,12 +51,7 @@ class _HomePageState extends State<HomePage> {
                     ? CachedNetworkImageProvider(
                         context.read<SessionProvider>().user.picture)
                     : const AssetImage("assets/images/profile_placeholder.jpeg")
-                        as ImageProvider
-                // NetworkImage(
-                //     Provider.of<SessionProvider>(context).user.picture),
-                )
-            // const Icon(Icons.manage_accounts_rounded),
-            ),
+                        as ImageProvider)),
         title: Text(
           "ฅᨐฅ",
           style: TextStyle(
@@ -91,13 +86,14 @@ class _HomePageState extends State<HomePage> {
 
       // Bottom Navogation Bar Material 3 design
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.fromLTRB(50, 0, 50, 30),
+        margin: const EdgeInsets.fromLTRB(85, 0, 85, 30),
         height: 65,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(30),
           child: NavigationBar(
             indicatorColor: Theme.of(context).colorScheme.primary,
             selectedIndex: _navSelectedIndex,
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
             onDestinationSelected: (int index) {
               setState(() {
                 _navSelectedIndex = index;
