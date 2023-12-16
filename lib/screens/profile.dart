@@ -1,9 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:neko_list/providers/session_provider.dart';
-import 'package:neko_list/screens/auth/login.dart';
-import 'package:neko_list/services/oauth_services.dart';
-import 'package:neko_list/providers/theme_provider.dart';
+import 'package:neko_list/screens/settings_screen.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
@@ -28,17 +26,21 @@ class _ProfileState extends State<Profile> {
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.chevron_left),
         ),
-        title: const Text("Profile"),
+        title: const Text(
+          "Profile",
+          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {
-              Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SettingsPage(),
+                ),
+              );
             },
-            icon: Provider.of<ThemeProvider>(context).themeData.brightness ==
-                    Brightness.dark
-                ? const Icon(Icons.light_mode_rounded)
-                : const Icon(Icons.dark_mode),
+            icon: const Icon(Icons.settings),
           )
         ],
       ),
@@ -71,37 +73,7 @@ class _ProfileState extends State<Profile> {
             if (value.user.animeStatistics.isNotEmpty)
               UserAnimeStatsOverview(
                   animeStatistics: value.user.animeStatistics),
-            // const Divider(
-            //   color: Colors.grey,
-            //   height: 25,
-            //   thickness: 1,
-            //   indent: 30,
-            //   endIndent: 30,
-            // ),
             const SizedBox(height: 20),
-            Center(
-              child: TextButton.icon(
-                onPressed: () {
-                  signOut().then(
-                    (value) => Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: ((context) => const LoginPage()),
-                      ),
-                    ),
-                  );
-                },
-                label: const Text('Logout'),
-                icon: const Icon(Icons.logout_rounded),
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.resolveWith(
-                      (states) => Colors.white),
-                  fixedSize: const MaterialStatePropertyAll(Size(150, 10)),
-                  backgroundColor: MaterialStateProperty.resolveWith(
-                      (states) => Colors.red.shade400),
-                ),
-              ),
-            ),
           ],
         );
       }),
