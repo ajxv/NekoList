@@ -334,6 +334,7 @@ class _HomeFeedState extends State<HomeFeed>
                 scrollDirection: Axis.horizontal,
                 child: Row(children: [
                   ...dataProvider.getTopManhwas
+                      .sublist(0, 10)
                       .map<Widget>(
                         (e) => ListEntryCard(
                           isAnime: false,
