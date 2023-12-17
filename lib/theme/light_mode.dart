@@ -21,10 +21,12 @@ ThemeData lightMode = ThemeData(
   colorScheme: ColorScheme.light(
     background: const Color.fromRGBO(240, 233, 233, 1),
     primary: const Color.fromRGBO(130, 0, 36, 1),
-    secondary: Colors.grey.shade100,
+    secondary: const Color.fromRGBO(245, 245, 245, 1),
+    tertiary: Colors.red.shade300.withOpacity(0.5),
     onPrimary: Colors.grey.shade100,
     onBackground: Colors.grey.shade900,
     onSecondary: Colors.grey.shade900,
+    onTertiary: Colors.grey.shade100,
   ),
 
   // AppBar Theme
@@ -35,7 +37,7 @@ ThemeData lightMode = ThemeData(
   // NavigationBar Theme (bottom)
   navigationBarTheme: NavigationBarThemeData(
     // surfaceTintColor: Colors.blue.shade900,
-    backgroundColor: Color.fromARGB(255, 102, 0, 29),
+    backgroundColor: const Color.fromARGB(255, 102, 0, 29),
 
     // navigation bar labels
     labelTextStyle: MaterialStateTextStyle.resolveWith((states) {
