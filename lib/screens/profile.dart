@@ -47,86 +47,95 @@ class _ProfileState extends State<Profile> {
         ],
       ),
       body: Consumer<SessionProvider>(builder: (context, value, child) {
-        return ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.all(10),
-          children: [
-            const SizedBox(height: 20),
-            CircleAvatar(
-              radius: 60,
-              child: ClipOval(
-                child: value.user.picture.isNotEmpty
-                    ? CachedNetworkImage(imageUrl: value.user.picture)
-                    : Image.asset("assets/images/profile_placeholder.jpeg"),
-              ),
-            ),
-            const SizedBox(height: 15),
-            Text(
-              value.user.name,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-            // Text(
-            //   value.user.id.toString(),
-            //   textAlign: TextAlign.center,
-            // ),
-            const SizedBox(height: 15),
-
-            if (value.user.animeStatistics.isNotEmpty)
-              UserAnimeStatsOverview(
-                  animeStatistics: value.user.animeStatistics),
-            const SizedBox(height: 10),
-            if (value.user.animeStatistics.isNotEmpty) ...[
-              Divider(
-                color:
-                    Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
-                indent: 30,
-                endIndent: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, top: 20, bottom: 20),
-                child: Text(
-                  "Anime Stats",
-                  style: Theme.of(context).textTheme.headlineSmall,
-                  textAlign: TextAlign.center,
+        return RefreshIndicator(
+          onRefresh: () async {
+            await context.read<SessionProvider>().fetchUser();
+          },
+          child: ListView(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(10),
+            children: [
+              const SizedBox(height: 20),
+              CircleAvatar(
+                radius: 60,
+                child: ClipOval(
+                  child: value.user.picture.isNotEmpty
+                      ? CachedNetworkImage(imageUrl: value.user.picture)
+                      : Image.asset("assets/images/profile_placeholder.jpeg"),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 20, 10, 40),
-                child: SizedBox(
-                  height: 200,
-                  child: PieChart(
-                    dataMap: context.read<SessionProvider>().animeStat,
-                    chartType: ChartType.ring,
-                    chartValuesOptions: const ChartValuesOptions(
-                      showChartValues: false,
-                    ),
-                    centerText:
-                        "Total: ${value.user.animeStatistics['num_items_completed']!.toInt()}",
+              const SizedBox(height: 15),
+              Text(
+                value.user.name,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              // Text(
+              //   value.user.id.toString(),
+              //   textAlign: TextAlign.center,
+              // ),
+              const SizedBox(height: 15),
+
+              if (value.user.animeStatistics.isNotEmpty)
+                UserAnimeStatsOverview(
+                    animeStatistics: value.user.animeStatistics),
+              const SizedBox(height: 10),
+              if (value.user.animeStatistics.isNotEmpty) ...[
+                Divider(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onBackground
+                      .withOpacity(0.1),
+                  indent: 30,
+                  endIndent: 30,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, top: 20, bottom: 20),
+                  child: Text(
+                    "Anime Stats",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                    textAlign: TextAlign.center,
                   ),
                 ),
-              ),
-              Divider(
-                color:
-                    Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
-                indent: 30,
-                endIndent: 30,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 20, 10, 40),
+                  child: SizedBox(
+                    height: 200,
+                    child: PieChart(
+                      dataMap: value.animeStat,
+                      chartType: ChartType.ring,
+                      chartValuesOptions: const ChartValuesOptions(
+                        showChartValues: false,
+                      ),
+                      centerText:
+                          "Total: ${value.user.animeStatistics['num_items']!.toInt()}",
+                    ),
+                  ),
+                ),
+                Divider(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onBackground
+                      .withOpacity(0.1),
+                  indent: 30,
+                  endIndent: 30,
+                ),
+              ],
+              IconButton(
+                onPressed: () {
+                  Share.share(
+                      "https://myanimelist.net/profile/${value.user.name}");
+                },
+                icon: const Icon(
+                  Icons.share,
+                  size: 20,
+                ),
               ),
             ],
-            IconButton(
-              onPressed: () {
-                Share.share(
-                    "https://myanimelist.net/profile/${value.user.name}");
-              },
-              icon: const Icon(
-                Icons.share,
-                size: 20,
-              ),
-            ),
-          ],
+          ),
         );
       }),
     );

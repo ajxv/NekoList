@@ -43,17 +43,18 @@ class TrendingListProvider extends ChangeNotifier {
     notifyListeners();
 
     // ANIME
-    // get seasonal animes
-    await MyAnimelistApi().getSeasonalAnime(limit: 100).then((data) {
-      list['seasonalAnime'] = data.data;
-      notifyListeners();
-    });
 
     // get top airing animes
     await MyAnimelistApi()
         .getTrendingAnimes(rankingType: 'airing', limit: 10)
         .then((data) {
       list['topAiringAnime'] = data.data;
+      notifyListeners();
+    });
+
+    // get seasonal animes
+    await MyAnimelistApi().getSeasonalAnime(limit: 100).then((data) {
+      list['seasonalAnime'] = data.data;
       notifyListeners();
     });
 
@@ -80,6 +81,7 @@ class TrendingListProvider extends ChangeNotifier {
     });
 
     // MANGA
+
     // get top mangas
     await MyAnimelistApi()
         .getTrendingMangas(rankingType: 'manga', limit: 100)
