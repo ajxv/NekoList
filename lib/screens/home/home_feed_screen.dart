@@ -312,7 +312,7 @@ class _HomeFeedState extends State<HomeFeed>
                         builder: (context) => RankingListPage(
                           title: 'Top Manga',
                           data: dataProvider.getTopMangas,
-                          isAnime: true,
+                          isAnime: false,
                         ),
                       ),
                     ),
@@ -351,7 +351,7 @@ class _HomeFeedState extends State<HomeFeed>
                         builder: (context) => RankingListPage(
                           title: 'Top Manhwa',
                           data: dataProvider.getTopManhwas,
-                          isAnime: true,
+                          isAnime: false,
                         ),
                       ),
                     ),
@@ -390,7 +390,7 @@ class _HomeFeedState extends State<HomeFeed>
                         builder: (context) => RankingListPage(
                           title: 'Popular Manga',
                           data: dataProvider.getPopularMangas,
-                          isAnime: true,
+                          isAnime: false,
                         ),
                       ),
                     ),
