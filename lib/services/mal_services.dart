@@ -489,4 +489,50 @@ class MyAnimelistApi {
       return Future.error(e.toString());
     }
   }
+
+  // Get seasonal anime
+  Future getSeasonalAnime({limit = 25}) async {
+    var accessToken = await _secureStorage.getAccessToken();
+    bool showNSFW = await _sharedPref.getShowNSFW();
+
+    Map seasons = {
+      'winter': [1, 2, 3],
+      'spring': [4, 5, 6],
+      'summer': [7, 8, 9],
+      'fall': [10, 11, 12],
+    };
+
+    // get current year and season
+    DateTime now = DateTime.now();
+    int year = now.year;
+    String season =
+        seasons.keys.firstWhere((key) => seasons[key]!.contains(now.month));
+
+    Uri url = Uri.parse(
+        "$baseUrl/anime/season/$year/$season?limit=$limit&fields=mean&nsfw=$showNSFW");
+
+    try {
+      var response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return AnimeSuggestion.fromJson(jsonDecode(response.body));
+      } else if (response.statusCode == 401) {
+        await auth_services.refreshAccessToken();
+        return getSeasonalAnime(limit: limit);
+      } else {
+        return Future.error("Failed to load SeasonalAnime");
+      }
+    } on SocketException {
+      return Future.error("SocketException: Check your internet connection");
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
 }

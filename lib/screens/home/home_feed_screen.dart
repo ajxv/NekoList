@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:neko_list/providers/trending_list_provider.dart';
 import 'package:neko_list/screens/entry_details_screen.dart';
+import 'package:neko_list/screens/ranking_list_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/list_entry_card_widget.dart';
@@ -27,6 +28,16 @@ class _HomeFeedState extends State<HomeFeed>
   Widget build(BuildContext context) {
     super.build(context);
 
+    // final elevatedButtonStyle = ElevatedButton.styleFrom(
+    //   foregroundColor: Theme.of(context).colorScheme.onTertiary,
+    //   backgroundColor: Theme.of(context).colorScheme.tertiary,
+    //   shape: const RoundedRectangleBorder(
+    //     borderRadius: BorderRadius.all(
+    //       Radius.circular(8),
+    //     ),
+    //   ),
+    // );
+
     var dataProvider = Provider.of<TrendingListProvider>(context);
 
     return RefreshIndicator(
@@ -39,7 +50,7 @@ class _HomeFeedState extends State<HomeFeed>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // card carousel slider
-            if (dataProvider.getTopAiringAnimes.isNotEmpty)
+            if (dataProvider.getTopAiringAnimes.isNotEmpty) ...[
               CarouselSlider(
                 options: CarouselOptions(
                   autoPlay: true,
@@ -68,13 +79,93 @@ class _HomeFeedState extends State<HomeFeed>
                     )
                     .toList(),
               ),
-
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 20, bottom: 20),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //     children: [
+              //       ElevatedButton(
+              //         style: elevatedButtonStyle,
+              //         onPressed: () {},
+              //         child: const Padding(
+              //           padding: EdgeInsets.only(top: 15, bottom: 15),
+              //           child: Row(
+              //             mainAxisAlignment: MainAxisAlignment.center,
+              //             children: [
+              //               Icon(Icons.movie),
+              //               SizedBox(width: 5),
+              //               Text("Anime Ranking"),
+              //             ],
+              //           ),
+              //         ),
+              //       ),
+              //       ElevatedButton(
+              //         style: elevatedButtonStyle,
+              //         onPressed: () {},
+              //         child: const Padding(
+              //           padding: EdgeInsets.only(top: 15, bottom: 15),
+              //           child: Row(
+              //             mainAxisAlignment: MainAxisAlignment.center,
+              //             children: [
+              //               Icon(Icons.menu_book_rounded),
+              //               SizedBox(width: 5),
+              //               Text("Manga Ranking"),
+              //             ],
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+            ],
             // Reccomended animes
             if (!dataProvider.isLoading)
               // show only after loading is done
               ...[
+              // seasonal anime
               Padding(
-                padding: const EdgeInsets.only(left: 10, top: 10),
+                padding: const EdgeInsets.only(left: 10, top: 10, bottom: 5),
+                child: Text(
+                  "This season",
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ),
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(10),
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    ...dataProvider.getSeasonalAnime
+                        .sublist(0, 10)
+                        .map<Widget>(
+                          (e) => ListEntryCard(
+                            isAnime: true,
+                            entryId: e.node.id,
+                            title: e.node.title,
+                            imageUrl: e.node.mainPicture.medium,
+                            avgRating: e.node.meanScore,
+                          ),
+                        )
+                        .toList(),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => RankingListPage(
+                            title: 'This Season',
+                            data: dataProvider.getSeasonalAnime,
+                            isAnime: true,
+                          ),
+                        ),
+                      ),
+                      child: const Text("show more"),
+                    )
+                  ],
+                ),
+              ),
+
+              // suggested animes
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 10, bottom: 5),
                 child: Text(
                   "Suggested for you",
                   style: Theme.of(context).textTheme.headlineSmall,
@@ -84,23 +175,38 @@ class _HomeFeedState extends State<HomeFeed>
                 padding: const EdgeInsets.all(10),
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: dataProvider.getAnimeSuggestions
-                      .map<Widget>(
-                        (e) => ListEntryCard(
-                          isAnime: true,
-                          entryId: e.node.id,
-                          title: e.node.title,
-                          imageUrl: e.node.mainPicture.medium,
-                          avgRating: e.node.meanScore,
+                  children: [
+                    ...dataProvider.getAnimeSuggestions
+                        .sublist(0, 10)
+                        .map<Widget>(
+                          (e) => ListEntryCard(
+                            isAnime: true,
+                            entryId: e.node.id,
+                            title: e.node.title,
+                            imageUrl: e.node.mainPicture.medium,
+                            avgRating: e.node.meanScore,
+                          ),
+                        )
+                        .toList(),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => RankingListPage(
+                            title: 'Suggested',
+                            data: dataProvider.getAnimeSuggestions,
+                            isAnime: true,
+                          ),
                         ),
-                      )
-                      .toList(),
+                      ),
+                      child: const Text("show more"),
+                    )
+                  ],
                 ),
               ),
 
               // Top animes
               Padding(
-                padding: const EdgeInsets.only(left: 10, top: 10),
+                padding: const EdgeInsets.only(left: 10, top: 10, bottom: 5),
                 child: Text(
                   "Top Animes",
                   style: Theme.of(context).textTheme.headlineSmall,
@@ -109,8 +215,9 @@ class _HomeFeedState extends State<HomeFeed>
               SingleChildScrollView(
                 padding: const EdgeInsets.all(10),
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: dataProvider.getTopAnimes
+                child: Row(children: [
+                  ...dataProvider.getTopAnimes
+                      .sublist(0, 10)
                       .map<Widget>(
                         (e) => ListEntryCard(
                           isAnime: true,
@@ -121,12 +228,24 @@ class _HomeFeedState extends State<HomeFeed>
                         ),
                       )
                       .toList(),
-                ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => RankingListPage(
+                          title: 'Top Anime',
+                          data: dataProvider.getTopAnimes,
+                          isAnime: true,
+                        ),
+                      ),
+                    ),
+                    child: const Text("show more"),
+                  )
+                ]),
               ),
 
               // Popular animes
               Padding(
-                padding: const EdgeInsets.only(left: 10, top: 10),
+                padding: const EdgeInsets.only(left: 10, top: 10, bottom: 5),
                 child: Text(
                   "Popular Animes",
                   style: Theme.of(context).textTheme.headlineSmall,
@@ -135,8 +254,9 @@ class _HomeFeedState extends State<HomeFeed>
               SingleChildScrollView(
                 padding: const EdgeInsets.all(10),
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: dataProvider.getPopularAnimes
+                child: Row(children: [
+                  ...dataProvider.getPopularAnimes
+                      .sublist(0, 10)
                       .map<Widget>(
                         (e) => ListEntryCard(
                           isAnime: true,
@@ -147,12 +267,24 @@ class _HomeFeedState extends State<HomeFeed>
                         ),
                       )
                       .toList(),
-                ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => RankingListPage(
+                          title: 'Popular Anime',
+                          data: dataProvider.getPopularAnimes,
+                          isAnime: true,
+                        ),
+                      ),
+                    ),
+                    child: const Text("show more"),
+                  )
+                ]),
               ),
 
               // Top mangas
               Padding(
-                padding: const EdgeInsets.only(left: 10, top: 10),
+                padding: const EdgeInsets.only(left: 10, top: 10, bottom: 5),
                 child: Text(
                   "Top Mangas",
                   style: Theme.of(context).textTheme.headlineSmall,
@@ -161,8 +293,9 @@ class _HomeFeedState extends State<HomeFeed>
               SingleChildScrollView(
                 padding: const EdgeInsets.all(10),
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: dataProvider.getTopMangas
+                child: Row(children: [
+                  ...dataProvider.getTopMangas
+                      .sublist(0, 10)
                       .map<Widget>(
                         (e) => ListEntryCard(
                           isAnime: false,
@@ -173,12 +306,24 @@ class _HomeFeedState extends State<HomeFeed>
                         ),
                       )
                       .toList(),
-                ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => RankingListPage(
+                          title: 'Top Manga',
+                          data: dataProvider.getTopMangas,
+                          isAnime: true,
+                        ),
+                      ),
+                    ),
+                    child: const Text("show more"),
+                  )
+                ]),
               ),
 
               // Top manhwas
               Padding(
-                padding: const EdgeInsets.only(left: 10, top: 10),
+                padding: const EdgeInsets.only(left: 10, top: 10, bottom: 5),
                 child: Text(
                   "Top Manhwas",
                   style: Theme.of(context).textTheme.headlineSmall,
@@ -187,8 +332,8 @@ class _HomeFeedState extends State<HomeFeed>
               SingleChildScrollView(
                 padding: const EdgeInsets.all(10),
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: dataProvider.getTopManhwas
+                child: Row(children: [
+                  ...dataProvider.getTopManhwas
                       .map<Widget>(
                         (e) => ListEntryCard(
                           isAnime: false,
@@ -199,22 +344,35 @@ class _HomeFeedState extends State<HomeFeed>
                         ),
                       )
                       .toList(),
-                ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => RankingListPage(
+                          title: 'Top Manhwa',
+                          data: dataProvider.getTopManhwas,
+                          isAnime: true,
+                        ),
+                      ),
+                    ),
+                    child: const Text("show more"),
+                  )
+                ]),
               ),
 
               // Popular mangas
               Padding(
-                padding: const EdgeInsets.only(left: 10, top: 10),
+                padding: const EdgeInsets.only(left: 10, top: 10, bottom: 5),
                 child: Text(
-                  "Popular Mangas/Manhwas",
+                  "Popular Mangas",
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
               SingleChildScrollView(
                 padding: const EdgeInsets.all(10),
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: dataProvider.getPopularMangas
+                child: Row(children: [
+                  ...dataProvider.getPopularMangas
+                      .sublist(0, 10)
                       .map<Widget>(
                         (e) => ListEntryCard(
                           isAnime: false,
@@ -225,7 +383,19 @@ class _HomeFeedState extends State<HomeFeed>
                         ),
                       )
                       .toList(),
-                ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => RankingListPage(
+                          title: 'Popular Manga',
+                          data: dataProvider.getPopularMangas,
+                          isAnime: true,
+                        ),
+                      ),
+                    ),
+                    child: const Text("show more"),
+                  )
+                ]),
               ),
             ] else
               // show circular progress indicator if loading

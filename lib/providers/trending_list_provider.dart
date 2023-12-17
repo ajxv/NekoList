@@ -9,6 +9,9 @@ class TrendingListProvider extends ChangeNotifier {
 
   get isLoading => _isLoading;
 
+  get getSeasonalAnime =>
+      list.containsKey('seasonalAnime') ? list['seasonalAnime'] : [];
+
   get getAnimeSuggestions =>
       list.containsKey('animeSuggestion') ? list['animeSuggestion'] : [];
 
@@ -40,6 +43,12 @@ class TrendingListProvider extends ChangeNotifier {
     notifyListeners();
 
     // ANIME
+    // get seasonal animes
+    await MyAnimelistApi().getSeasonalAnime(limit: 100).then((data) {
+      list['seasonalAnime'] = data.data;
+      notifyListeners();
+    });
+
     // get top airing animes
     await MyAnimelistApi()
         .getTrendingAnimes(rankingType: 'airing', limit: 10)
@@ -49,14 +58,14 @@ class TrendingListProvider extends ChangeNotifier {
     });
 
     // get anime suggestions
-    await MyAnimelistApi().getAnimeSuggestions(limit: 10).then((data) {
+    await MyAnimelistApi().getAnimeSuggestions(limit: 100).then((data) {
       list['animeSuggestion'] = data.data;
       notifyListeners();
     });
 
     // get top anime of all time
     await MyAnimelistApi()
-        .getTrendingAnimes(rankingType: 'all', limit: 10)
+        .getTrendingAnimes(rankingType: 'all', limit: 100)
         .then((data) {
       list['topAnime'] = data.data;
       notifyListeners();
@@ -64,7 +73,7 @@ class TrendingListProvider extends ChangeNotifier {
 
     // get popular animes
     await MyAnimelistApi()
-        .getTrendingAnimes(rankingType: 'bypopularity', limit: 10)
+        .getTrendingAnimes(rankingType: 'bypopularity', limit: 100)
         .then((data) {
       list['popularAnime'] = data.data;
       notifyListeners();
@@ -73,7 +82,7 @@ class TrendingListProvider extends ChangeNotifier {
     // MANGA
     // get top mangas
     await MyAnimelistApi()
-        .getTrendingMangas(rankingType: 'manga', limit: 10)
+        .getTrendingMangas(rankingType: 'manga', limit: 100)
         .then((data) {
       list['topManga'] = data.data;
       notifyListeners();
@@ -81,7 +90,7 @@ class TrendingListProvider extends ChangeNotifier {
 
     // get top manhwas
     await MyAnimelistApi()
-        .getTrendingMangas(rankingType: 'manhwa', limit: 10)
+        .getTrendingMangas(rankingType: 'manhwa', limit: 100)
         .then((data) {
       list['topManhwa'] = data.data;
       notifyListeners();
@@ -89,7 +98,7 @@ class TrendingListProvider extends ChangeNotifier {
 
     // get popular manga/manhwas/all
     await MyAnimelistApi()
-        .getTrendingMangas(rankingType: 'bypopularity', limit: 10)
+        .getTrendingMangas(rankingType: 'bypopularity', limit: 100)
         .then((data) {
       list['popularManga'] = data.data;
       notifyListeners();
