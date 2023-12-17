@@ -27,17 +27,6 @@ class _HomeFeedState extends State<HomeFeed>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
-    // final elevatedButtonStyle = ElevatedButton.styleFrom(
-    //   foregroundColor: Theme.of(context).colorScheme.onTertiary,
-    //   backgroundColor: Theme.of(context).colorScheme.tertiary,
-    //   shape: const RoundedRectangleBorder(
-    //     borderRadius: BorderRadius.all(
-    //       Radius.circular(8),
-    //     ),
-    //   ),
-    // );
-
     var dataProvider = Provider.of<TrendingListProvider>(context);
 
     return RefreshIndicator(
@@ -79,44 +68,22 @@ class _HomeFeedState extends State<HomeFeed>
                     )
                     .toList(),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.only(top: 20, bottom: 20),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //     children: [
-              //       ElevatedButton(
-              //         style: elevatedButtonStyle,
-              //         onPressed: () {},
-              //         child: const Padding(
-              //           padding: EdgeInsets.only(top: 15, bottom: 15),
-              //           child: Row(
-              //             mainAxisAlignment: MainAxisAlignment.center,
-              //             children: [
-              //               Icon(Icons.movie),
-              //               SizedBox(width: 5),
-              //               Text("Anime Ranking"),
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //       ElevatedButton(
-              //         style: elevatedButtonStyle,
-              //         onPressed: () {},
-              //         child: const Padding(
-              //           padding: EdgeInsets.only(top: 15, bottom: 15),
-              //           child: Row(
-              //             mainAxisAlignment: MainAxisAlignment.center,
-              //             children: [
-              //               Icon(Icons.menu_book_rounded),
-              //               SizedBox(width: 5),
-              //               Text("Manga Ranking"),
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20, bottom: 10),
+                child: Center(
+                  child: Text(
+                    "‍-ᨐ-",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.2),
+                    ),
+                  ),
+                ),
+              ),
             ],
             // Reccomended animes
             if (!dataProvider.isLoading)

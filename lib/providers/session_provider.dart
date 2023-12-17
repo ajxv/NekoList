@@ -13,6 +13,14 @@ class SessionProvider extends ChangeNotifier {
 
   UserDetails get user => _user;
 
+  Map<String, double> get animeStat => {
+        'Watching': _user.animeStatistics['num_items_watching']!,
+        'Completed': _user.animeStatistics['num_items_completed']!,
+        'On Hold': _user.animeStatistics['num_items_on_hold']!,
+        'Dropped': _user.animeStatistics['num_items_dropped']!,
+        'Planned': _user.animeStatistics['num_items_plan_to_watch']!,
+      };
+
   fetchUser() {
     MyAnimelistApi().getUserDetails().then((userData) {
       _user = userData;

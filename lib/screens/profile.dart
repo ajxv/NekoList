@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:neko_list/providers/session_provider.dart';
 import 'package:neko_list/screens/settings_screen.dart';
+import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -46,6 +48,7 @@ class _ProfileState extends State<Profile> {
       ),
       body: Consumer<SessionProvider>(builder: (context, value, child) {
         return ListView(
+          shrinkWrap: true,
           padding: const EdgeInsets.all(10),
           children: [
             const SizedBox(height: 20),
@@ -66,14 +69,63 @@ class _ProfileState extends State<Profile> {
                 fontSize: 18,
               ),
             ),
-            Text(
-              value.user.id.toString(),
-              textAlign: TextAlign.center,
-            ),
+            // Text(
+            //   value.user.id.toString(),
+            //   textAlign: TextAlign.center,
+            // ),
+            const SizedBox(height: 15),
+
             if (value.user.animeStatistics.isNotEmpty)
               UserAnimeStatsOverview(
                   animeStatistics: value.user.animeStatistics),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
+            if (value.user.animeStatistics.isNotEmpty) ...[
+              Divider(
+                color:
+                    Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
+                indent: 30,
+                endIndent: 30,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 20, bottom: 20),
+                child: Text(
+                  "Anime Stats",
+                  style: Theme.of(context).textTheme.headlineSmall,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 20, 10, 40),
+                child: SizedBox(
+                  height: 200,
+                  child: PieChart(
+                    dataMap: context.read<SessionProvider>().animeStat,
+                    chartType: ChartType.ring,
+                    chartValuesOptions: const ChartValuesOptions(
+                      showChartValues: false,
+                    ),
+                    centerText:
+                        "Total: ${value.user.animeStatistics['num_items_completed']!.toInt()}",
+                  ),
+                ),
+              ),
+              Divider(
+                color:
+                    Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
+                indent: 30,
+                endIndent: 30,
+              ),
+            ],
+            IconButton(
+              onPressed: () {
+                Share.share(
+                    "https://myanimelist.net/profile/${value.user.name}");
+              },
+              icon: const Icon(
+                Icons.share,
+                size: 20,
+              ),
+            ),
           ],
         );
       }),
