@@ -34,7 +34,10 @@ class RankingListPage extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.chevron_left),
         ),
-        title: Text(title),
+        title: Text(
+          title,
+          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: GridView.builder(
