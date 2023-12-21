@@ -25,7 +25,7 @@
 </div>
 
 ## Screenshots
-<p float="left">
+<p align="center">
   <img src="https://github.com/ajxv/NekoList/assets/56473062/a43cf3a4-db44-47a3-b3a2-101c46d71731" width="250" /> 
   <img src="https://github.com/ajxv/NekoList/assets/56473062/2eb60c2f-79a0-4252-ae84-bc188b79ba17" width="250" /> 
   <img src="https://github.com/ajxv/NekoList/assets/56473062/f4981e1c-1aeb-49c6-9306-6facbebfe6da" width="250" /> 
