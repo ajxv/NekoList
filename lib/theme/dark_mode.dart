@@ -22,9 +22,11 @@ ThemeData darkMode = ThemeData(
     background: const Color.fromARGB(255, 12, 14, 20),
     primary: const Color.fromRGBO(130, 0, 36, 1),
     secondary: const Color.fromRGBO(171, 65, 65, 1),
+    tertiary: Colors.red.shade300.withOpacity(0.2),
     onPrimary: Colors.grey.shade300,
     onBackground: Colors.white70,
     onSecondary: Colors.grey.shade300,
+    onTertiary: Colors.grey.shade300,
   ),
 
   // AppBar Theme
@@ -35,6 +37,7 @@ ThemeData darkMode = ThemeData(
   // NavigationBar Theme (bottom)
   navigationBarTheme: NavigationBarThemeData(
     // surfaceTintColor: Colors.grey.shade500,
+    backgroundColor: const Color.fromARGB(255, 53, 0, 15),
 
     labelTextStyle: MaterialStateTextStyle.resolveWith((states) {
       if (states.contains(MaterialState.selected)) {

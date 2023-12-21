@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:neko_list/screens/splashscreen.dart';
 import 'package:provider/provider.dart';
 
-import 'screens/auth/login.dart';
-import 'helpers/secure_storage.dart';
-import 'screens/homepage.dart';
 import 'providers/entry_status_provider.dart';
 import 'providers/list_provider.dart';
 import 'providers/session_provider.dart';
@@ -34,29 +32,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _secureStorage = SecureStorage();
-  var _isAuth = false;
-
-  Future<void> fetchAuthState() async {
-    _isAuth = await _secureStorage.getAuthStatus();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: fetchAuthState(),
-        builder: (context, snapshot) {
-          return MaterialApp(
-            title: 'NekoList',
-            theme: Provider.of<ThemeProvider>(context).themeData,
-            home: _isAuth ? const HomePage() : const LoginPage(),
-          );
-        });
+    return MaterialApp(
+      title: 'NekoList',
+      theme: Provider.of<ThemeProvider>(context).themeData,
+      home: const SplashScreen(),
+    );
   }
 }

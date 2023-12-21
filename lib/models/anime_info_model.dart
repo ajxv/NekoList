@@ -62,14 +62,17 @@ class AnimeInfo {
   factory AnimeInfo.fromJson(Map<String, dynamic> json) => AnimeInfo(
         id: json["id"],
         title: json["title"],
-        mainPicture: Picture.fromJson(json["main_picture"]),
+        mainPicture: json["main_picture"] != null
+            ? Picture.fromJson(json["main_picture"])
+            : Picture(medium: '', large: ''),
         alternativeTitles:
             AlternativeTitles.fromJson(json["alternative_titles"]),
         startDate: json['start_date'] != null
             ? DateTime.tryParse(json["start_date"])
             : null,
-        endDate:
-            json['end_date'] != null ? DateTime.parse(json["end_date"]) : null,
+        endDate: json['end_date'] != null
+            ? DateTime.tryParse(json["end_date"])
+            : null,
         synopsis: json["synopsis"],
         mean: json['mean'] != null ? json["mean"]?.toDouble() : 0,
         rank: json['rank'] != null ? json["rank"] : 0,

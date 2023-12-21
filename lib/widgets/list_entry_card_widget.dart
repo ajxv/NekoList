@@ -56,14 +56,14 @@ class ListEntryCard extends StatelessWidget {
         ),
         child: Card(
           color: Theme.of(context).colorScheme.background,
-          elevation: 0.2,
+          elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
               // entry poster
               ClipRRect(
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(10),
                 child: Stack(
                   children: [
                     imageUrl.isNotEmpty

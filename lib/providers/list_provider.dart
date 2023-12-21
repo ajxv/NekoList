@@ -158,6 +158,7 @@ class MangaListProvider extends ChangeNotifier {
                 ),
                 userRating: data.listStatus.score,
                 labelMaxLines: 1,
+                isAiring: data.node.publishingStatus == 'currently_publishing',
               ))
           .toList();
 

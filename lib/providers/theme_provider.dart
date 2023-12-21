@@ -9,15 +9,20 @@ class ThemeProvider with ChangeNotifier {
 
   ThemeData _themeData = darkMode;
 
-  ThemeData get themeData {
-    getTheme().then((value) => null);
-    return _themeData;
+  // get theme when initializing provider
+  ThemeProvider() {
+    getTheme();
   }
 
+  // getter themedata
+  ThemeData get themeData => _themeData;
+
+  // fetch theme based on saved pref
   Future<void> getTheme() async {
     String theme = await _pref.getTheme();
 
     theme == 'dark' ? _themeData = darkMode : _themeData = lightMode;
+    notifyListeners();
   }
 
   set themeData(ThemeData themeData) {

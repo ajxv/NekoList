@@ -1,23 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:neko_list/providers/session_provider.dart';
-import 'package:neko_list/screens/auth/login.dart';
-import 'package:neko_list/services/oauth_services.dart';
-import 'package:neko_list/providers/theme_provider.dart';
+import 'package:neko_list/screens/settings_screen.dart';
+import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
-class Profile extends StatefulWidget {
+class Profile extends StatelessWidget {
   const Profile({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _ProfileState();
-}
-
-class _ProfileState extends State<Profile> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,81 +18,120 @@ class _ProfileState extends State<Profile> {
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.chevron_left),
         ),
-        title: const Text("Profile"),
+        title: const Text(
+          "Profile",
+          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {
-              Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SettingsPage(),
+                ),
+              );
             },
-            icon: Provider.of<ThemeProvider>(context).themeData.brightness ==
-                    Brightness.dark
-                ? const Icon(Icons.light_mode_rounded)
-                : const Icon(Icons.dark_mode),
+            icon: const Icon(Icons.settings),
           )
         ],
       ),
       body: Consumer<SessionProvider>(builder: (context, value, child) {
-        return ListView(
-          padding: const EdgeInsets.all(10),
-          children: [
-            const SizedBox(height: 20),
-            CircleAvatar(
-              radius: 60,
-              child: ClipOval(
-                child: value.user.picture.isNotEmpty
-                    ? CachedNetworkImage(imageUrl: value.user.picture)
-                    : Image.asset("assets/images/profile_placeholder.jpeg"),
+        return RefreshIndicator(
+          onRefresh: () async {
+            await context.read<SessionProvider>().fetchUser();
+          },
+          child: ListView(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(10),
+            children: [
+              const SizedBox(height: 20),
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: value.user.picture.isNotEmpty
+                        ? CachedNetworkImageProvider(value.user.picture)
+                        : const AssetImage(
+                                "assets/images/profile_placeholder.jpeg")
+                            as ImageProvider,
+                    fit: BoxFit.contain,
+                  ),
+                  shape: BoxShape.circle,
+                ),
+                height: 150,
               ),
-            ),
-            const SizedBox(height: 15),
-            Text(
-              value.user.name,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-            Text(
-              value.user.id.toString(),
-              textAlign: TextAlign.center,
-            ),
-            if (value.user.animeStatistics.isNotEmpty)
-              UserAnimeStatsOverview(
-                  animeStatistics: value.user.animeStatistics),
-            // const Divider(
-            //   color: Colors.grey,
-            //   height: 25,
-            //   thickness: 1,
-            //   indent: 30,
-            //   endIndent: 30,
-            // ),
-            const SizedBox(height: 20),
-            Center(
-              child: TextButton.icon(
-                onPressed: () {
-                  signOut().then(
-                    (value) => Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: ((context) => const LoginPage()),
-                      ),
-                    ),
-                  );
-                },
-                label: const Text('Logout'),
-                icon: const Icon(Icons.logout_rounded),
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.resolveWith(
-                      (states) => Colors.white),
-                  fixedSize: const MaterialStatePropertyAll(Size(150, 10)),
-                  backgroundColor: MaterialStateProperty.resolveWith(
-                      (states) => Colors.red.shade400),
+              const SizedBox(height: 15),
+              Text(
+                value.user.name,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
                 ),
               ),
-            ),
-          ],
+              // Text(
+              //   value.user.id.toString(),
+              //   textAlign: TextAlign.center,
+              // ),
+              const SizedBox(height: 15),
+
+              if (value.user.animeStatistics.isNotEmpty)
+                UserAnimeStatsOverview(
+                    animeStatistics: value.user.animeStatistics),
+              const SizedBox(height: 10),
+              if (value.user.animeStatistics.isNotEmpty) ...[
+                Divider(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onBackground
+                      .withOpacity(0.1),
+                  indent: 30,
+                  endIndent: 30,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, top: 20, bottom: 20),
+                  child: Text(
+                    "Anime Stats",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 20, 10, 40),
+                  child: SizedBox(
+                    height: 200,
+                    child: PieChart(
+                      dataMap: value.animeStat,
+                      chartType: ChartType.ring,
+                      chartValuesOptions: const ChartValuesOptions(
+                        showChartValues: false,
+                      ),
+                      centerText:
+                          "Total: ${value.user.animeStatistics['num_items']!.toInt()}",
+                    ),
+                  ),
+                ),
+                Divider(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onBackground
+                      .withOpacity(0.1),
+                  indent: 30,
+                  endIndent: 30,
+                ),
+              ],
+              IconButton(
+                onPressed: () {
+                  Share.share(
+                      "https://myanimelist.net/profile/${value.user.name}");
+                },
+                icon: const Icon(
+                  Icons.share,
+                  size: 20,
+                ),
+              ),
+            ],
+          ),
         );
       }),
     );
