@@ -270,7 +270,7 @@ class CompletionCounter extends StatelessWidget {
               border: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
               ),
-              labelText: 'watched',
+              labelText: 'completed',
               counterText: '',
               suffixText: '/ ${totalCount.toString()}',
             ),
