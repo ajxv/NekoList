@@ -39,8 +39,10 @@ class TrendingListProvider extends ChangeNotifier {
   }
 
   void getData() async {
+    if (_isLoading) return;
+
     _isLoading = true;
-    notifyListeners();
+    // notifyListeners();
 
     // ANIME
 

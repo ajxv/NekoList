@@ -27,6 +27,7 @@ class _HomeFeedState extends State<HomeFeed>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
     var dataProvider = Provider.of<TrendingListProvider>(context);
 
     return RefreshIndicator(
