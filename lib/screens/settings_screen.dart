@@ -1,12 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:neko_list/providers/session_provider.dart';
+import 'package:ota_update/ota_update.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 import '../providers/theme_provider.dart';
 import '../services/oauth_services.dart';
 import 'auth/login.dart';
+import '../helpers/constants.dart';
+import '../providers/session_provider.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -19,6 +24,74 @@ class SettingsPage extends StatelessWidget {
     );
 
     bool showNSFW = context.watch<SessionProvider>().showNSFW;
+    String currentAppVersion =
+        context.read<SessionProvider>().currentAppVersion;
+
+    updateDialog(latestTag) {
+      return showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                "New version available: $latestTag",
+                style:
+                    const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Fluttertoast.showToast(msg: 'Downloading updates..');
+                    try {
+                      // ignore: prefer_interpolation_to_compose_strings
+                      OtaUpdate().execute(latestReleaseDownloadPath +
+                          'NekoList_' +
+                          latestTag +
+                          '.apk');
+                    } catch (e) {
+                      Fluttertoast.showToast(
+                          msg: 'Failed to make OTA update. Details: $e');
+                    }
+                  },
+                  child: Text(
+                    'Update',
+                    style: TextStyle(color: Colors.green.shade300),
+                  ),
+                )
+              ],
+            );
+          });
+    }
+
+    checkForUpdate() async {
+      // check latest release tag in github
+      final url = Uri.parse(latestTagApi);
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final releaseData = jsonDecode(response.body);
+        final latestTag = releaseData['tag_name'];
+
+        if (currentAppVersion == latestTag.replaceAll('v', '')) {
+          Fluttertoast.showToast(msg: "Already up to date");
+        } else {
+          // if new version available
+          return updateDialog(latestTag);
+        }
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Failed to get latest release info: ${response.statusCode}');
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -117,14 +190,13 @@ class SettingsPage extends StatelessWidget {
                   ),
                 ),
                 ListTile(
-                  title: const Text('Check for Updates'),
+                  title: const Text('Check for updates'),
                   subtitle: Text(
-                    'Feature not added',
+                    'v$currentAppVersion',
                     style: subtitleStyle,
                   ),
                   leading: const Icon(Icons.update_rounded),
-                  onTap: () {},
-                  enabled: false,
+                  onTap: checkForUpdate,
                 ),
                 // Logout Button
                 const Spacer(),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neko_list/models/user_model.dart';
 import 'package:neko_list/services/mal_services.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../helpers/shared_preferences.dart';
 
@@ -15,9 +16,12 @@ class SessionProvider extends ChangeNotifier {
 
   bool _showNSFW = false;
 
-  UserDetails get user => _user;
+  late String _currentAppVersion;
 
+  // getters
+  UserDetails get user => _user;
   bool get showNSFW => _showNSFW;
+  String get currentAppVersion => _currentAppVersion;
 
   Map<String, double> get animeStat => {
         'Watching': _user.animeStatistics['num_items_watching']!,
@@ -41,6 +45,10 @@ class SessionProvider extends ChangeNotifier {
     await SharedPreference().getShowNSFW().then((b) {
       _showNSFW = b;
     });
+
+    // get app info
+    await PackageInfo.fromPlatform()
+        .then((appInfo) => _currentAppVersion = appInfo.version);
   }
 
   setShowNSFW(bool value) {
