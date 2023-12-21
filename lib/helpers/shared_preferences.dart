@@ -31,11 +31,13 @@ class SharedPreference {
     return s == "true" ? 'dark' : 'light';
   }
 
-  // Theme
+  // show NSFW
   Future setShowNSFW(bool showNSFW) async {
     final sharedPreference = await getSharedPreferences();
 
     await sharedPreference.setBool(_showNSFW, showNSFW);
+
+    return showNSFW;
   }
 
   Future<bool> getShowNSFW() async {

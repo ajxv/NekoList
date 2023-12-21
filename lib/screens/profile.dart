@@ -6,18 +6,8 @@ import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-class Profile extends StatefulWidget {
+class Profile extends StatelessWidget {
   const Profile({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _ProfileState();
-}
-
-class _ProfileState extends State<Profile> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,13 +46,19 @@ class _ProfileState extends State<Profile> {
             padding: const EdgeInsets.all(10),
             children: [
               const SizedBox(height: 20),
-              CircleAvatar(
-                radius: 60,
-                child: ClipOval(
-                  child: value.user.picture.isNotEmpty
-                      ? CachedNetworkImage(imageUrl: value.user.picture)
-                      : Image.asset("assets/images/profile_placeholder.jpeg"),
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: value.user.picture.isNotEmpty
+                        ? CachedNetworkImageProvider(value.user.picture)
+                        : const AssetImage(
+                                "assets/images/profile_placeholder.jpeg")
+                            as ImageProvider,
+                    fit: BoxFit.contain,
+                  ),
+                  shape: BoxShape.circle,
                 ),
+                height: 150,
               ),
               const SizedBox(height: 15),
               Text(

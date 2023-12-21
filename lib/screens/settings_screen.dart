@@ -1,33 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:neko_list/providers/session_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../helpers/shared_preferences.dart';
 import '../providers/theme_provider.dart';
 import '../services/oauth_services.dart';
 import 'auth/login.dart';
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
-  final SharedPreference _pref = SharedPreference();
-  late bool _showNSFW = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _pref.getShowNSFW().then((b) {
-      setState(() {
-        _showNSFW = b;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +17,9 @@ class _SettingsPageState extends State<SettingsPage> {
       fontSize: 12,
       color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
     );
+
+    bool showNSFW = context.watch<SessionProvider>().showNSFW;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,
@@ -95,16 +80,13 @@ class _SettingsPageState extends State<SettingsPage> {
                 SwitchListTile(
                   title: const Text("Show NSFW entries"),
                   subtitle: Text(
-                    _showNSFW ? "Allowed" : "Hidden",
+                    showNSFW ? "Allowed" : "Hidden",
                     style: subtitleStyle,
                   ),
                   secondary: const Icon(Icons.error_outline),
-                  value: _showNSFW,
+                  value: showNSFW,
                   onChanged: (value) {
-                    _pref.setShowNSFW(value);
-                    setState(() {
-                      _pref.getShowNSFW().then((b) => _showNSFW = b);
-                    });
+                    context.read<SessionProvider>().setShowNSFW(value);
                   },
                   activeColor: Colors.green.shade300,
                   activeTrackColor: Colors.green.shade200.withOpacity(0.5),
