@@ -26,12 +26,13 @@
 
 ## Screenshots
 <p align="center">
-  <img src="https://github.com/ajxv/NekoList/assets/56473062/a43cf3a4-db44-47a3-b3a2-101c46d71731" width="250" /> 
-  <img src="https://github.com/ajxv/NekoList/assets/56473062/2eb60c2f-79a0-4252-ae84-bc188b79ba17" width="250" /> 
-  <img src="https://github.com/ajxv/NekoList/assets/56473062/f4981e1c-1aeb-49c6-9306-6facbebfe6da" width="250" /> 
-  <img src="https://github.com/ajxv/NekoList/assets/56473062/a79eb98f-8486-407c-aa1b-63cf65b91288" width="250" /> 
-  <img src="https://github.com/ajxv/NekoList/assets/56473062/dddc52bc-8886-42b0-a0e2-1368f15a9e7f" width="250" /> 
-  <img src="https://github.com/ajxv/NekoList/assets/56473062/a21027db-23e6-426f-90a9-27c6356025ef" width="250" />
+  
+  <img src="https://github.com/ajxv/NekoList/assets/56473062/a25c882e-1cb9-4195-9b6f-c27afe099846" width="260" /> 
+  <img src="https://github.com/ajxv/NekoList/assets/56473062/c2c8f374-1a91-4d8a-bd7d-274dc3407dd6" width="260" /> 
+  <img src="https://github.com/ajxv/NekoList/assets/56473062/a4a93ef6-48f1-478e-85c8-3502a1e9fd53" width="260" /> 
+  <img src="https://github.com/ajxv/NekoList/assets/56473062/a79eb98f-8486-407c-aa1b-63cf65b91288" width="260" /> 
+  <img src="https://github.com/ajxv/NekoList/assets/56473062/fd5798b8-a6c3-49b9-9351-3024c617cfe0" width="260" /> 
+  <img src="https://github.com/ajxv/NekoList/assets/56473062/a21027db-23e6-426f-90a9-27c6356025ef" width="260" />
 </p>
 
 

@@ -272,7 +272,7 @@ class CompletionCounter extends StatelessWidget {
               ),
               labelText: 'completed',
               counterText: '',
-              suffixText: '/ ${totalCount.toString()}',
+              suffixText: '/ ${totalCount != 0 ? totalCount.toString() : '?'}',
             ),
             style: const TextStyle(fontSize: 15),
             maxLength: 4,

@@ -50,13 +50,19 @@ class SettingsPage extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    Fluttertoast.showToast(msg: 'Downloading updates..');
+                    Fluttertoast.showToast(
+                      msg: 'Downloading update..',
+                      toastLength: Toast.LENGTH_LONG,
+                    );
+                    Navigator.of(context).pop();
                     try {
-                      // ignore: prefer_interpolation_to_compose_strings
-                      OtaUpdate().execute(latestReleaseDownloadPath +
-                          'NekoList_' +
-                          latestTag +
-                          '.apk');
+                      OtaUpdate()
+                          // ignore: prefer_interpolation_to_compose_strings
+                          .execute(latestReleaseDownloadPath +
+                              'NekoList_' +
+                              latestTag +
+                              '.apk')
+                          .listen((OtaEvent event) {});
                     } catch (e) {
                       Fluttertoast.showToast(
                           msg: 'Failed to make OTA update. Details: $e');
