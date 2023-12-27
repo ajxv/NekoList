@@ -42,16 +42,20 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
             },
-            icon: CircleAvatar(
-                radius: 15,
-                backgroundImage: Provider.of<SessionProvider>(context)
-                        .user
-                        .picture
-                        .isNotEmpty
-                    ? CachedNetworkImageProvider(
-                        context.read<SessionProvider>().user.picture)
-                    : const AssetImage("assets/images/profile_placeholder.jpeg")
-                        as ImageProvider)),
+            icon: Hero(
+              tag: "profileImage",
+              child: CircleAvatar(
+                  radius: 15,
+                  backgroundImage: Provider.of<SessionProvider>(context)
+                          .user
+                          .picture
+                          .isNotEmpty
+                      ? CachedNetworkImageProvider(
+                          context.read<SessionProvider>().user.picture)
+                      : const AssetImage(
+                              "assets/images/profile_placeholder.jpeg")
+                          as ImageProvider),
+            )),
         title: Text(
           "ฅᨐฅ",
           style: TextStyle(
