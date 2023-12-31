@@ -32,7 +32,10 @@ class Profile extends StatelessWidget {
                 ),
               );
             },
-            icon: const Icon(Icons.settings),
+            icon: const Hero(
+              tag: "settings",
+              child: Icon(Icons.settings),
+            ),
           )
         ],
       ),
@@ -46,19 +49,22 @@ class Profile extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             children: [
               const SizedBox(height: 20),
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: value.user.picture.isNotEmpty
-                        ? CachedNetworkImageProvider(value.user.picture)
-                        : const AssetImage(
-                                "assets/images/profile_placeholder.jpeg")
-                            as ImageProvider,
-                    fit: BoxFit.contain,
+              Hero(
+                tag: "profileImage",
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: value.user.picture.isNotEmpty
+                          ? CachedNetworkImageProvider(value.user.picture)
+                          : const AssetImage(
+                                  "assets/images/profile_placeholder.jpeg")
+                              as ImageProvider,
+                      fit: BoxFit.contain,
+                    ),
+                    shape: BoxShape.circle,
                   ),
-                  shape: BoxShape.circle,
+                  height: 150,
                 ),
-                height: 150,
               ),
               const SizedBox(height: 15),
               Text(
