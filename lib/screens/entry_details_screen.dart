@@ -126,7 +126,7 @@ class _EntryDetailPageState extends State<EntryDetailPage> {
                   // basic details
                   BasicDetailSection(
                     imageUrl: entryDetails.mainPicture.large,
-                    animeTitle: entryDetails.title,
+                    title: entryDetails.title,
                     mediaType: entryDetails.mediaType,
                     airingStatus: entryDetails.status,
                     meanScore: entryDetails.mean,
@@ -480,7 +480,7 @@ class _EntryDetailPageState extends State<EntryDetailPage> {
 
 class BasicDetailSection extends StatelessWidget {
   final String imageUrl;
-  final String animeTitle;
+  final String title;
   final String mediaType;
   final String airingStatus;
   final double meanScore;
@@ -490,7 +490,7 @@ class BasicDetailSection extends StatelessWidget {
   const BasicDetailSection({
     super.key,
     required this.imageUrl,
-    required this.animeTitle,
+    required this.title,
     required this.mediaType,
     required this.airingStatus,
     required this.meanScore,
@@ -530,11 +530,11 @@ class BasicDetailSection extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onLongPress: () async {
-                      await Clipboard.setData(ClipboardData(text: animeTitle));
+                      await Clipboard.setData(ClipboardData(text: title));
                       Fluttertoast.showToast(msg: "Title copied to clipboard");
                     },
                     child: Text(
-                      animeTitle,
+                      title,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
