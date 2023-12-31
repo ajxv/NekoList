@@ -32,7 +32,10 @@ class Profile extends StatelessWidget {
                 ),
               );
             },
-            icon: const Icon(Icons.settings),
+            icon: const Hero(
+              tag: "settings",
+              child: Icon(Icons.settings),
+            ),
           )
         ],
       ),
