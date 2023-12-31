@@ -4,7 +4,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../services/mal_services.dart';
 
 class EntryStatusProvider extends ChangeNotifier {
-  String initialStatus = '';
+  String _initialStatus = '';
+  int _totalCount = 0;
+
   final _myListStatus = {};
 
   get myListStatus => _myListStatus;
@@ -21,7 +23,9 @@ class EntryStatusProvider extends ChangeNotifier {
 
   // load status from myliststatus object
   void loadListStatus(isAnime, myListStatus, totalCount) {
-    initialStatus = myListStatus.status;
+    _initialStatus = myListStatus.status;
+    _totalCount = totalCount;
+
     setMyListStatus(
       status: myListStatus.status,
       score: myListStatus.score,
@@ -34,6 +38,11 @@ class EntryStatusProvider extends ChangeNotifier {
 
   // update status
   void updateStatus(entryId, isAnime, refreshFunction) {
+    // if all episodes watched / chapters read, automatically mark as completed
+    if (_totalCount != 0 && _myListStatus['completed'] == _totalCount) {
+      _myListStatus['status'] = 'completed';
+    }
+
     if (isAnime) {
       MyAnimelistApi()
           .updateListAnime(
@@ -47,9 +56,9 @@ class EntryStatusProvider extends ChangeNotifier {
           Fluttertoast.showToast(msg: "Updated");
 
           // refresh lists
-          if (initialStatus.isNotEmpty &&
-              initialStatus != _myListStatus['status']) {
-            refreshFunction(initialStatus);
+          if (_initialStatus.isNotEmpty &&
+              _initialStatus != _myListStatus['status']) {
+            refreshFunction(_initialStatus);
           }
 
           refreshFunction(_myListStatus['status']);
@@ -71,8 +80,8 @@ class EntryStatusProvider extends ChangeNotifier {
           Fluttertoast.showToast(msg: "Updated");
 
           // refresh lists
-          if (initialStatus != _myListStatus['status']) {
-            refreshFunction(initialStatus);
+          if (_initialStatus != _myListStatus['status']) {
+            refreshFunction(_initialStatus);
           }
 
           refreshFunction(_myListStatus['status']);
@@ -89,7 +98,7 @@ class EntryStatusProvider extends ChangeNotifier {
     if (isAnime) {
       MyAnimelistApi().removeListAnime(animeId: entryId).then((value) {
         // refresh list
-        refreshFunction(initialStatus);
+        refreshFunction(_initialStatus);
         // show toast
         Fluttertoast.showToast(msg: "Removed from List");
       }).catchError((error) {
@@ -98,7 +107,7 @@ class EntryStatusProvider extends ChangeNotifier {
     } else {
       MyAnimelistApi().removeListManga(mangaId: entryId).then((value) {
         // refresh list
-        refreshFunction(initialStatus);
+        refreshFunction(_initialStatus);
         // show toast
         Fluttertoast.showToast(msg: "Removed from List");
       }).catchError((error) {
