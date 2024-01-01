@@ -43,6 +43,11 @@ class EntryStatusProvider extends ChangeNotifier {
       _myListStatus['status'] = 'completed';
     }
 
+    // set completed count to total count if marked as completed
+    if (_totalCount != 0 && _myListStatus['status'] == 'completed') {
+      _myListStatus['completed'] = _totalCount;
+    }
+
     if (isAnime) {
       MyAnimelistApi()
           .updateListAnime(

@@ -104,9 +104,9 @@ class SettingsPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.background,
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: Hero(
+          icon: const Hero(
             tag: "settings",
-            child: const Icon(Icons.chevron_left),
+            child: Icon(Icons.chevron_left),
           ),
         ),
         title: const Text(
